@@ -24,7 +24,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
   frameSize: [number, number];
 
-  bobSize = 40;
+  bobSize = 60;
   bob: number[];
   
   public context: CanvasRenderingContext2D;
@@ -32,11 +32,11 @@ export class RendererComponent implements OnInit, AfterViewInit {
   constructor() { 
     this.bob = RendererComponent.buildBob(this.bobSize);
 
-    this.paletteR = this.buildPalette(150, [150, 255]);
-    this.paletteG = this.buildPalette(150, [150, 255]);
+    this.paletteR = this.buildPalette(150, [180, 255]);
+    this.paletteG = this.buildPalette(150, [100, 255]);
     this.paletteB = this.buildPalette(103, [200, 250]);
 
-    this.queue = new Array(35112);
+    this.queue = new Array(30000);
     for (let i = 0; i < this.queue.length; i++) {
       this.queue[i] = [-1, -1];
     }
@@ -85,7 +85,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
         let distance = Math.min(size/2, Math.sqrt(Math.pow(center - i, 2) + Math.pow(center - j, 2)));
         let normalized = 1 - distance * 2 / size;
 
-        bob[k] = Math.round(normalized)*2;
+        bob[k] = Math.round(normalized);
         k++;
       }
     }
@@ -108,6 +108,9 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
   private drawBob(x: number, y: number, size: number, bob: number[]): void {
 
+    x -= Math.round(size/2);
+    y -= Math.round(size/2);
+
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
         let k = ((x + i) + (y + j) * this.image.width);
@@ -117,6 +120,9 @@ export class RendererComponent implements OnInit, AfterViewInit {
   }
 
   private eraseBob(x: number, y: number, size: number, bob: number[]): void {
+
+    x -= Math.round(size/2);
+    y -= Math.round(size/2);
 
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
@@ -141,7 +147,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
         // let y = Math.round(((Math.cos(k/60) * Math.cos(k/15)) * 0.5 + 0.5) * this.image.height);
 
-        let y: number = Math.round(this.image.height * this.nCos(k/73) * 0.9);
+        let y: number = Math.round(this.image.height * Math.cos(k/73) * 0.45 + this.image.height/2);
     
         this.drawBob(x, y, this.bobSize, this.bob);
 
