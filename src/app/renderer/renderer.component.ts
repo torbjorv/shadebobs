@@ -12,7 +12,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
   running: Boolean = true;
   image: ImageData;
   previousT: number = 0;
-  frameRateMultiplier = 10;
+  frameRateMultiplier = 50;
   buffer: number[];
 
   paletteR: number[];
@@ -22,17 +22,15 @@ export class RendererComponent implements OnInit, AfterViewInit {
   queue: [number, number][];
   queuePointer = 0;
 
-  frameSize = [640, 480];
+  frameSize: [number, number];
 
-  bobSize = 80;
+  bobSize = 40;
   bob: number[];
   
   public context: CanvasRenderingContext2D;
   
   constructor() { 
     this.bob = RendererComponent.buildBob(this.bobSize);
-    this.buffer = new Array(this.frameSize[0] * this.frameSize[1]);
-    for (let i = 0; i < this.buffer.length; i++) this.buffer[i] = 0;
 
     this.paletteR = this.buildPalette(150, [150, 255]);
     this.paletteG = this.buildPalette(150, [150, 255]);
@@ -49,11 +47,20 @@ export class RendererComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.context = (<HTMLCanvasElement>this.canvas.nativeElement).getContext('2d');
 
-    this.image = this.context.getImageData(0, 0, 640, 480);
+    let canvas = (<HTMLCanvasElement>this.canvas.nativeElement);
+    this.frameSize = [canvas.offsetWidth, canvas.offsetHeight];
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
 
+    this.context = canvas.getContext('2d');
 
+    this.buffer = new Array(this.frameSize[0] * this.frameSize[1]);
+    for (let i = 0; i < this.buffer.length; i++) this.buffer[i] = 0;
+
+    
+
+    this.image = this.context.createImageData(this.frameSize[0], this.frameSize[1]);
 
     for (let i = 0; i < this.image.data.length; i += 4) {
       this.image.data[i+0] = this.paletteR[0];
@@ -79,7 +86,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
         let normalized = 1 - distance * 2 / size;
 
         bob[k] = Math.round(normalized)*2;
-        // bob[k] = 5;
         k++;
       }
     }
@@ -106,10 +112,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
       for (let j = 0; j < size; j++) {
         let k = ((x + i) + (y + j) * this.image.width);
         this.buffer[k] += bob[i + j*size];
-        this.image.data[k * 4 + 0] = this.paletteR[Math.round(this.buffer[k]) % this.paletteR.length];
-        this.image.data[k * 4 + 1] = this.paletteG[Math.round(this.buffer[k]) % this.paletteG.length];
-        this.image.data[k * 4 + 2] = this.paletteB[Math.round(this.buffer[k]) % this.paletteB.length];
-        this.image.data[k * 4 + 3] = 255;
       }
     }
   }
@@ -120,10 +122,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
       for (let j = 0; j < size; j++) {
         let k = ((x + i) + (y + j) * this.image.width);
         this.buffer[k] -= bob[i + j*size];
-        this.image.data[k * 4 + 0] = this.paletteR[Math.round(this.buffer[k]) % this.paletteR.length];
-        this.image.data[k * 4 + 1] = this.paletteG[Math.round(this.buffer[k]) % this.paletteG.length];
-        this.image.data[k * 4 + 2] = this.paletteB[Math.round(this.buffer[k]) % this.paletteB.length];
-        this.image.data[k * 4 + 3] = 255;
       }
     }
   }
@@ -144,9 +142,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
         // let y = Math.round(((Math.cos(k/60) * Math.cos(k/15)) * 0.5 + 0.5) * this.image.height);
 
         let y: number = Math.round(this.image.height * this.nCos(k/73) * 0.9);
-        // let y2: number = this.image.height * this.nCos(k/73);
-
-        // let y = Math.round(y1 * y2) % this.image.height;
     
         this.drawBob(x, y, this.bobSize, this.bob);
 
@@ -155,6 +150,13 @@ export class RendererComponent implements OnInit, AfterViewInit {
         }
         this.queue[this.queuePointer] = [x, y];
         this.queuePointer = (this.queuePointer + 1) % this.queue.length;
+      }
+
+      for (let i = 0; i < this.buffer.length; i++) {
+        this.image.data[i * 4 + 0] = this.paletteR[Math.round(this.buffer[i]) % this.paletteR.length];
+        this.image.data[i * 4 + 1] = this.paletteG[Math.round(this.buffer[i]) % this.paletteG.length];
+        this.image.data[i * 4 + 2] = this.paletteB[Math.round(this.buffer[i]) % this.paletteB.length];
+        this.image.data[i * 4 + 3] = 255;
       }
     }
 
