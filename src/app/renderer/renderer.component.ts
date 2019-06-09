@@ -32,9 +32,9 @@ export class RendererComponent implements OnInit, AfterViewInit {
   constructor() { 
     this.bob = RendererComponent.buildBob(this.bobSize);
 
-    this.paletteR = this.buildPalette(150, [180, 255]);
-    this.paletteG = this.buildPalette(150, [100, 255]);
-    this.paletteB = this.buildPalette(103, [200, 250]);
+    this.paletteR = this.buildPalette(100, [180, 255]);
+    this.paletteG = this.buildPalette(100, [100, 255]);
+    this.paletteB = this.buildPalette(73, [200, 250]);
 
     this.queue = new Array(30000);
     for (let i = 0; i < this.queue.length; i++) {
