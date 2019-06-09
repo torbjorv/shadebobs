@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-renderer',
@@ -14,6 +14,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
   previousT: number = 0;
   frameRateMultiplier = 50;
   buffer: number[];
+  resizeTimeout: NodeJS.Timer;
 
   paletteR: number[];
   paletteG: number[];
@@ -36,18 +37,17 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this.paletteG = this.buildPalette(100, [100, 255]);
     this.paletteB = this.buildPalette(73, [200, 250]);
 
-    this.queue = new Array(30000);
-    for (let i = 0; i < this.queue.length; i++) {
-      this.queue[i] = [-1, -1];
-    }
-
   }
 
   ngOnInit() {
   }
 
   ngAfterViewInit(): void {
+    this.setup();
+    this.renderFrame(0);
+  }
 
+  private setup(): void {
     let canvas = (<HTMLCanvasElement>this.canvas.nativeElement);
     this.frameSize = [canvas.offsetWidth, canvas.offsetHeight];
     canvas.width = canvas.offsetWidth;
@@ -58,8 +58,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this.buffer = new Array(this.frameSize[0] * this.frameSize[1]);
     for (let i = 0; i < this.buffer.length; i++) this.buffer[i] = 0;
 
-    
-
     this.image = this.context.createImageData(this.frameSize[0], this.frameSize[1]);
 
     for (let i = 0; i < this.image.data.length; i += 4) {
@@ -69,7 +67,22 @@ export class RendererComponent implements OnInit, AfterViewInit {
       this.image.data[i+3] = 255;
     }
 
-    this.renderFrame(0);
+    this.queue = new Array(30000);
+    for (let i = 0; i < this.queue.length; i++) {
+      this.queue[i] = [-1, -1];
+    }
+
+  }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+      //debounce resize, wait for resize to finish before doing stuff
+      if (this.resizeTimeout) {
+          clearTimeout(this.resizeTimeout);
+      }
+      this.resizeTimeout = setTimeout((() => {
+          this.setup();
+      }).bind(this), 500);
   }
 
   private static buildBob(size: number): number[] {
