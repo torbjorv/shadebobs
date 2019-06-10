@@ -14,7 +14,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
   previousT: number = 0;
   frameRateMultiplier = 50;
   buffer: number[];
-  resizeTimeout: NodeJS.Timer;
+  resizeTimeout;
 
   paletteR: number[];
   paletteG: number[];
