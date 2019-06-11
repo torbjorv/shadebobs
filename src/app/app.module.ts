@@ -3,14 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { RendererComponent } from './renderer/renderer.component';
+import { SettingsComponent } from './settings/settings.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RendererComponent
+    RendererComponent,
+    SettingsComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, Input } from '@angular/core';
+import { FifoQueue } from '../fifoqueue';
 
 @Component({
   selector: 'app-renderer',
@@ -20,8 +21,8 @@ export class RendererComponent implements OnInit, AfterViewInit {
   paletteG: number[];
   paletteB: number[];
 
-  queue: [number, number][];
-  queuePointer = 0;
+  tail: FifoQueue<[number, number]>;
+  maxTailLength = 30000
 
   frameSize: [number, number];
 
@@ -29,6 +30,27 @@ export class RendererComponent implements OnInit, AfterViewInit {
   bob: number[];
   
   public context: CanvasRenderingContext2D;
+
+
+  @Input("tailLength")
+  public set tailLength(value: number) {
+    value = Math.min(this.maxTailLength, value);
+
+    if (this.tailLength === value) {
+      return;
+    }
+
+    while (this.tail.length > value) {
+      let bob:[number, number] = this.tail.pop();
+      this.eraseBob(bob[0], bob[1], this.bobSize, this.bob);
+    }
+
+    this.tail.resize(value);
+  }
+
+  public get tailLength(): number {
+    return this.tail.capacity;
+  }
   
   constructor() { 
     this.bob = RendererComponent.buildBob(this.bobSize);
@@ -36,6 +58,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this.paletteR = this.buildPalette(100, [180, 255]);
     this.paletteG = this.buildPalette(100, [100, 255]);
     this.paletteB = this.buildPalette(73, [200, 250]);
+    this.tail = new FifoQueue(this.maxTailLength);
 
   }
 
@@ -56,7 +79,8 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this.context = canvas.getContext('2d');
 
     this.buffer = new Array(this.frameSize[0] * this.frameSize[1]);
-    for (let i = 0; i < this.buffer.length; i++) this.buffer[i] = 0;
+    this.buffer.fill(0);
+    this.tail = new FifoQueue(this.tail.capacity);
 
     this.image = this.context.createImageData(this.frameSize[0], this.frameSize[1]);
 
@@ -65,11 +89,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
       this.image.data[i+1] = this.paletteG[0];
       this.image.data[i+2] = this.paletteB[0];
       this.image.data[i+3] = 255;
-    }
-
-    this.queue = new Array(30000);
-    for (let i = 0; i < this.queue.length; i++) {
-      this.queue[i] = [-1, -1];
     }
 
   }
@@ -164,11 +183,11 @@ export class RendererComponent implements OnInit, AfterViewInit {
     
         this.drawBob(x, y, this.bobSize, this.bob);
 
-        if (this.queue[this.queuePointer][0] != -1) {
-          this.eraseBob(this.queue[this.queuePointer][0], this.queue[this.queuePointer][1], this.bobSize, this.bob);
+        if (this.tail.length == this.tail.capacity) {
+          let bob:[number, number] = this.tail.pop();
+          this.eraseBob(bob[0], bob[1], this.bobSize, this.bob);
         }
-        this.queue[this.queuePointer] = [x, y];
-        this.queuePointer = (this.queuePointer + 1) % this.queue.length;
+        this.tail.push([x, y]);
       }
 
       for (let i = 0; i < this.buffer.length; i++) {

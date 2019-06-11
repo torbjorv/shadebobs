@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Settings } from './settings';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'shadebobs';
+
+  settings: Settings = new Settings();
 }
