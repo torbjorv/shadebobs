@@ -76,9 +76,9 @@ export class RendererComponent implements OnInit, AfterViewInit {
   constructor() { 
     this.bob = RendererComponent.buildBob(this.bobSize);
 
-    this.paletteR = this.buildPalette(100, [180, 255]);
-    this.paletteG = this.buildPalette(100, [100, 255]);
-    this.paletteB = this.buildPalette(73, [200, 250]);
+    this.paletteR = this.buildPalette(200, [255, 0]);
+    this.paletteG = this.buildPalette(210, [255, 0]);
+    this.paletteB = this.buildPalette(220, [255, 0]);
     this.tail = new FifoQueue(this.maxTailLength);
 
     this.buffer = new Array(this.bufferSize[0] * this.bufferSize[1]);
