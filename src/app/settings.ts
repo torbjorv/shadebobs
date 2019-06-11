@@ -1,5 +1,5 @@
 export class Settings {
-    tail: number = 10000;
+    tail: number = 25000;
     count: number = 8;
-    speed: number = 5;
+    speed: number = 4;
 }
