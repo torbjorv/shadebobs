@@ -13,24 +13,30 @@ export class RendererComponent implements OnInit, AfterViewInit {
   running: Boolean = true;
   image: ImageData;
   previousT: number = 0;
-  frameRateMultiplier = 50;
+  frameRateMultiplier = 10;
   buffer: number[];
   resizeTimeout;
+  bufferSize = [1234, 400];
 
   paletteR: number[];
   paletteG: number[];
   paletteB: number[];
 
   tail: FifoQueue<[number, number]>;
+  _tailLength: number = 10000;
   maxTailLength = 30000
 
-  frameSize: [number, number];
+  // frameSize: [number, number];
 
-  bobSize = 60;
+  bobSize = 30;
   bob: number[];
+
+  _bobCount: number = 1;
   
   public context: CanvasRenderingContext2D;
-
+  
+  @Input("speed")
+  public speed: number = 1;
 
   @Input("tailLength")
   public set tailLength(value: number) {
@@ -40,17 +46,32 @@ export class RendererComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    while (this.tail.length > value) {
-      let bob:[number, number] = this.tail.pop();
-      this.eraseBob(bob[0], bob[1], this.bobSize, this.bob);
-    }
-
-    this.tail.resize(value);
+    this._tailLength = value;
+    this.reset();
   }
 
   public get tailLength(): number {
-    return this.tail.capacity;
+    return this._tailLength;
   }
+
+
+  @Input('bobCount')
+  public set bobCount(value: number) {
+
+    value = Math.min(10, value);
+    value = Math.max(1, value);
+    if (this.bobCount === value) {
+      return;
+    }
+
+    this.reset();
+    this._bobCount = value;
+  }
+
+  public get bobCount(): number {
+    return this._bobCount;
+  }
+
   
   constructor() { 
     this.bob = RendererComponent.buildBob(this.bobSize);
@@ -60,29 +81,39 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this.paletteB = this.buildPalette(73, [200, 250]);
     this.tail = new FifoQueue(this.maxTailLength);
 
+    this.buffer = new Array(this.bufferSize[0] * this.bufferSize[1]);
+    this.buffer.fill(0);
   }
 
   ngOnInit() {
   }
 
   ngAfterViewInit(): void {
-    this.setup();
+
+    let canvas = (<HTMLCanvasElement>this.canvas.nativeElement);
+    this.context = canvas.getContext('2d');
+    canvas.width = this.bufferSize[0];
+    canvas.height = this.bufferSize[1];
+
+    this.reset();
     this.renderFrame(0);
   }
 
-  private setup(): void {
-    let canvas = (<HTMLCanvasElement>this.canvas.nativeElement);
-    this.frameSize = [canvas.offsetWidth, canvas.offsetHeight];
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+  private reset(): void {
 
-    this.context = canvas.getContext('2d');
+    if (!this.canvas) {
+      return;
+    }
 
-    this.buffer = new Array(this.frameSize[0] * this.frameSize[1]);
+    // this.frameSize = [canvas.offsetWidth, canvas.offsetHeight];
+    // canvas.width = canvas.offsetWidth;
+    // canvas.height = canvas.offsetHeight;
+
+    this.tail = new FifoQueue(this.tailLength * this.bobCount);
+
     this.buffer.fill(0);
-    this.tail = new FifoQueue(this.tail.capacity);
 
-    this.image = this.context.createImageData(this.frameSize[0], this.frameSize[1]);
+    this.image = this.context.createImageData(this.bufferSize[0], this.bufferSize[1]);
 
     for (let i = 0; i < this.image.data.length; i += 4) {
       this.image.data[i+0] = this.paletteR[0];
@@ -93,16 +124,16 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
   }
 
-  @HostListener('window:resize')
-  onWindowResize() {
-      //debounce resize, wait for resize to finish before doing stuff
-      if (this.resizeTimeout) {
-          clearTimeout(this.resizeTimeout);
-      }
-      this.resizeTimeout = setTimeout((() => {
-          this.setup();
-      }).bind(this), 500);
-  }
+  // @HostListener('window:resize')
+  // onWindowResize() {
+  //     //debounce resize, wait for resize to finish before doing stuff
+  //     // if (this.resizeTimeout) {
+  //     //     clearTimeout(this.resizeTimeout);
+  //     // }
+  //     // this.resizeTimeout = setTimeout((() => {
+  //     //     this.reset();
+  //     // }).bind(this), 500);
+  // }
 
   private static buildBob(size: number): number[] {
 
@@ -117,7 +148,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
         let distance = Math.min(size/2, Math.sqrt(Math.pow(center - i, 2) + Math.pow(center - j, 2)));
         let normalized = 1 - distance * 2 / size;
 
-        bob[k] = Math.round(normalized);
+        bob[k] = normalized;
         k++;
       }
     }
@@ -164,36 +195,39 @@ export class RendererComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private nCos(k: number): number {
-    return Math.cos(k) * 0.5 + 0.5;
-  }
-
   private renderFrame(t: number): void {
 
+    t *= this.speed;
+    let multiplier = Math.round(this.frameRateMultiplier*this.speed);
+
+    let elapsed = t - this.previousT;
     if (t !== this.previousT) {
 
-      for (let i = 0; i < this.frameRateMultiplier; i++) {
+      for (let j = 0; j < this.bobCount; j++) {
+        for (let i = 0; i < multiplier; i++) {
+          let k = this.previousT + elapsed * (i/multiplier) + j*1000;
 
-        let k = this.previousT + (t - this.previousT) * (i/this.frameRateMultiplier);
-        let x: number = Math.round(k/0.2) % this.image.width;
-
-        // let y = Math.round(((Math.cos(k/60) * Math.cos(k/15)) * 0.5 + 0.5) * this.image.height);
-
-        let y: number = Math.round(this.image.height * Math.cos(k/73) * 0.45 + this.image.height/2);
-    
-        this.drawBob(x, y, this.bobSize, this.bob);
-
-        if (this.tail.length == this.tail.capacity) {
-          let bob:[number, number] = this.tail.pop();
-          this.eraseBob(bob[0], bob[1], this.bobSize, this.bob);
+          let x: number = Math.round(k/2) % this.bufferSize[0];
+          if (j % 2 == 1) {
+            x = this.bufferSize[0] - x;
+          }
+          let y: number = Math.round(this.bufferSize[1] * Math.cos(k/300 + (j/this.bobCount)*2*Math.PI) * 0.45 + this.bufferSize[1]/2);
+      
+          this.drawBob(x, y, this.bobSize, this.bob);
+  
+          if (this.tail.length == this.tail.capacity) {
+            let bob:[number, number] = this.tail.pop();
+            this.eraseBob(bob[0], bob[1], this.bobSize, this.bob);
+          }
+          this.tail.push([x, y]);  
         }
-        this.tail.push([x, y]);
       }
 
       for (let i = 0; i < this.buffer.length; i++) {
-        this.image.data[i * 4 + 0] = this.paletteR[Math.round(this.buffer[i]) % this.paletteR.length];
-        this.image.data[i * 4 + 1] = this.paletteG[Math.round(this.buffer[i]) % this.paletteG.length];
-        this.image.data[i * 4 + 2] = this.paletteB[Math.round(this.buffer[i]) % this.paletteB.length];
+        let k = Math.round(this.buffer[i]);
+        this.image.data[i * 4 + 0] = this.paletteR[ k % this.paletteR.length];
+        this.image.data[i * 4 + 1] = this.paletteG[ k % this.paletteG.length];
+        this.image.data[i * 4 + 2] = this.paletteB[ k % this.paletteB.length];
         this.image.data[i * 4 + 3] = 255;
       }
     }
