@@ -21,65 +21,92 @@ export class RendererComponent implements OnInit, AfterViewInit {
   paletteR: number[];
   paletteG: number[];
   paletteB: number[];
+  _size = 30;
+  bob: number[];
+  _count: number = 1;
+  public context: CanvasRenderingContext2D;
 
-  tail: FifoQueue<[number, number]>;
-  _tailLength: number = 10000;
+  _force: number = 1;
+  
+
+  private _tail: FifoQueue<[number, number]>;
+  private _length: number = 10000;
   maxTailLength = 30000
 
-  // frameSize: [number, number];
+  @Input('size')
+  public set size(value: number) {
+    value = Math.min(100, value);
+    value = Math.max(10, value);
+    if (this.size === value) {
+      return;
+    }
+    this._size = value;
+    this.reset();
+  }
 
-  bobSize = 30;
-  bob: number[];
+  public get size(): number {
+    return this._size;
+  }
 
-  _bobCount: number = 1;
-  
-  public context: CanvasRenderingContext2D;
+  @Input('force')
+  public set force(value: number) {
+    value = Math.min(10, value);
+    value = Math.max(1, value);
+    if (this.force === value) {
+      return;
+    }
+    this._force = value;
+    this.reset();
+  }
+
+  public get force(): number {
+    return this._force;
+  }
   
   @Input("speed")
   public speed: number = 1;
 
-  @Input("tailLength")
-  public set tailLength(value: number) {
+  @Input("tail")
+  public set tail(value: number) {
     value = Math.min(this.maxTailLength, value);
 
-    if (this.tailLength === value) {
+    if (this.tail === value) {
       return;
     }
 
-    this._tailLength = value;
+    this._length = value;
     this.reset();
   }
 
-  public get tailLength(): number {
-    return this._tailLength;
+  public get tail(): number {
+    return this._length;
   }
 
 
-  @Input('bobCount')
-  public set bobCount(value: number) {
+  @Input('count')
+  public set count(value: number) {
 
     value = Math.min(10, value);
     value = Math.max(1, value);
-    if (this.bobCount === value) {
+    if (this.count === value) {
       return;
     }
 
     this.reset();
-    this._bobCount = value;
+    this._count = value;
   }
 
-  public get bobCount(): number {
-    return this._bobCount;
+  public get count(): number {
+    return this._count;
   }
 
   
   constructor() { 
-    this.bob = RendererComponent.buildBob(this.bobSize);
 
     this.paletteR = this.buildPalette(200, [255, 0]);
     this.paletteG = this.buildPalette(210, [255, 0]);
     this.paletteB = this.buildPalette(220, [255, 0]);
-    this.tail = new FifoQueue(this.maxTailLength);
+    this._tail = new FifoQueue(this.maxTailLength);
 
     this.buffer = new Array(this.bufferSize[0] * this.bufferSize[1]);
     this.buffer.fill(0);
@@ -105,11 +132,8 @@ export class RendererComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // this.frameSize = [canvas.offsetWidth, canvas.offsetHeight];
-    // canvas.width = canvas.offsetWidth;
-    // canvas.height = canvas.offsetHeight;
-
-    this.tail = new FifoQueue(this.tailLength * this.bobCount);
+    this._tail = new FifoQueue(this.tail * this.count);
+    this.bob = RendererComponent.buildBob(this.size, this.force);
 
     this.buffer.fill(0);
 
@@ -124,18 +148,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
   }
 
-  // @HostListener('window:resize')
-  // onWindowResize() {
-  //     //debounce resize, wait for resize to finish before doing stuff
-  //     // if (this.resizeTimeout) {
-  //     //     clearTimeout(this.resizeTimeout);
-  //     // }
-  //     // this.resizeTimeout = setTimeout((() => {
-  //     //     this.reset();
-  //     // }).bind(this), 500);
-  // }
-
-  private static buildBob(size: number): number[] {
+  private static buildBob(size: number, force: number): number[] {
 
     let bob: number[] = new Array(size*size);
 
@@ -148,7 +161,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
         let distance = Math.min(size/2, Math.sqrt(Math.pow(center - i, 2) + Math.pow(center - j, 2)));
         let normalized = 1 - distance * 2 / size;
 
-        bob[k] = normalized;
+        bob[k] = normalized * force;
         k++;
       }
     }
@@ -203,7 +216,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
     let elapsed = t - this.previousT;
     if (t !== this.previousT) {
 
-      for (let j = 0; j < this.bobCount; j++) {
+      for (let j = 0; j < this.count; j++) {
         for (let i = 0; i < multiplier; i++) {
           let k = this.previousT + elapsed * (i/multiplier) + j*1000;
 
@@ -211,15 +224,15 @@ export class RendererComponent implements OnInit, AfterViewInit {
           if (j % 2 == 1) {
             x = this.bufferSize[0] - x;
           }
-          let y: number = Math.round(this.bufferSize[1] * Math.cos(k/300 + (j/this.bobCount)*2*Math.PI) * 0.45 + this.bufferSize[1]/2);
+          let y: number = Math.round(this.bufferSize[1] * Math.cos(k/300 + (j/this.count)*2*Math.PI) * 0.45 + this.bufferSize[1]/2);
       
-          this.drawBob(x, y, this.bobSize, this.bob);
+          this.drawBob(x, y, this.size, this.bob);
   
-          if (this.tail.length == this.tail.capacity) {
-            let bob:[number, number] = this.tail.pop();
-            this.eraseBob(bob[0], bob[1], this.bobSize, this.bob);
+          if (this._tail.length == this._tail.capacity) {
+            let bob:[number, number] = this._tail.pop();
+            this.eraseBob(bob[0], bob[1], this.size, this.bob);
           }
-          this.tail.push([x, y]);  
+          this._tail.push([x, y]);  
         }
       }
 
