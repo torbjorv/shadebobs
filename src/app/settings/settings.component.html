@@ -1,34 +1,34 @@
-<div style="width: 100%; height: 100%; display: flex; flex-direction: column">
+<div class="settings-container">
 
   <div class="title">Shadebobs</div>
-  <div class="credits">Cyberfish/TLS (torbjorv@github)</div>
+  <div class="credits"><a href="https://github.com/torbjorv">Cyberfish/TLS (torbjorv@github)</a></div>
 
   <div class="item-container">
     <div class="item-label">Tail</div>
-    <mat-slider class="item-value-slider" min="100" max="30000" step="100" thumbLabel [(value)]="settings.tail">
+    <mat-slider class="item-value-slider" min="100" max="50000" step="100" [(value)]="settings.tail">
     </mat-slider>
   </div>
 
   <div class="item-container">
     <div class="item-label">Count</div>
-    <mat-slider class="item-value-slider" min="1" max="10" step="1" thumbLabel [(value)]="settings.count"></mat-slider>
+    <mat-slider class="item-value-slider" min="1" max="10" step="1" [(value)]="settings.count"></mat-slider>
   </div>
 
   <div class="item-container">
     <div class="item-label">Speed</div>
-    <mat-slider class="item-value-slider" min="0.1" max="10" step="0.1" thumbLabel [(value)]="settings.speed">
+    <mat-slider class="item-value-slider" min="0.1" max="10" step="0.1" [(value)]="settings.speed">
     </mat-slider>
   </div>
 
   <div class="item-container">
     <div class="item-label">Size</div>
-    <mat-slider class="item-value-slider" min="10" max="50" step="1" thumbLabel [(value)]="settings.size">
+    <mat-slider class="item-value-slider" min="10" max="50" step="1" [(value)]="settings.size">
     </mat-slider>
   </div>
 
   <div class="item-container">
       <div class="item-label">Force</div>
-      <mat-slider class="item-value-slider" min="1" max="10" step="0.1" thumbLabel [(value)]="settings.force">
+      <mat-slider class="item-value-slider" min="1" max="10" step="0.1" [(value)]="settings.force">
       </mat-slider>
     </div>
 

@@ -30,7 +30,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
   private _tail: FifoQueue<[number, number]>;
   private _length: number = 10000;
-  maxTailLength = 30000
+  maxTailLength = 50000
 
   @Input('size')
   public set size(value: number) {

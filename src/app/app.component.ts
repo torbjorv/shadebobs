@@ -11,16 +11,17 @@ export class AppComponent {
   title = 'shadebobs';
 
   settings: Settings = new Settings();
+  settingsVisible: boolean = false;
 
   public constructor(private router: Router, private route: ActivatedRoute) {
 
     this.route.queryParamMap.subscribe(params => {
 
-      this.settings.tail = this.getValueOrDefault(params, 'tail', 25000);
-      this.settings.count = this.getValueOrDefault(params, 'count', 8);
-      this.settings.speed = this.getValueOrDefault(params, 'speed', 4);
-      this.settings.size = this.getValueOrDefault(params, 'size', 25);
-      this.settings.force = this.getValueOrDefault(params, 'force', 2);
+      this.settings.tail = this.getValueOrDefault(params, 'tail', 40000);
+      this.settings.count = this.getValueOrDefault(params, 'count', 7);
+      this.settings.speed = this.getValueOrDefault(params, 'speed', 8);
+      this.settings.size = this.getValueOrDefault(params, 'size', 27);
+      this.settings.force = this.getValueOrDefault(params, 'force', 4);
     });
 
     this.settings.onChanged.subscribe(newSettings => {
@@ -36,5 +37,9 @@ export class AppComponent {
 
   private getValueOrDefault<T>(map: ParamMap, key: string, defaultValue: T): T {
     return map.has(key) ? <T>(map.get(key) as any) : defaultValue;
+  }
+
+  public toggleSettings() {
+    this.settingsVisible = !this.settingsVisible;
   }
 }
