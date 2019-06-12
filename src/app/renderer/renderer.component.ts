@@ -15,7 +15,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
   previousT: number = 0;
   frameRateMultiplier = 10;
   buffer: number[];
-  resizeTimeout;
   bufferSize = [1234, 400];
 
   paletteR: number[];
@@ -35,7 +34,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
   @Input('size')
   public set size(value: number) {
-    value = Math.min(100, value);
+    value = Math.min(50, value);
     value = Math.max(10, value);
     if (this.size === value) {
       return;
