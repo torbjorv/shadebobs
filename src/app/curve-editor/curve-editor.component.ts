@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output } from '@angular/core';
 import * as d3 from 'd3';
 import { CardinalCurve } from './cardinal-curve';
 import { Point } from './point';
+import { EventEmitter } from 'protractor';
+import { Subject, Observable } from 'rxjs';
 
 
 class ControlPoint {
@@ -9,19 +11,6 @@ class ControlPoint {
   public active: boolean = false;
 
   constructor(public world: Point) { }
-
-  public move(to: Point, limits:[[number, number], [number, number]] = undefined): void {
-
-    // set the individual properties because the template is binding to the x/y, not the Point
-    // instance.
-    this.world.x = to.x;
-    this.world.y = to.y;
-
-    if (limits) {
-      this.world.x = Math.min(Math.max(this.world.x, limits[0][0]), limits[1][0]); 
-      this.world.y = Math.min(Math.max(this.world.y, limits[0][1]), limits[1][1]); 
-    }
-  }
 }
 
 @Component({
@@ -33,6 +22,13 @@ export class CurveEditorComponent implements OnChanges {
 
   @ViewChild('chart', { static: false })
   private chartContainer: ElementRef;
+
+  private _onChanged: Subject<[number, number][]> = new Subject();
+
+  @Output('controlPoints')
+  public get onChanged(): Observable<[number, number][]> {
+    return this._onChanged;
+  }
 
   world: [[number, number], [number, number]] = [[0, 0], [100, 255]];
   public svgSize: [number, number] = [10, 10];
@@ -63,9 +59,6 @@ export class CurveEditorComponent implements OnChanges {
   }
 
   ngAfterViewInit() {
-    console.log(this.chartContainer.nativeElement.clientWidth)
-    console.log(this.chartContainer.nativeElement.clientHeight)
-
     this.onResize();
     this.updateSvg();
   }
@@ -77,27 +70,7 @@ export class CurveEditorComponent implements OnChanges {
   public getCurve(numPoints: number):number[] {
 
     let r = CardinalCurve.getCurvePoints2(this.points.map(d => d.world), 0.5, numPoints);
-
     return r;
-
-    // let path = d3.select('path');
-
-    // let svgLine: any = path.node();
-    // let lineLength = svgLine.getTotalLength();
-    // let interval;
-    // if (numPoints === 1) {
-    //   interval = 0;
-    // } else {
-    //   interval = lineLength / (numPoints - 1);
-    // }
-    // let values: number[] = d3.range(numPoints).map((d) => {
-    //   let point = svgLine.getPointAtLength(d * interval);
-    //   console.log(point)
-    //   return Math.round(this.toWorld(new Point(point.x, point.y)).y);
-    // });
-
-    
-    // return values;
   }
 
   public get svgCurve(): string {
@@ -140,7 +113,22 @@ export class CurveEditorComponent implements OnChanges {
       .data(this.points)
       .call(d3.drag<SVGCircleElement, ControlPoint>()
         .on("start", (d) => d.active = true)
-        .on("drag", (d) => d.move(this.toWorld(new Point(d3.event.x, d3.event.y)), this.world))
+        .on("drag", (d) => this.move(d, this.toWorld(new Point(d3.event.x, d3.event.y)), this.world))
         .on("end", (d) => d.active = false));
+  }
+
+  private move(p: ControlPoint, to: Point, limits:[[number, number], [number, number]] = undefined): void {
+
+    // set the individual properties because the template is binding to the x/y, not the Point
+    // instance.
+    p.world.x = to.x;
+    p.world.y = to.y;
+
+    if (limits) {
+      p.world.x = Math.min(Math.max(p.world.x, limits[0][0]), limits[1][0]); 
+      p.world.y = Math.min(Math.max(p.world.y, limits[0][1]), limits[1][1]); 
+    }
+
+    this._onChanged.next(this.points.map(p => [p.world.x, p.world.y]));
   }
 }

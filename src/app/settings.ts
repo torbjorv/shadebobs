@@ -6,15 +6,16 @@ export class Settings {
     _speed: number;
     _size: number;
     _force: number;
-    _redBegin: number;
-    _redEnd: number;
-    _redCycle: number;
-    _greenBegin: number;
-    _greenEnd: number;
-    _greenCycle: number;
-    _blueBegin: number;
-    _blueEnd: number;
-    _blueCycle: number;
+    _palette: [number[], number[], number[]];
+    // _redBegin: number;
+    // _redEnd: number;
+    // _redCycle: number;
+    // _greenBegin: number;
+    // _greenEnd: number;
+    // _greenCycle: number;
+    // _blueBegin: number;
+    // _blueEnd: number;
+    // _blueCycle: number;
 
     _onChanged: Subject<Settings> = new Subject();
 
@@ -24,30 +25,32 @@ export class Settings {
         speed: number = 4, 
         size: number = 30, 
         force: number = 1,
-        redBegin: number = 0,
-        redEnd: number = 0,
-        redCycle: number = 200,
-        greenBegin: number = 0,
-        greenEnd: number = 0,
-        greenCycle: number = 200,
-        blueBegin: number = 0,
-        blueEnd: number = 0,
-        blueCycle: number = 200,
+        palette: [number[], number[], number[]] = [[0], [0], [0]]
+        // redBegin: number = 0,
+        // redEnd: number = 0,
+        // redCycle: number = 200,
+        // greenBegin: number = 0,
+        // greenEnd: number = 0,
+        // greenCycle: number = 200,
+        // blueBegin: number = 0,
+        // blueEnd: number = 0,
+        // blueCycle: number = 200,
         ) {
         this._tail = tail;
         this._count = count;
         this._speed = speed;
         this._size = size;
         this._force = force;
-        this._redBegin = redBegin;
-        this._redEnd = redEnd;
-        this._redCycle = redCycle;
-        this._greenBegin = greenBegin;
-        this._greenEnd = greenEnd;
-        this._greenCycle = greenCycle;
-        this._blueBegin = blueBegin;
-        this._blueEnd = blueEnd;
-        this._blueCycle = blueCycle;
+        this._palette = palette;
+        // this._redBegin = redBegin;
+        // this._redEnd = redEnd;
+        // this._redCycle = redCycle;
+        // this._greenBegin = greenBegin;
+        // this._greenEnd = greenEnd;
+        // this._greenCycle = greenCycle;
+        // this._blueBegin = blueBegin;
+        // this._blueEnd = blueEnd;
+        // this._blueCycle = blueCycle;
     }
 
     private shallowCopy() {
@@ -57,9 +60,10 @@ export class Settings {
             this._speed, 
             this._size, 
             this._force,
-            this._redBegin, this._redEnd, this._redCycle,
-            this._greenBegin, this._greenEnd, this._greenCycle,
-            this._blueBegin, this._blueEnd, this._blueCycle
+            this._palette
+            // this._redBegin, this._redEnd, this._redCycle,
+            // this._greenBegin, this._greenEnd, this._greenCycle,
+            // this._blueBegin, this._blueEnd, this._blueCycle
             );
     }
 
@@ -113,95 +117,104 @@ export class Settings {
     }
     public get force(): number { return this._force; }
 
-    public set redBegin(value: number) {
-
-        if (this.redBegin == value)
-            return;
-
-        this._redBegin = +value;
+    public set palette(value: [number[], number[], number[]]) {
+        this._palette = value;
         this.raiseOnChanged();
     }
-    public get redBegin(): number { return this._redBegin; }
 
-    public set redEnd(value: number) {
-
-        if (this.redEnd == value)
-            return;
-
-        this._redEnd = +value;
-        this.raiseOnChanged();
+    public get palette(): [number[], number[], number[]] {
+        return this._palette;
     }
-    public get redEnd(): number { return this._redEnd; }
 
-    public set redCycle(value: number) {
+    // public set redBegin(value: number) {
 
-        if (this.redCycle == value)
-            return;
+    //     if (this.redBegin == value)
+    //         return;
 
-        this._redCycle = +value;
-        this.raiseOnChanged();
-    }
-    public get redCycle(): number { return this._redCycle; }
+    //     this._redBegin = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get redBegin(): number { return this._redBegin; }
 
-    public set greenBegin(value: number) {
+    // public set redEnd(value: number) {
 
-        if (this.greenBegin == value)
-            return;
+    //     if (this.redEnd == value)
+    //         return;
 
-        this._greenBegin = +value;
-        this.raiseOnChanged();
-    }
-    public get greenBegin(): number { return this._greenBegin; }
+    //     this._redEnd = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get redEnd(): number { return this._redEnd; }
 
-    public set greenEnd(value: number) {
+    // public set redCycle(value: number) {
 
-        if (this.greenEnd == value)
-            return;
+    //     if (this.redCycle == value)
+    //         return;
 
-        this._greenEnd = +value;
-        this.raiseOnChanged();
-    }
-    public get greenEnd(): number { return this._greenEnd; }
+    //     this._redCycle = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get redCycle(): number { return this._redCycle; }
 
-    public set greenCycle(value: number) {
+    // public set greenBegin(value: number) {
 
-        if (this.greenCycle == value)
-            return;
+    //     if (this.greenBegin == value)
+    //         return;
 
-        this._greenCycle = +value;
-        this.raiseOnChanged();
-    }
-    public get greenCycle(): number { return this._greenCycle; }
+    //     this._greenBegin = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get greenBegin(): number { return this._greenBegin; }
 
-    public set blueBegin(value: number) {
+    // public set greenEnd(value: number) {
 
-        if (this.blueBegin == value)
-            return;
+    //     if (this.greenEnd == value)
+    //         return;
 
-        this._blueBegin = +value;
-        this.raiseOnChanged();
-    }
-    public get blueBegin(): number { return this._blueBegin; }
+    //     this._greenEnd = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get greenEnd(): number { return this._greenEnd; }
 
-    public set blueEnd(value: number) {
+    // public set greenCycle(value: number) {
 
-        if (this.blueEnd == value)
-            return;
+    //     if (this.greenCycle == value)
+    //         return;
 
-        this._blueEnd = +value;
-        this.raiseOnChanged();
-    }
-    public get blueEnd(): number { return this._blueEnd; }
+    //     this._greenCycle = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get greenCycle(): number { return this._greenCycle; }
 
-    public set blueCycle(value: number) {
+    // public set blueBegin(value: number) {
 
-        if (this.blueCycle == value)
-            return;
+    //     if (this.blueBegin == value)
+    //         return;
 
-        this._blueCycle = +value;
-        this.raiseOnChanged();
-    }
-    public get blueCycle(): number { return this._blueCycle; }
+    //     this._blueBegin = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get blueBegin(): number { return this._blueBegin; }
+
+    // public set blueEnd(value: number) {
+
+    //     if (this.blueEnd == value)
+    //         return;
+
+    //     this._blueEnd = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get blueEnd(): number { return this._blueEnd; }
+
+    // public set blueCycle(value: number) {
+
+    //     if (this.blueCycle == value)
+    //         return;
+
+    //     this._blueCycle = +value;
+    //     this.raiseOnChanged();
+    // }
+    // public get blueCycle(): number { return this._blueCycle; }
 
     private raiseOnChanged(): void {
         this._onChanged.next(this.shallowCopy());

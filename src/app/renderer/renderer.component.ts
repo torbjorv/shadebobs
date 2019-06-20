@@ -22,68 +22,13 @@ export class RendererComponent implements OnInit, AfterViewInit {
   paletteR: number[];
   paletteG: number[];
   paletteB: number[];
-  // _size = 30;
   bob: number[];
-  // _count: number = 1;
   public context: CanvasRenderingContext2D;
 
   private _settingsSubscription: Subscription;
 
-  // _force: number = 1;
-  
-
   private _tail: FifoQueue<[number, number]>;
-  // private _length: number = 10000;
   maxTailLength = 50000
-
-  // @Input('size')
-  // public set size(value: number) {
-  //   value = Math.min(50, value);
-  //   value = Math.max(10, value);
-  //   if (this.size === value) {
-  //     return;
-  //   }
-  //   this._size = value;
-  //   this.reset();
-  // }
-
-  // public get size(): number {
-  //   return this._size;
-  // }
-
-  // @Input('force')
-  // public set force(value: number) {
-  //   value = Math.min(10, value);
-  //   value = Math.max(1, value);
-  //   if (this.force === value) {
-  //     return;
-  //   }
-  //   this._force = value;
-  //   this.reset();
-  // }
-
-  // public get force(): number {
-  //   return this._force;
-  // }
-  
-  // @Input("speed")
-  // public speed: number = 1;
-
-  // @Input("tail")
-  // public set tail(value: number) {
-  //   value = Math.min(this.maxTailLength, value);
-
-  //   if (this.tail === value) {
-  //     return;
-  //   }
-
-  //   this._length = value;
-  //   this.reset();
-  // }
-
-  // public get tail(): number {
-  //   return this._length;
-  // }
 
   private _settings: Settings;
   @Input("settings") 
@@ -99,48 +44,28 @@ export class RendererComponent implements OnInit, AfterViewInit {
       this.checkRange('speed', value.speed, 0.1, 10);
       this.checkRange('size', value.size, 10, 50);
       this.checkRange('force', value.force, 1, 10);
-      this.checkRange('redBegin', value.redBegin, 0, 255);
-      this.checkRange('redEnd', value.redEnd, 0, 255);
-      this.checkRange('redCycle', value.redCycle, 50, 1000);
-      this.checkRange('greenBegin', value.greenBegin, 0, 255);
-      this.checkRange('greenEnd', value.greenEnd, 0, 255);
-      this.checkRange('greenCycle', value.greenCycle, 50, 1000);
-      this.checkRange('blueBegin', value.blueBegin, 0, 255);
-      this.checkRange('blueEnd', value.blueEnd, 0, 255);
-      this.checkRange('blueCycle', value.blueCycle, 50, 1000);
+      // this.checkRange('redBegin', value.redBegin, 0, 255);
+      // this.checkRange('redEnd', value.redEnd, 0, 255);
+      // this.checkRange('redCycle', value.redCycle, 50, 1000);
+      // this.checkRange('greenBegin', value.greenBegin, 0, 255);
+      // this.checkRange('greenEnd', value.greenEnd, 0, 255);
+      // this.checkRange('greenCycle', value.greenCycle, 50, 1000);
+      // this.checkRange('blueBegin', value.blueBegin, 0, 255);
+      // this.checkRange('blueEnd', value.blueEnd, 0, 255);
+      // this.checkRange('blueCycle', value.blueCycle, 50, 1000);
   
       this._settings = value;
       this.reset();  
     });
+    this._settings = value;
   }
 
   public get settings(): Settings {
     return this._settings;
   }
 
-  // @Input('count')
-  // public set count(value: number) {
-
-    
-  //   value = Math.min(10, value);
-  //   value = Math.max(1, value);
-  //   if (this.count === value) {
-  //     return;
-  //   }
-
-  //   this.reset();
-  //   this._count = value;
-  // }
-
-  // public get count(): number {
-  //   return this._count;
-  // }
-
-  
   constructor() { 
 
-    this.paletteG = this.buildPalette(210, [255, 0]);
-    this.paletteB = this.buildPalette(220, [255, 0]);
     this._tail = new FifoQueue(this.maxTailLength);
 
     this.buffer = new Array(this.bufferSize[0] * this.bufferSize[1]);
@@ -157,8 +82,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
     canvas.width = this.bufferSize[0];
     canvas.height = this.bufferSize[1];
 
-    
-
     this.reset();
     this.renderFrame(0);
   }
@@ -173,11 +96,13 @@ export class RendererComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log(this.settings)
+    this.paletteR = [...this.settings.palette[0], ...this.settings.palette[0].reverse()];
+    this.paletteG = [...this.settings.palette[1], ...this.settings.palette[1].reverse()];
+    this.paletteB = [...this.settings.palette[2], ...this.settings.palette[2].reverse()];
 
-    this.paletteR = this.buildPalette(this.settings.redCycle, [this.settings.redBegin, this.settings.redEnd]);
-    this.paletteG = this.buildPalette(this.settings.greenCycle, [this.settings.greenBegin, this.settings.greenEnd]);
-    this.paletteB = this.buildPalette(this.settings.blueCycle, [this.settings.blueBegin, this.settings.blueEnd]);
+    // this.paletteR = this.buildPalette(this.settings.redCycle, [this.settings.redBegin, this.settings.redEnd]);
+    // this.paletteG = this.buildPalette(this.settings.greenCycle, [this.settings.greenBegin, this.settings.greenEnd]);
+    // this.paletteB = this.buildPalette(this.settings.blueCycle, [this.settings.blueBegin, this.settings.blueEnd]);
 
     this._tail = new FifoQueue(this.settings.tail * this.settings.count);
     this.bob = RendererComponent.buildBob(this.settings.size, this.settings.force);
