@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit, AfterViewInit } from '@angular/core';
+import { Component, DoCheck, OnInit, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Settings } from './settings';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
-export class AppComponent {
+export class AppComponent implements OnChanges {
   title = 'shadebobs';
 
   settings: Settings = new Settings();
@@ -15,6 +15,34 @@ export class AppComponent {
 
   public constructor(private router: Router, private route: ActivatedRoute) {
 
+    this.settings.redPoints = 
+    [
+        [0, 0],
+      [30, 150],
+      [40, 255],
+      [60, 255],
+      [100, 255],
+    ];
+  
+    this.settings.greenPoints = 
+    [
+        [0, 0],
+      [30, 150],
+      [40, 255],
+      [60, 255],
+      [100, 255],
+    ];
+  
+    this.settings.bluePoints =
+    [
+        [0, 0],
+      [30, 150],
+      [40, 255],
+      [60, 255],
+      [100, 255],
+    ];
+  
+  
     this.route.queryParamMap.subscribe(params => {
 
       this.settings.tail = this.getValueOrDefault(params, 'tail', 40000);
@@ -56,6 +84,10 @@ export class AppComponent {
         // blueCycle: newSettings.blueCycle
       }});        
     });
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 
   private getValueOrDefault<T>(map: ParamMap, key: string, defaultValue: T): T {

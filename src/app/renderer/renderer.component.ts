@@ -50,7 +50,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
       this.checkRange('size', value.size, 10, 50);
       this.checkRange('force', value.force, 1, 10);
   
-      console.log(value.palette);
       this._settings = value;
       this.reset();  
     });

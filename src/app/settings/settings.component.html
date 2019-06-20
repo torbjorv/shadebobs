@@ -31,59 +31,10 @@
     <mat-slider class="item-value-slider" min="1" max="10" step="0.1" [(value)]="settings.force">
     </mat-slider>
   </div>
-<!-- 
-  <div class="color-label">Red</div>
-  <div class="item-container">
-    <div class="item-label">Begin</div>
-    <mat-slider class="item-value-slider" min="0" max="255" step="1" [(value)]="settings.redBegin">
-    </mat-slider>
-  </div>
-  <div class="item-container">
-    <div class="item-label">End</div>
-    <mat-slider class="item-value-slider" min="0" max="255" step="1" [(value)]="settings.redEnd">
-    </mat-slider>
-  </div>
-  <div class="item-container">
-    <div class="item-label">Cycle</div>
-    <mat-slider class="item-value-slider" min="10" max="1000" step="1" [(value)]="settings.redCycle">
-    </mat-slider>
-  </div>
-
-  <div class="color-label">Green</div>
-  <div class="item-container">
-    <div class="item-label">Begin</div>
-    <mat-slider class="item-value-slider" min="0" max="255" step="1" [(value)]="settings.greenBegin">
-    </mat-slider>
-  </div>
-  <div class="item-container">
-    <div class="item-label">End</div>
-    <mat-slider class="item-value-slider" min="0" max="255" step="1" [(value)]="settings.greenEnd">
-    </mat-slider>
-  </div>
-  <div class="item-container">
-    <div class="item-label">Cycle</div>
-    <mat-slider class="item-value-slider" min="10" max="1000" step="1" [(value)]="settings.greenCycle">
-    </mat-slider>
-  </div>
-
-  <div class="color-label">Blue</div>
-  <div class="item-container">
-    <div class="item-label">Begin</div>
-    <mat-slider class="item-value-slider" min="0" max="255" step="1" [(value)]="settings.blueBegin">
-    </mat-slider>
-  </div>
-  <div class="item-container">
-    <div class="item-label">End</div>
-    <mat-slider class="item-value-slider" min="0" max="255" step="1" [(value)]="settings.blueEnd">
-    </mat-slider>
-  </div>
-  <div class="item-container">
-    <div class="item-label">Cycle</div>
-    <mat-slider class="item-value-slider" min="10" max="1000" step="1" [(value)]="settings.blueCycle">
-    </mat-slider>
-  </div> -->
-
   <div>
-      <app-palette-editor (palette)="settings.palette = $event" ></app-palette-editor>
+      <app-palette-editor 
+      [(redPoints)]="settings.redPoints" 
+      [(greenPoints)]="settings.greenPoints" 
+      [(bluePoints)]="settings.bluePoints" ></app-palette-editor>
   </div>
 </div>

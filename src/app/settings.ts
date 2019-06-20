@@ -1,4 +1,5 @@
 import { Subject, Observable } from 'rxjs';
+import { CardinalCurve } from './curve-editor/cardinal-curve';
 
 export class Settings {
     _tail: number;
@@ -6,7 +7,6 @@ export class Settings {
     _speed: number;
     _size: number;
     _force: number;
-    _palette: [number[], number[], number[]];
 
     _onChanged: Subject<Settings> = new Subject();
 
@@ -16,14 +16,19 @@ export class Settings {
         speed: number = 4, 
         size: number = 30, 
         force: number = 1,
-        palette: [number[], number[], number[]] = [[0], [0], [0]]
+        redPoints: [number, number][] = [[0, 0]],
+        greenPoints: [number, number][] = [[0, 0]],
+        bluePoints: [number, number][] = [[0, 0]]
+        
         ) {
         this._tail = tail;
         this._count = count;
         this._speed = speed;
         this._size = size;
         this._force = force;
-        this._palette = [[...palette[0]], [...palette[1]], [...palette[2]]];
+        this.redPoints = redPoints;
+        this.greenPoints = greenPoints;
+        this.bluePoints = bluePoints;
     }
 
     private shallowCopy() {
@@ -33,7 +38,9 @@ export class Settings {
             this._speed, 
             this._size, 
             this._force,
-            this._palette
+            this.redPoints,
+            this.greenPoints,
+            this.bluePoints
             );
     }
 
@@ -87,19 +94,42 @@ export class Settings {
     }
     public get force(): number { return this._force; }
 
-    public set palette(value: [number[], number[], number[]]) {
-        this.paletteR = value[0];
-        this.paletteG = value[1];
-        this.paletteB = value[2];
-    }
+    public redPoints:[number, number][] = 
+    [
+        [0, 0],
+      [30, 150],
+      [40, 255],
+      [60, 255],
+      [100, 255],
+    ];
+  
+    public greenPoints:[number, number][] = 
+    [
+        [0, 0],
+      [30, 150],
+      [40, 255],
+      [60, 255],
+      [100, 255],
+    ];
 
-    public get palette(): [number[], number[], number[]] {
-        return this._palette;
-    }
+    public bluePoints:[number, number][] = 
+    [
+        [0, 0],
+      [30, 150],
+      [40, 255],
+      [60, 255],
+      [100, 255],
+    ];
 
-    public paletteR: number[] = [0];
-    public paletteG: number[] = [0];
-    public paletteB: number[] = [0];
+    public get paletteR(): number[] {
+        return CardinalCurve.getCurvePoints2(this.redPoints, 0.5, 100);
+    }
+    public get paletteG(): number[] {
+        return CardinalCurve.getCurvePoints2(this.greenPoints, 0.5, 100);
+    }
+    public get paletteB(): number[] {
+        return CardinalCurve.getCurvePoints2(this.bluePoints, 0.5, 100);
+    }
 
     private raiseOnChanged(): void {
         this._onChanged.next(this.shallowCopy());

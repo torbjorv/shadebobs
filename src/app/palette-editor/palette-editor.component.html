@@ -1,10 +1,11 @@
 <div class="channel">
+  <div class="channel-curve channel-background"></div>
   <svg width="100%" height="100%" class="channel-curve">
 
     <defs>
-      <linearGradient *ngIf="redCurve" id="redGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop *ngFor="let v of redCurve.getCurve(100); let i = index" [attr.offset]="i + '%'"
-          [style.stop-color]="'rgb(' + v + ', 0, 0)'" [style.stop-opacity]="1" />
+      <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop *ngFor="let v of getCurveR(); let i = index" [attr.offset]="i + '%'"
+          [style.stop-color]="'rgb(255, 0, 0)'" [style.stop-opacity]="v/255" />
       </linearGradient>
     </defs>
 
@@ -12,17 +13,18 @@
   </svg>
 
   <div class="channel-curve">
-    <app-curve-editor #red (controlPoints)="raisePaletteChanged()"></app-curve-editor>
+    <app-curve-editor #red [(points)]="redPoints"></app-curve-editor>
   </div>
 </div>
 
 <div class="channel">
+  <div class="channel-curve channel-background"></div>
   <svg width="100%" height="100%"  class="channel-curve">
 
     <defs>
-      <linearGradient *ngIf="greenCurve" id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop *ngFor="let v of greenCurve.getCurve(100); let i = index" [attr.offset]="i + '%'"
-          [style.stop-color]="'rgb(0, ' + v + ', 0)'" [style.stop-opacity]="1" />
+      <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop *ngFor="let v of getCurveG(); let i = index" [attr.offset]="i + '%'"
+          [style.stop-color]="'rgb(0, 255, 0)'" [style.stop-opacity]="v/255" />
       </linearGradient>
     </defs>
 
@@ -30,17 +32,18 @@
   </svg>
 
   <div class="channel-curve">
-    <app-curve-editor #green (controlPoints)="raisePaletteChanged()"></app-curve-editor>
+    <app-curve-editor #green [(points)]="greenPoints"></app-curve-editor>
   </div>
 </div>
 
 <div class="channel">
+    <div class="channel-curve channel-background"></div>
     <svg width="100%" height="100%"  class="channel-curve">
   
       <defs>
-        <linearGradient *ngIf="blueCurve" id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop *ngFor="let v of blueCurve.getCurve(100); let i = index" [attr.offset]="i + '%'"
-            [style.stop-color]="'rgb(0, 0, ' + v + ')'" [style.stop-opacity]="1" />
+        <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop *ngFor="let v of getCurveB(); let i = index" [attr.offset]="i + '%'"
+            [style.stop-color]="'rgb(0, 0, 255)'" [style.stop-opacity]="v/255" />
         </linearGradient>
       </defs>
   
@@ -48,7 +51,7 @@
     </svg>
   
     <div class="channel-curve">
-      <app-curve-editor #blue (controlPoints)="raisePaletteChanged()"></app-curve-editor>
+      <app-curve-editor #blue [(points)]="bluePoints"></app-curve-editor>
     </div>
   </div>
   
@@ -58,8 +61,8 @@
   <svg width="100%" height="100%"  class="channels-mixed">
 
     <defs>
-      <linearGradient *ngIf="redCurve && greenCurve && blueCurve" id="mixedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop *ngFor="let v of mixed(100); let i = index" [attr.offset]="i + '%'"
+      <linearGradient id="mixedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop *ngFor="let v of mixed(); let i = index" [attr.offset]="i + '%'"
           [style.stop-color]="'rgb(' + v[0] + ', ' + v[1] + ', ' + v[2] + ')'" [style.stop-opacity]="1" />
       </linearGradient>
     </defs>
