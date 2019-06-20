@@ -111,20 +111,20 @@ export class CurveEditorComponent implements OnChanges {
       .data(this.points)
       .call(d3.drag<SVGCircleElement, ControlPoint>()
         .on("start", (d, i) => this.active[i] = true)
-        .on("drag", (d, i) => this.move(d, this.toWorld(new Point(d3.event.x, d3.event.y)), this.world))
+        .on("drag", (d, i) => this.move(d.world, this.toWorld(new Point(d3.event.x, d3.event.y)), this.world))
         .on("end", (d, i) => this.active[i] = false));
   }
 
-  private move(p: ControlPoint, to: Point, limits:[[number, number], [number, number]] = undefined): void {
+  private move(p: Point, to: Point, limits:[[number, number], [number, number]] = undefined): void {
 
     // set the individual properties because the template is binding to the x/y, not the Point
     // instance.
-    p.world.x = to.x;
-    p.world.y = to.y;
+    p.x = to.x;
+    p.y = to.y;
 
     if (limits) {
-      p.world.x = Math.min(Math.max(p.world.x, limits[0][0]), limits[1][0]); 
-      p.world.y = Math.min(Math.max(p.world.y, limits[0][1]), limits[1][1]); 
+      p.x = Math.min(Math.max(p.x, limits[0][0]), limits[1][0]); 
+      p.y = Math.min(Math.max(p.y, limits[0][1]), limits[1][1]); 
     }
 
     this._onChanged.next(this.points.map(p => [p.world.x, p.world.y]));
