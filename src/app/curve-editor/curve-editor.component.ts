@@ -7,9 +7,6 @@ import { Subject, Observable } from 'rxjs';
 
 
 class ControlPoint {
-
-  public active: boolean = false;
-
   constructor(public world: Point) { }
 }
 
@@ -33,6 +30,7 @@ export class CurveEditorComponent implements OnChanges {
   world: [[number, number], [number, number]] = [[0, 0], [100, 255]];
   public svgSize: [number, number] = [10, 10];
 
+  active: boolean[] = [false, false, false, false, false];
   points = [
     new ControlPoint(new Point(0, 0)),
     new ControlPoint(new Point(30, 150)),
@@ -112,9 +110,9 @@ export class CurveEditorComponent implements OnChanges {
       .selectAll('circle')
       .data(this.points)
       .call(d3.drag<SVGCircleElement, ControlPoint>()
-        .on("start", (d) => d.active = true)
-        .on("drag", (d) => this.move(d, this.toWorld(new Point(d3.event.x, d3.event.y)), this.world))
-        .on("end", (d) => d.active = false));
+        .on("start", (d, i) => this.active[i] = true)
+        .on("drag", (d, i) => this.move(d, this.toWorld(new Point(d3.event.x, d3.event.y)), this.world))
+        .on("end", (d, i) => this.active[i] = false));
   }
 
   private move(p: ControlPoint, to: Point, limits:[[number, number], [number, number]] = undefined): void {
