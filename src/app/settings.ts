@@ -23,7 +23,7 @@ export class Settings {
         this._speed = speed;
         this._size = size;
         this._force = force;
-        this._palette = palette;
+        this._palette = [[...palette[0]], [...palette[1]], [...palette[2]]];
     }
 
     private shallowCopy() {

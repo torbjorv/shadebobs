@@ -23,7 +23,7 @@ export class AppComponent {
       this.settings.size = this.getValueOrDefault(params, 'size', 27);
       this.settings.force = this.getValueOrDefault(params, 'force', 4);
 
-      this.settings.palette = [[0], [0], [0]];
+      // this.settings.palette = [[0], [0], [0]];
 
       // this.settings.redBegin = this.getValueOrDefault(params, 'redBegin', 255);
       // this.settings.redEnd = this.getValueOrDefault(params, 'redEnd', 0);

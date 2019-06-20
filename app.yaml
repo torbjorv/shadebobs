@@ -1,4 +1,4 @@
-service: curveeditor
+service: shadebobs
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -18,13 +18,3 @@ handlers:
 - url: /(.*)
   static_files: dist/index.html
   upload: dist/index.html
-
-# Any other requests are routed to index.html for angular to handle so we don't need hash URLs
-# - url: /.*
-#   secure: always
-#   redirect_http_response_code: 301
-#   static_files: dist/index.html
-#   upload: dist/index\.html
-#   http_headers:
-#     Strict-Transport-Security: max-age=31536000; includeSubDomains
-#     X-Frame-Options: DENY

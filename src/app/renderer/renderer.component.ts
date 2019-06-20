@@ -45,6 +45,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
       this.checkRange('size', value.size, 10, 50);
       this.checkRange('force', value.force, 1, 10);
   
+      console.log(value.palette);
       this._settings = value;
       this.reset();  
     });
@@ -87,9 +88,13 @@ export class RendererComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.paletteR = [...this.settings.palette[0], ...this.settings.palette[0].reverse()];
-    this.paletteG = [...this.settings.palette[1], ...this.settings.palette[1].reverse()];
-    this.paletteB = [...this.settings.palette[2], ...this.settings.palette[2].reverse()];
+    this.paletteR = [...this.settings.palette[0]];
+    this.paletteR = this.paletteR.concat([...this.settings.palette[0]].reverse());
+    this.paletteG = [...this.settings.palette[1]];
+    this.paletteG = this.paletteG.concat([...this.settings.palette[1]].reverse());
+    this.paletteB = [...this.settings.palette[2]];
+    this.paletteB = this.paletteB.concat([...this.settings.palette[2]].reverse());
+
 
     this._tail = new FifoQueue(this.settings.tail * this.settings.count);
     this.bob = RendererComponent.buildBob(this.settings.size, this.settings.force);
