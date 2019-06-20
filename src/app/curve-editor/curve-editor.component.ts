@@ -6,10 +6,6 @@ import { EventEmitter } from 'protractor';
 import { Subject, Observable } from 'rxjs';
 
 
-class ControlPoint {
-  constructor(public world: Point) { }
-}
-
 @Component({
   selector: 'app-curve-editor',
   templateUrl: './curve-editor.component.html',
@@ -31,14 +27,14 @@ export class CurveEditorComponent implements OnChanges {
   public svgSize: [number, number] = [10, 10];
 
   active: boolean[] = [false, false, false, false, false];
-  points = [
-    new ControlPoint(new Point(0, 0)),
-    new ControlPoint(new Point(30, 150)),
-    new ControlPoint(new Point(40, 255)),
-    new ControlPoint(new Point(60, 255)),
-    new ControlPoint(new Point(100, 255)),
-  ]
 
+  points = [
+    new Point(0, 0),
+    new Point(30, 150),
+    new Point(40, 255),
+    new Point(60, 255),
+    new Point(100, 255),
+  ]
   constructor() { }
 
   onResize() {
@@ -67,7 +63,7 @@ export class CurveEditorComponent implements OnChanges {
 
   public getCurve(numPoints: number):number[] {
 
-    let r = CardinalCurve.getCurvePoints2(this.points.map(d => d.world), 0.5, numPoints);
+    let r = CardinalCurve.getCurvePoints2(this.points, 0.5, numPoints);
     return r;
   }
 
@@ -77,8 +73,8 @@ export class CurveEditorComponent implements OnChanges {
       .curve(d3.curveMonotoneX);
 
     let p = this.points
-      .sort((p0, p1) => p0.world.x - p1.world.x)
-      .map(p => this.toSvg(p.world))
+      .sort((p0, p1) => p0.x - p1.x)
+      .map(p => this.toSvg(p))
       .map(p => [p.x, p.y]);
 
     return lineGenerator(p);
@@ -106,27 +102,30 @@ export class CurveEditorComponent implements OnChanges {
   }
 
   private updateSvg(): void {
+
+    // This is just a hack so we can use D3's drag-features
     d3.select(this.chartContainer.nativeElement).select('svg')
       .selectAll('circle')
-      .data(this.points)
-      .call(d3.drag<SVGCircleElement, ControlPoint>()
-        .on("start", (d, i) => this.active[i] = true)
-        .on("drag", (d, i) => this.move(d.world, this.toWorld(new Point(d3.event.x, d3.event.y)), this.world))
+      .data(d3.range(this.points.length))
+      .call(d3.drag<SVGCircleElement, number>()
+        .on("drag", (d, i) => { console.log(d3.event.x); 
+          this.move(i, this.toWorld(new Point(d3.event.x, d3.event.y)), this.world);
+         })
         .on("end", (d, i) => this.active[i] = false));
   }
 
-  private move(p: Point, to: Point, limits:[[number, number], [number, number]] = undefined): void {
+  private move(i: number, to: Point, limits:[[number, number], [number, number]] = undefined): void {
 
     // set the individual properties because the template is binding to the x/y, not the Point
     // instance.
-    p.x = to.x;
-    p.y = to.y;
+    this.points[i].x = to.x;
+    this.points[i].y = to.y;
 
     if (limits) {
-      p.x = Math.min(Math.max(p.x, limits[0][0]), limits[1][0]); 
-      p.y = Math.min(Math.max(p.y, limits[0][1]), limits[1][1]); 
+      this.points[i].x = Math.min(Math.max(this.points[i].x, limits[0][0]), limits[1][0]); 
+      this.points[i].y = Math.min(Math.max(this.points[i].y, limits[0][1]), limits[1][1]); 
     }
 
-    this._onChanged.next(this.points.map(p => [p.world.x, p.world.y]));
+    this._onChanged.next(this.points.map(p => p.toArray()));
   }
 }

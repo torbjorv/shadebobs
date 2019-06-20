@@ -2,9 +2,9 @@
   <svg [attr.width]="svgSize[0]" [attr.height]="svgSize[1]" [attr.viewBox]="svgViewBox" style="background-color: rgba(255, 0, 0, 0)">
 
       <svg:path [attr.d]="svgCurve" stroke-width="1px" stroke="white" fill-opacity="0"/>
-      <svg:circle *ngFor="let p of points; let i = index" 
-        [attr.cx]="toSvg(p.world).x" 
-        [attr.cy]="toSvg(p.world).y" 
+      <svg:circle *ngFor="let p of points2; let i = index" 
+        [attr.cx]="toSvg(p).x" 
+        [attr.cy]="toSvg(p).y" 
         [attr.r]="active[i] ? 9 : 7"
         stroke="white"
         fill="black"/>
