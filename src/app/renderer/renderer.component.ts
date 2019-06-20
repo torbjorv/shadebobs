@@ -44,15 +44,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
       this.checkRange('speed', value.speed, 0.1, 10);
       this.checkRange('size', value.size, 10, 50);
       this.checkRange('force', value.force, 1, 10);
-      // this.checkRange('redBegin', value.redBegin, 0, 255);
-      // this.checkRange('redEnd', value.redEnd, 0, 255);
-      // this.checkRange('redCycle', value.redCycle, 50, 1000);
-      // this.checkRange('greenBegin', value.greenBegin, 0, 255);
-      // this.checkRange('greenEnd', value.greenEnd, 0, 255);
-      // this.checkRange('greenCycle', value.greenCycle, 50, 1000);
-      // this.checkRange('blueBegin', value.blueBegin, 0, 255);
-      // this.checkRange('blueEnd', value.blueEnd, 0, 255);
-      // this.checkRange('blueCycle', value.blueCycle, 50, 1000);
   
       this._settings = value;
       this.reset();  
@@ -100,10 +91,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this.paletteG = [...this.settings.palette[1], ...this.settings.palette[1].reverse()];
     this.paletteB = [...this.settings.palette[2], ...this.settings.palette[2].reverse()];
 
-    // this.paletteR = this.buildPalette(this.settings.redCycle, [this.settings.redBegin, this.settings.redEnd]);
-    // this.paletteG = this.buildPalette(this.settings.greenCycle, [this.settings.greenBegin, this.settings.greenEnd]);
-    // this.paletteB = this.buildPalette(this.settings.blueCycle, [this.settings.blueBegin, this.settings.blueEnd]);
-
     this._tail = new FifoQueue(this.settings.tail * this.settings.count);
     this.bob = RendererComponent.buildBob(this.settings.size, this.settings.force);
 
@@ -139,28 +126,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
     }
 
     return bob;
-  }
-
-  private buildPalette(count: number, range: [number, number]): number[] {
-
-    let palette: number[] = new Array(count);
-    let k = (range[1] - range[0]) / (count/2);
-
-    for (let i = 0; i < count; i++) {
-      if (i < count/2) {
-        palette[i] = range[0] + k * i;
-      } else {
-        palette[i] = range[1] - k * (i - count/2);
-      }
-    }
-
-    // for (let i = 0; i < count; i++) {
-    //   let k = Math.PI * 2 * i / count + Math.PI;
-    //   let t = Math.cos(k) * 0.5 + 0.5;
-    //   palette[i] = range[0] + (range[1] - range[0]) * t;
-    // }
-
-    return palette;
   }
 
   private drawBob(x: number, y: number, size: number, bob: number[]): void {
