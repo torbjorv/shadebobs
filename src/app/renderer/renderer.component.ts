@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, Input } from '@angular/core';
 import { FifoQueue } from '../fifoqueue';
+import { Settings } from '../settings';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-renderer',
@@ -20,89 +22,123 @@ export class RendererComponent implements OnInit, AfterViewInit {
   paletteR: number[];
   paletteG: number[];
   paletteB: number[];
-  _size = 30;
+  // _size = 30;
   bob: number[];
-  _count: number = 1;
+  // _count: number = 1;
   public context: CanvasRenderingContext2D;
 
-  _force: number = 1;
+  private _settingsSubscription: Subscription;
+
+  // _force: number = 1;
   
 
   private _tail: FifoQueue<[number, number]>;
-  private _length: number = 10000;
+  // private _length: number = 10000;
   maxTailLength = 50000
 
-  @Input('size')
-  public set size(value: number) {
-    value = Math.min(50, value);
-    value = Math.max(10, value);
-    if (this.size === value) {
-      return;
-    }
-    this._size = value;
-    this.reset();
-  }
+  // @Input('size')
+  // public set size(value: number) {
+  //   value = Math.min(50, value);
+  //   value = Math.max(10, value);
+  //   if (this.size === value) {
+  //     return;
+  //   }
+  //   this._size = value;
+  //   this.reset();
+  // }
 
-  public get size(): number {
-    return this._size;
-  }
+  // public get size(): number {
+  //   return this._size;
+  // }
 
-  @Input('force')
-  public set force(value: number) {
-    value = Math.min(10, value);
-    value = Math.max(1, value);
-    if (this.force === value) {
-      return;
-    }
-    this._force = value;
-    this.reset();
-  }
+  // @Input('force')
+  // public set force(value: number) {
+  //   value = Math.min(10, value);
+  //   value = Math.max(1, value);
+  //   if (this.force === value) {
+  //     return;
+  //   }
+  //   this._force = value;
+  //   this.reset();
+  // }
 
-  public get force(): number {
-    return this._force;
-  }
+  // public get force(): number {
+  //   return this._force;
+  // }
   
-  @Input("speed")
-  public speed: number = 1;
+  // @Input("speed")
+  // public speed: number = 1;
 
-  @Input("tail")
-  public set tail(value: number) {
-    value = Math.min(this.maxTailLength, value);
+  // @Input("tail")
+  // public set tail(value: number) {
+  //   value = Math.min(this.maxTailLength, value);
 
-    if (this.tail === value) {
-      return;
-    }
+  //   if (this.tail === value) {
+  //     return;
+  //   }
 
-    this._length = value;
-    this.reset();
+  //   this._length = value;
+  //   this.reset();
+  // }
+
+  // public get tail(): number {
+  //   return this._length;
+  // }
+
+  private _settings: Settings;
+  @Input("settings") 
+  public set settings(value: Settings) {
+
+    if (this._settingsSubscription) {
+      this._settingsSubscription.unsubscribe();
+    } 
+
+    this._settingsSubscription = value.onChanged.subscribe(() => {
+      this.checkRange('tail', value.tail, 100, 50000);
+      this.checkRange('count', value.count, 1, 10);
+      this.checkRange('speed', value.speed, 0.1, 10);
+      this.checkRange('size', value.size, 10, 50);
+      this.checkRange('force', value.force, 1, 10);
+      this.checkRange('redBegin', value.redBegin, 0, 255);
+      this.checkRange('redEnd', value.redEnd, 0, 255);
+      this.checkRange('redCycle', value.redCycle, 50, 1000);
+      this.checkRange('greenBegin', value.greenBegin, 0, 255);
+      this.checkRange('greenEnd', value.greenEnd, 0, 255);
+      this.checkRange('greenCycle', value.greenCycle, 50, 1000);
+      this.checkRange('blueBegin', value.blueBegin, 0, 255);
+      this.checkRange('blueEnd', value.blueEnd, 0, 255);
+      this.checkRange('blueCycle', value.blueCycle, 50, 1000);
+  
+      this._settings = value;
+      this.reset();  
+    });
   }
 
-  public get tail(): number {
-    return this._length;
+  public get settings(): Settings {
+    return this._settings;
   }
 
+  // @Input('count')
+  // public set count(value: number) {
 
-  @Input('count')
-  public set count(value: number) {
+    
+  //   value = Math.min(10, value);
+  //   value = Math.max(1, value);
+  //   if (this.count === value) {
+  //     return;
+  //   }
 
-    value = Math.min(10, value);
-    value = Math.max(1, value);
-    if (this.count === value) {
-      return;
-    }
+  //   this.reset();
+  //   this._count = value;
+  // }
 
-    this.reset();
-    this._count = value;
-  }
-
-  public get count(): number {
-    return this._count;
-  }
+  // public get count(): number {
+  //   return this._count;
+  // }
 
   
   constructor() { 
 
-    this.paletteR = this.buildPalette(200, [255, 0]);
     this.paletteG = this.buildPalette(210, [255, 0]);
     this.paletteB = this.buildPalette(220, [255, 0]);
     this._tail = new FifoQueue(this.maxTailLength);
@@ -121,6 +157,8 @@ export class RendererComponent implements OnInit, AfterViewInit {
     canvas.width = this.bufferSize[0];
     canvas.height = this.bufferSize[1];
 
+    
+
     this.reset();
     this.renderFrame(0);
   }
@@ -131,8 +169,18 @@ export class RendererComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this._tail = new FifoQueue(this.tail * this.count);
-    this.bob = RendererComponent.buildBob(this.size, this.force);
+    if (!this.settings) {
+      return;
+    }
+
+    console.log(this.settings)
+
+    this.paletteR = this.buildPalette(this.settings.redCycle, [this.settings.redBegin, this.settings.redEnd]);
+    this.paletteG = this.buildPalette(this.settings.greenCycle, [this.settings.greenBegin, this.settings.greenEnd]);
+    this.paletteB = this.buildPalette(this.settings.blueCycle, [this.settings.blueBegin, this.settings.blueEnd]);
+
+    this._tail = new FifoQueue(this.settings.tail * this.settings.count);
+    this.bob = RendererComponent.buildBob(this.settings.size, this.settings.force);
 
     this.buffer.fill(0);
 
@@ -171,12 +219,21 @@ export class RendererComponent implements OnInit, AfterViewInit {
   private buildPalette(count: number, range: [number, number]): number[] {
 
     let palette: number[] = new Array(count);
+    let k = (range[1] - range[0]) / (count/2);
 
     for (let i = 0; i < count; i++) {
-      let k = Math.PI * 2 * i / count + Math.PI;
-      let t = Math.cos(k) * 0.5 + 0.5;
-      palette[i] = range[0] + (range[1] - range[0]) * t;
+      if (i < count/2) {
+        palette[i] = range[0] + k * i;
+      } else {
+        palette[i] = range[1] - k * (i - count/2);
+      }
     }
+
+    // for (let i = 0; i < count; i++) {
+    //   let k = Math.PI * 2 * i / count + Math.PI;
+    //   let t = Math.cos(k) * 0.5 + 0.5;
+    //   palette[i] = range[0] + (range[1] - range[0]) * t;
+    // }
 
     return palette;
   }
@@ -209,48 +266,55 @@ export class RendererComponent implements OnInit, AfterViewInit {
 
   private renderFrame(t: number): void {
 
-    t *= this.speed;
-    let multiplier = Math.round(this.frameRateMultiplier*this.speed);
+    if (this.settings) {
 
-    let elapsed = t - this.previousT;
-    if (t !== this.previousT) {
+      t *= this.settings.speed;
+      let multiplier = Math.round(this.frameRateMultiplier*this.settings.speed);
 
-      for (let j = 0; j < this.count; j++) {
-        for (let i = 0; i < multiplier; i++) {
-          let k = this.previousT + elapsed * (i/multiplier) + j*1000;
+      let elapsed = t - this.previousT;
+      if (t !== this.previousT) {
 
-          let x: number = Math.round(k/2) % this.bufferSize[0];
-          if (j % 2 == 1) {
-            x = this.bufferSize[0] - x;
+        for (let j = 0; j < this.settings.count; j++) {
+          for (let i = 0; i < multiplier; i++) {
+            let k = this.previousT + elapsed * (i/multiplier) + j*1000;
+
+            let x: number = Math.round(k/2) % this.bufferSize[0];
+            if (j % 2 == 1) {
+              x = this.bufferSize[0] - x;
+            }
+            let y: number = Math.round(this.bufferSize[1] * Math.cos(k/300 + (j/this.settings.count)*2*Math.PI) * 0.45 + this.bufferSize[1]/2);
+        
+            this.drawBob(x, y, this.settings.size, this.bob);
+    
+            if (this._tail.length == this._tail.capacity) {
+              let bob:[number, number] = this._tail.pop();
+              this.eraseBob(bob[0], bob[1], this.settings.size, this.bob);
+            }
+            this._tail.push([x, y]);  
           }
-          let y: number = Math.round(this.bufferSize[1] * Math.cos(k/300 + (j/this.count)*2*Math.PI) * 0.45 + this.bufferSize[1]/2);
-      
-          this.drawBob(x, y, this.size, this.bob);
-  
-          if (this._tail.length == this._tail.capacity) {
-            let bob:[number, number] = this._tail.pop();
-            this.eraseBob(bob[0], bob[1], this.size, this.bob);
-          }
-          this._tail.push([x, y]);  
+        }
+
+        for (let i = 0; i < this.buffer.length; i++) {
+          let k = Math.round(this.buffer[i]);
+          this.image.data[i * 4 + 0] = this.paletteR[ k % this.paletteR.length];
+          this.image.data[i * 4 + 1] = this.paletteG[ k % this.paletteG.length];
+          this.image.data[i * 4 + 2] = this.paletteB[ k % this.paletteB.length];
+          this.image.data[i * 4 + 3] = 255;
         }
       }
 
-      for (let i = 0; i < this.buffer.length; i++) {
-        let k = Math.round(this.buffer[i]);
-        this.image.data[i * 4 + 0] = this.paletteR[ k % this.paletteR.length];
-        this.image.data[i * 4 + 1] = this.paletteG[ k % this.paletteG.length];
-        this.image.data[i * 4 + 2] = this.paletteB[ k % this.paletteB.length];
-        this.image.data[i * 4 + 3] = 255;
-      }
+      this.previousT = t;
+      this.context.putImageData(this.image, 0, 0);
     }
-
-
-    this.previousT = t;
-
-    this.context.putImageData(this.image, 0, 0);
 
     if (this.running) {
       requestAnimationFrame((t) => this.renderFrame(t))
+    }
+  }
+
+  private checkRange(name: string, value: number, min: number, max: number) {
+    if (value < min || value > max) {
+      throw new Error(`${ name } should be in range [${ min }, ${ max }] but is ${ value }`);
     }
   }
 

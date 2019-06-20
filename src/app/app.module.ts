@@ -7,12 +7,16 @@ import { RendererComponent } from './renderer/renderer.component';
 import { SettingsComponent } from './settings/settings.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { AppRoutingModule } from './app-routing.module';
+import { CurveEditorComponent } from './curve-editor/curve-editor.component';
+import { PaletteEditorComponent } from './palette-editor/palette-editor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RendererComponent,
-    SettingsComponent
+    SettingsComponent,
+    CurveEditorComponent,
+    PaletteEditorComponent
   ],
   imports: [
     BrowserModule,

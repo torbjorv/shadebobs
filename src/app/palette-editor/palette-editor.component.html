@@ -1,0 +1,39 @@
+<div style="width: 500px; height: 100px; padding: 10px">
+  <svg width="100%" height="100%">
+
+    <defs>
+      <linearGradient *ngIf="blueCurve" id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop *ngFor="let v of blueCurve.getCurve(100); let i = index" [attr.offset]="i + '%'"
+          [style.stop-color]="'rgb(0, 0, ' + v + ')'" [style.stop-opacity]="1" />
+      </linearGradient>
+    </defs>
+
+    <svg:rect width="100%" height="100%" fill="url(#blueGradient)" />
+
+    <!-- <svg:rect width="100%" height="100%" fill="red" /> -->
+  </svg>
+
+</div>
+<div style="position: relative; top: -120px; width: 500px; height: 100px; background-color: rgba(0, 0, 0, 0); padding: 10px">
+  <app-curve-editor #blue></app-curve-editor>
+</div>
+
+<div style="width: 500px; height: 100px; padding: 10px">
+    <svg width="100%" height="100%">
+  
+      <defs>
+        <linearGradient *ngIf="redCurve" id="redGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop *ngFor="let v of redCurve.getCurve(100); let i = index" [attr.offset]="i + '%'"
+            [style.stop-color]="'rgb(0, 0, ' + v + ')'" [style.stop-opacity]="1" />
+        </linearGradient>
+      </defs>
+  
+      <svg:rect width="100%" height="100%" fill="url(#redGradient)" />
+  
+      <!-- <svg:rect width="100%" height="100%" fill="red" /> -->
+    </svg>
+  
+  </div>
+  <div style="position: relative; top: -120px; width: 500px; height: 100px; background-color: rgba(0, 0, 0, 0); padding: 10px">
+    <app-curve-editor #red></app-curve-editor>
+  </div>

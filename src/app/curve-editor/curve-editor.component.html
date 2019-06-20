@@ -1,0 +1,21 @@
+<div #chart id="chart" class="svg-container" (window:resize)="onResize()"  style="background-color: rgba(0, 255, 0, 0)">
+  <svg [attr.width]="svgSize[0]" [attr.height]="svgSize[1]" [attr.viewBox]="svgViewBox" style="background-color: rgba(255, 0, 0, 0)">
+
+      <defs>
+          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop *ngFor="let v of getCurve(100); let i = index" 
+              [attr.offset]="i + '%'" 
+              [style.stop-color]="'rgb(0, 0, ' + v + ')'" [style.stop-opacity]="1"/>
+          </linearGradient>
+        </defs>
+  
+      <!-- <svg:rect width="100%" height="100%" fill="url(#grad1)"/> -->
+      <svg:path [attr.d]="svgCurve" stroke-width="1px" stroke="white" fill-opacity="0"/>
+      <svg:circle *ngFor="let p of points" 
+        [attr.cx]="toSvg(p.world).x" 
+        [attr.cy]="toSvg(p.world).y" 
+        [attr.r]="p.active ? 9 : 7"
+        stroke="white"
+        fill="black"/>
+  </svg>
+</div>
