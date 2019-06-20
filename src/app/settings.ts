@@ -88,13 +88,18 @@ export class Settings {
     public get force(): number { return this._force; }
 
     public set palette(value: [number[], number[], number[]]) {
-        this._palette = value;
-        this.raiseOnChanged();
+        this.paletteR = value[0];
+        this.paletteG = value[1];
+        this.paletteB = value[2];
     }
 
     public get palette(): [number[], number[], number[]] {
         return this._palette;
     }
+
+    public paletteR: number[] = [0];
+    public paletteG: number[] = [0];
+    public paletteB: number[] = [0];
 
     private raiseOnChanged(): void {
         this._onChanged.next(this.shallowCopy());

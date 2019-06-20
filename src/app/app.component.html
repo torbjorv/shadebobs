@@ -1,4 +1,7 @@
-<app-renderer [settings]="settings"></app-renderer>
+<app-renderer [settings]="settings" 
+[paletteR]="settings.paletteR"
+[paletteG]="settings.paletteG"
+[paletteB]="settings.paletteB"></app-renderer>
 <div *ngIf="settingsVisible" class="settings">
   <app-settings [settings]="settings"></app-settings>
 </div>

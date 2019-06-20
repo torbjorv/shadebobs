@@ -19,9 +19,14 @@ export class RendererComponent implements OnInit, AfterViewInit {
   buffer: number[];
   bufferSize = [1234, 400];
 
-  paletteR: number[];
-  paletteG: number[];
-  paletteB: number[];
+  @Input('paletteR')
+  paletteR: number[] = [0];
+
+  @Input('paletteG')
+  paletteG: number[] = [0];
+
+  @Input('paletteB')
+  paletteB: number[] = [0];
   bob: number[];
   public context: CanvasRenderingContext2D;
 
@@ -87,14 +92,6 @@ export class RendererComponent implements OnInit, AfterViewInit {
     if (!this.settings) {
       return;
     }
-
-    this.paletteR = [...this.settings.palette[0]];
-    this.paletteR = this.paletteR.concat([...this.settings.palette[0]].reverse());
-    this.paletteG = [...this.settings.palette[1]];
-    this.paletteG = this.paletteG.concat([...this.settings.palette[1]].reverse());
-    this.paletteB = [...this.settings.palette[2]];
-    this.paletteB = this.paletteB.concat([...this.settings.palette[2]].reverse());
-
 
     this._tail = new FifoQueue(this.settings.tail * this.settings.count);
     this.bob = RendererComponent.buildBob(this.settings.size, this.settings.force);
@@ -189,11 +186,15 @@ export class RendererComponent implements OnInit, AfterViewInit {
           }
         }
 
+        let r = this.paletteR.concat([...this.paletteR].reverse());
+        let g = this.paletteG.concat([...this.paletteG].reverse());
+        let b = this.paletteB.concat([...this.paletteB].reverse());
+
         for (let i = 0; i < this.buffer.length; i++) {
           let k = Math.round(this.buffer[i]);
-          this.image.data[i * 4 + 0] = this.paletteR[ k % this.paletteR.length];
-          this.image.data[i * 4 + 1] = this.paletteG[ k % this.paletteG.length];
-          this.image.data[i * 4 + 2] = this.paletteB[ k % this.paletteB.length];
+          this.image.data[i * 4 + 0] = r[ k % r.length];
+          this.image.data[i * 4 + 1] = g[ k % g.length];
+          this.image.data[i * 4 + 2] = b[ k % b.length];
           this.image.data[i * 4 + 3] = 255;
         }
       }
