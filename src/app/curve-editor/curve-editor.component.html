@@ -1,7 +1,8 @@
 <div #chart id="chart" class="svg-container" (window:resize)="onResize()"  style="background-color: rgba(0, 255, 0, 0)">
   <svg [attr.width]="svgSize[0]" [attr.height]="svgSize[1]" [attr.viewBox]="svgViewBox" style="background-color: rgba(255, 0, 0, 0)">
 
-      <svg:path [attr.d]="svgCurve" stroke-width="1px" stroke="white" fill-opacity="0"/>
+    
+      <svg:path [attr.d]="svgCurve" stroke-width="1px" stroke="black" fill-opacity="0"/>
       <svg:circle *ngFor="let p of points; let i = index" 
         [attr.cx]="toSvg(p)[0]" 
         [attr.cy]="toSvg(p)[1]" 

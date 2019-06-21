@@ -82,7 +82,7 @@ export class RendererComponent implements OnInit, AfterViewInit {
     this.renderFrame(0);
   }
 
-  private reset(): void {
+  public reset(): void {
 
     if (!this.canvas) {
       return;

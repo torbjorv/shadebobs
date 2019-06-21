@@ -18,27 +18,27 @@ export class AppComponent implements OnChanges {
     this.settings.redPoints = 
     [
         [0, 0],
-      [30, 150],
-      [40, 255],
-      [60, 255],
-      [100, 255],
+      [30, 255],
+      [50, 255],
+      [75, 120],
+      [100, 100],
     ];
   
     this.settings.greenPoints = 
     [
         [0, 0],
-      [30, 150],
+      [30, 255],
       [40, 255],
-      [60, 255],
-      [100, 255],
+      [75, 120],
+      [100, 100],
     ];
   
     this.settings.bluePoints =
     [
-        [0, 0],
-      [30, 150],
-      [40, 255],
-      [60, 255],
+        [0, 80],
+      [40, 80],
+      [50, 255],
+      [75, 120],
       [100, 255],
     ];
   
@@ -48,22 +48,8 @@ export class AppComponent implements OnChanges {
       this.settings.tail = this.getValueOrDefault(params, 'tail', 40000);
       this.settings.count = this.getValueOrDefault(params, 'count', 7);
       this.settings.speed = this.getValueOrDefault(params, 'speed', 8);
-      this.settings.size = this.getValueOrDefault(params, 'size', 27);
+      this.settings.size = this.getValueOrDefault(params, 'size', 10);
       this.settings.force = this.getValueOrDefault(params, 'force', 4);
-
-      // this.settings.palette = [[0], [0], [0]];
-
-      // this.settings.redBegin = this.getValueOrDefault(params, 'redBegin', 255);
-      // this.settings.redEnd = this.getValueOrDefault(params, 'redEnd', 0);
-      // this.settings.redCycle = this.getValueOrDefault(params, 'redCycle', 200);
-
-      // this.settings.greenBegin = this.getValueOrDefault(params, 'greenBegin', 255);
-      // this.settings.greenEnd = this.getValueOrDefault(params, 'greenEnd', 0);
-      // this.settings.greenCycle = this.getValueOrDefault(params, 'greenCycle', 210);
-
-      // this.settings.blueBegin = this.getValueOrDefault(params, 'blueBegin', 255);
-      // this.settings.blueEnd = this.getValueOrDefault(params, 'blueEnd', 0);
-      // this.settings.blueCycle = this.getValueOrDefault(params, 'blueCycle', 220);
     });
 
     this.settings.onChanged.subscribe(newSettings => {
@@ -73,21 +59,11 @@ export class AppComponent implements OnChanges {
         speed: newSettings.speed,
         size: newSettings.size,
         force: newSettings.force
-        // redBegin: newSettings.redBegin,
-        // redEnd: newSettings.redEnd,
-        // redCycle: newSettings.redCycle,
-        // greenBegin: newSettings.greenBegin,
-        // greenEnd: newSettings.greenEnd,
-        // greenCycle: newSettings.greenCycle,
-        // blueBegin: newSettings.blueBegin,
-        // blueEnd: newSettings.blueEnd,
-        // blueCycle: newSettings.blueCycle
       }});        
     });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
   }
 
   private getValueOrDefault<T>(map: ParamMap, key: string, defaultValue: T): T {
@@ -96,5 +72,15 @@ export class AppComponent implements OnChanges {
 
   public toggleSettings() {
     this.settingsVisible = !this.settingsVisible;
+  }
+
+
+  public get settingsIconColor(): string {
+    if (this.settingsVisible) {
+      return "black";
+    } else {
+      let sum = this.settings.paletteR[0] + this.settings.paletteG[0] + this.settings.paletteB[0];
+      return sum > 350 ? "black" : "white";
+    }
   }
 }

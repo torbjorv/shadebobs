@@ -6,7 +6,7 @@
 <div *ngIf="settingsVisible" class="settings">
   <app-settings [settings]="settings"></app-settings>
 </div>
-<div (click)="toggleSettings()" class="settings-icon">
+<div (click)="toggleSettings()" class="settings-icon" [style.color]="settingsIconColor">
   <i *ngIf="!settingsVisible" class="material-icons-outlined">edit</i>
   <i *ngIf="settingsVisible" class="material-icons">edit</i>
 </div>
