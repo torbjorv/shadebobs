@@ -39,7 +39,6 @@ export class CurveEditorComponent implements OnChanges {
 
   active: boolean[] = [false, false, false, false, false];
 
-
   constructor() { }
 
   onResize() {
@@ -131,7 +130,7 @@ export class CurveEditorComponent implements OnChanges {
       p[1] = Math.min(Math.max(p[1], limits[0][1]), limits[1][1]); 
     }
     
-    this._points = this._points.sort((p0, p1) => p0[0] - p1[0]);
+    this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
     this._pointsChange.next(this._points);
   }
 }

@@ -52,15 +52,15 @@ export class AppComponent implements OnChanges {
       this.settings.force = this.getValueOrDefault(params, 'force', 4);
     });
 
-    this.settings.onChanged.subscribe(newSettings => {
-      this.router.navigate(['.'], { relativeTo: this.route, queryParams: {
-        tail: newSettings.tail,
-        count: newSettings.count,
-        speed: newSettings.speed,
-        size: newSettings.size,
-        force: newSettings.force
-      }});        
-    });
+    // this.settings.onChanged.subscribe(newSettings => {
+    //   this.router.navigate(['.'], { relativeTo: this.route, queryParams: {
+    //     tail: newSettings.tail,
+    //     count: newSettings.count,
+    //     speed: newSettings.speed,
+    //     size: newSettings.size,
+    //     force: newSettings.force
+    //   }});        
+    // });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

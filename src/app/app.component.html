@@ -1,7 +1,13 @@
-<app-renderer [settings]="settings" 
-[paletteR]="settings.paletteR"
-[paletteG]="settings.paletteG"
-[paletteB]="settings.paletteB">
+<app-renderer 
+[red]="settings.redPoints"
+[green]="settings.greenPoints"
+[blue]="settings.bluePoints"
+[tail]="settings.tail"
+[count]="settings.count"
+[speed]="settings.speed"
+[size]="settings.size"
+[force]="settings.force"
+>
 </app-renderer>
 <div *ngIf="settingsVisible" class="settings">
   <app-settings [settings]="settings"></app-settings>
