@@ -12,52 +12,69 @@ import { CardinalCurve } from './curve-editor/cardinal-curve';
 export class AppComponent {
   title = 'shadebobs';
 
-  settings: Settings = new Settings();
+  settings: Settings;
   settingsVisible: boolean = false;
 
   private _defaultRed: [number, number][] =
     [
-      [0, 0],
+      [0, 180],
       [30, 255],
-      [50, 255],
-      [75, 120],
-      [100, 100],
+      [50, 127],
+      [75, 36],
+      [100, 0],
     ];
 
   private _defaultGreen: [number, number][] =
     [
-      [0, 0],
+      [0, 180],
       [30, 255],
-      [40, 255],
-      [75, 120],
-      [100, 100],
+      [50, 127],
+      [75, 25],
+      [100, 0],
     ];
 
   private _defaultBlue: [number, number][] = [
-    [0, 80],
-    [40, 80],
-    [50, 255],
+    [0, 255],
+    [30, 255],
+    [50, 130],
     [75, 120],
-    [100, 255],
+    [100, 0],
   ];
+
+  private _defaultTail = 40000;
+  private _defaultCount = 8;
+  private _defaultSpeed = 3.5;
+  private _defaultSize = 10;
+  private _defaultForce = 3;
 
 
 
 
   public constructor(private router: Router, private route: ActivatedRoute) {
 
+    this.settings = new Settings(
+      this._defaultTail, 
+      this._defaultCount, 
+      this._defaultSpeed, 
+      this._defaultSize, 
+      this._defaultForce, 
+      this._defaultRed, 
+      this._defaultGreen, 
+      this._defaultBlue      
+    );
+
     // This is a BehaviorSubject so first value is always empty, then we just get the initial
     // values from the URL. The URL is updated through the settings, so it will keep changing.
     this.route.queryParamMap.pipe(skip(1), first()).subscribe(params => {
-      this.settings.red = this.getColorOrDefault(params, 'red', this._defaultRed);
-      this.settings.green = this.getColorOrDefault(params, 'green', this._defaultGreen);
-      this.settings.blue = this.getColorOrDefault(params, 'blue', this._defaultBlue);
+      this.settings.red = this.getColorOrDefault(params, 'red', this.settings.red);
+      this.settings.green = this.getColorOrDefault(params, 'green', this.settings.green);
+      this.settings.blue = this.getColorOrDefault(params, 'blue', this.settings.blue);
 
-      this.settings.tail = this.getValueOrDefault(params, 'tail', 40000);
-      this.settings.count = this.getValueOrDefault(params, 'count', 7);
-      this.settings.speed = this.getValueOrDefault(params, 'speed', 8);
-      this.settings.size = this.getValueOrDefault(params, 'size', 10);
-      this.settings.force = this.getValueOrDefault(params, 'force', 4);
+      this.settings.tail = this.getValueOrDefault(params, 'tail', this.settings.tail);
+      this.settings.count = this.getValueOrDefault(params, 'count', this.settings.count);
+      this.settings.speed = this.getValueOrDefault(params, 'speed', this.settings.speed);
+      this.settings.size = this.getValueOrDefault(params, 'size', this.settings.size);
+      this.settings.force = this.getValueOrDefault(params, 'force', this.settings.force);
     });
 
     window.setInterval(() => {
