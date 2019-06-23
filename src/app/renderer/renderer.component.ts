@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FifoQueue } from '../fifoqueue';
-import { CardinalCurve } from '../curve-editor/cardinal-curve';
+import { CardinalCurve } from '../cardinal-curve';
 
 @Component({
   selector: 'app-renderer',
@@ -10,7 +10,7 @@ import { CardinalCurve } from '../curve-editor/cardinal-curve';
 export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('viewport', { static: false })
-  canvas: ElementRef;
+  private _canvas: ElementRef;
   running: Boolean = true;
   image: ImageData;
   previousT: number = 0;
@@ -62,7 +62,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
 
-    let canvas = (<HTMLCanvasElement>this.canvas.nativeElement);
+    let canvas = (<HTMLCanvasElement>this._canvas.nativeElement);
     this.context = canvas.getContext('2d');
     canvas.width = this.bufferSize[0];
     canvas.height = this.bufferSize[1];
@@ -74,15 +74,15 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
 
     if ('red' in changes) {
-      this.redLookup = CardinalCurve.getCurvePoints2(this.red, 0.5, 100).concat(CardinalCurve.getCurvePoints2(this.red, 0.5, 100).reverse());
+      this.redLookup = CardinalCurve.build(this.red, 0.5, 100).concat(CardinalCurve.build(this.red, 0.5, 100).reverse());
     }
 
     if ('green' in changes) {
-      this.greenLookup = CardinalCurve.getCurvePoints2(this.green, 0.5, 100).concat(CardinalCurve.getCurvePoints2(this.green, 0.5, 100).reverse());
+      this.greenLookup = CardinalCurve.build(this.green, 0.5, 100).concat(CardinalCurve.build(this.green, 0.5, 100).reverse());
     }
 
     if ('blue' in changes) {
-      this.blueLookup = CardinalCurve.getCurvePoints2(this.blue, 0.5, 100).concat(CardinalCurve.getCurvePoints2(this.blue, 0.5, 100).reverse());
+      this.blueLookup = CardinalCurve.build(this.blue, 0.5, 100).concat(CardinalCurve.build(this.blue, 0.5, 100).reverse());
     }
 
     if ('tail' in changes || 'size' in changes || 'force' in changes || 'count' in changes) {
@@ -94,7 +94,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   public reset(): void {
 
-    if (!this.canvas) {
+    if (!this._canvas) {
       return;
     }
 

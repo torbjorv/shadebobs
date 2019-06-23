@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Settings } from './settings';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { skip, first } from 'rxjs/operators';
-import { CardinalCurve } from './curve-editor/cardinal-curve';
+import { CardinalCurve } from './cardinal-curve';
 
 @Component({
   selector: 'app-root',
@@ -105,9 +105,9 @@ export class AppComponent {
     if (this.settingsVisible) {
       return "black";
     } else {
-      let firstR = CardinalCurve.getCurvePoints2(this.settings.red, 0.5, 2)[0];
-      let firstG = CardinalCurve.getCurvePoints2(this.settings.green, 0.5, 2)[0];
-      let firstB = CardinalCurve.getCurvePoints2(this.settings.blue, 0.5, 2)[0];
+      let firstR = CardinalCurve.build(this.settings.red, 0.5, 2)[0];
+      let firstG = CardinalCurve.build(this.settings.green, 0.5, 2)[0];
+      let firstB = CardinalCurve.build(this.settings.blue, 0.5, 2)[0];
       let sum = firstR + firstG + firstB;
       return sum > 350 ? "black" : "white";
     }

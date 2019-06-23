@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Input } from '@angular/core';
 import { CurveEditorComponent } from '../curve-editor/curve-editor.component';
 import { Subject, Observable } from 'rxjs';
-import { CardinalCurve } from '../curve-editor/cardinal-curve';
+import { CardinalCurve } from '../cardinal-curve';
 
 @Component({
   selector: 'app-palette-editor',
@@ -69,15 +69,15 @@ export class PaletteEditorComponent implements OnInit {
   }
 
   public getCurveR() {
-    return CardinalCurve.getCurvePoints2(this.redPoints, 0.5, 100);
+    return CardinalCurve.build(this.redPoints, 0.5, 100);
   }
 
   public getCurveG() {
-    return CardinalCurve.getCurvePoints2(this.greenPoints, 0.5, 100);
+    return CardinalCurve.build(this.greenPoints, 0.5, 100);
   }
 
   public getCurveB() {
-    return CardinalCurve.getCurvePoints2(this.bluePoints, 0.5, 100);
+    return CardinalCurve.build(this.bluePoints, 0.5, 100);
   }
 
   public mixed(): [number, number, number][] {

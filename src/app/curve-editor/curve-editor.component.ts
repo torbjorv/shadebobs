@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input } from '@angular/core';
 import * as d3 from 'd3';
-import { CardinalCurve } from './cardinal-curve';
+import { CardinalCurve } from '../cardinal-curve';
 import { Subject, Observable } from 'rxjs';
 
 
@@ -73,7 +73,7 @@ export class CurveEditorComponent implements OnChanges {
 
   public getCurve(numPoints: number):number[] {
 
-    let r = CardinalCurve.getCurvePoints2(this.points, 0.5, numPoints);
+    let r = CardinalCurve.build(this.points, 0.5, numPoints);
     return r;
   }
 
