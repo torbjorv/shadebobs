@@ -10,65 +10,65 @@ import { CardinalCurve } from '../cardinal-curve';
 })
 export class PaletteEditorComponent implements OnInit {
 
-  private _redPoints: [number, number][] = [];
+  private _red: [number, number][] = [];
   @Input()
-  public set redPoints(value: [number, number][]) {
-    this._redPoints = value;
-    this._redPointsChange.next(value);
+  public set red(value: [number, number][]) {
+    this._red = value;
+    this._redChange.next(value);
   }
 
-  public get redPoints(): [number, number][] {
-    return this._redPoints;
+  public get red(): [number, number][] {
+    return this._red;
   }
 
-  private _redPointsChange: Subject<[number, number][]> = new Subject();
+  private _redChange: Subject<[number, number][]> = new Subject();
   @Output()
-  public get redPointsChange(): Observable<[number, number][]> {
-    return this._redPointsChange;
+  public get redChange(): Observable<[number, number][]> {
+    return this._redChange;
   }
 
-  private _greenPoints: [number, number][] = [];
+  private _green: [number, number][] = [];
   @Input()
-  public set greenPoints(value: [number, number][]) {
-    this._greenPoints = value;
-    this._greenPointsChange.next(value);
+  public set green(value: [number, number][]) {
+    this._green = value;
+    this._greenChange.next(value);
   }
-  public get greenPoints(): [number, number][] {
-    return this._greenPoints;
+  public get green(): [number, number][] {
+    return this._green;
   }
 
-  private _greenPointsChange: Subject<[number, number][]> = new Subject();
+  private _greenChange: Subject<[number, number][]> = new Subject();
   @Output()
-  public get greenPointsChange(): Observable<[number, number][]> {
-    return this._greenPointsChange;
+  public get greenChange(): Observable<[number, number][]> {
+    return this._greenChange;
   }
 
-  private _bluePoints: [number, number][] = [];
+  private _blue: [number, number][] = [];
   @Input()
-  public set bluePoints(value: [number, number][]) {
-    this._bluePoints = value;
-    this._bluePointsChange.next(value);
+  public set blue(value: [number, number][]) {
+    this._blue = value;
+    this._blueChange.next(value);
   }
-  public get bluePoints(): [number, number][] {
-    return this._bluePoints;
+  public get blue(): [number, number][] {
+    return this._blue;
   }
 
-  private _bluePointsChange: Subject<[number, number][]> = new Subject();
+  private _blueChange: Subject<[number, number][]> = new Subject();
   @Output()
-  public get bluePointsChange(): Observable<[number, number][]> {
-    return this._bluePointsChange;
+  public get blueChange(): Observable<[number, number][]> {
+    return this._blueChange;
   }
 
   public getCurveR() {
-    return CardinalCurve.build(this.redPoints, 0.5, 100);
+    return CardinalCurve.build(this.red, 0.5, 100);
   }
 
   public getCurveG() {
-    return CardinalCurve.build(this.greenPoints, 0.5, 100);
+    return CardinalCurve.build(this.green, 0.5, 100);
   }
 
   public getCurveB() {
-    return CardinalCurve.build(this.bluePoints, 0.5, 100);
+    return CardinalCurve.build(this.blue, 0.5, 100);
   }
 
   public mixed(): [number, number, number][] {
