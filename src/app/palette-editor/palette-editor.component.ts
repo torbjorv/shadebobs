@@ -10,15 +10,6 @@ import { CardinalCurve } from '../cardinal-curve';
 })
 export class PaletteEditorComponent implements OnInit {
 
-  @ViewChild('blue', { static: false })
-  public blueCurve: CurveEditorComponent;
-
-  @ViewChild('red', { static: false })
-  public redCurve: CurveEditorComponent;
-
-  @ViewChild('green', { static: false })
-  public greenCurve: CurveEditorComponent;
-
   private _redPoints: [number, number][] = [];
   @Input()
   public set redPoints(value: [number, number][]) {
