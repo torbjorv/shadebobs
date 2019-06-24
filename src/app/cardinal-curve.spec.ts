@@ -1,11 +1,10 @@
 import { CardinalCurve } from './cardinal-curve';
-import { Point } from './curve-editor/point';
 
-fdescribe('CardinalCurve', () => {
+describe('CardinalCurve', () => {
     it('handle 2 points and 1 segment', () => {
 
         // given
-        let points = [new Point(0, 0), new Point(1, 1)];
+        let points: [number, number][] = [[0, 0], [1, 1]];
 
         // when
         let result = CardinalCurve.build(points, 0.5, 2);
@@ -17,7 +16,7 @@ fdescribe('CardinalCurve', () => {
     it('handle 2 points and 2 segments', () => {
 
         // given
-        let points = [new Point(0, 0), new Point(1, 1)];
+        let points: [number, number][] = [[0, 0], [1, 1]];
 
         // when
         let result = CardinalCurve.build(points, 0.5, 3);
