@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PaletteEditorComponent } from './palette-editor.component';
+import { CurveEditorComponent } from '../curve-editor/curve-editor.component';
 
 describe('PaletteEditorComponent', () => {
   let component: PaletteEditorComponent;
@@ -8,7 +9,7 @@ describe('PaletteEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PaletteEditorComponent ]
+      declarations: [ PaletteEditorComponent, CurveEditorComponent ]
     })
     .compileComponents();
   }));

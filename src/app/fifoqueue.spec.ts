@@ -91,40 +91,4 @@ describe('FifoQueue', () => {
         expect(queue.at(0)).toEqual(2);
         expect(queue.at(1)).toEqual(3);
     });
-
-    it('dummy', () => {
-
-        const queue = new FifoQueue<number>(5000);
-
-        for (let i = 0; i < 5000; i++) {
-            queue.push(i);
-        }
-
-        for (let i = 0; i < 2500; i++) {
-            expect(queue.pop()).toEqual(i);
-        }
-
-        for (let i = 5000; i < 7500; i++) {
-            queue.push(i);
-        }
-
-        for (let i = 2500; i < 7500; i++ ) {
-            expect(queue.at(i - 2500)).toEqual(i);
-        }
-
-
-        for (let i = 0; i < 4000; i++) {
-
-            expect(queue.pop()).toEqual(2500 + i);
-        }
-
-        queue.resize(1000);
-        for (let i = 0; i < 1000; i++) {
-            expect(queue.at(i)).toEqual(6500 + i);
-
-        }
-
-        queue.push(1);
-
-    });
 });
