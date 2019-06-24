@@ -11,31 +11,33 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('viewport', { static: false })
   private _canvas: ElementRef;
-  running: Boolean = true;
-  image: ImageData;
-  previousT: number = 0;
-  frameRateMultiplier = 10;
-  buffer: number[];
-  bufferSize = [1234, 400];
+
+  private _image: ImageData;
+  private _previousT: number = 0;
+  private _frameRateMultiplier = 10;
+
+  // The draw buffer size is fixed, regardless of device so that the sine-curve patterns turn out
+  // the same on any screen resolution. 
+  private _bufferSize = [1234, 400];
+  private _buffer: number[];
 
   @Input('red')
-  red: [number, number][] = [[0, 0]];
+  public red: [number, number][] = [[0, 0]];
 
   @Input('green')
-  green: [number, number][] = [[0, 0]];
+  public green: [number, number][] = [[0, 0]];
 
   @Input('blue')
-  blue: [number, number][] = [[0, 0]];
+  public blue: [number, number][] = [[0, 0]];
 
   public redLookup: number[] = [];
   public greenLookup: number[] = [];
   public blueLookup: number[] = [];
 
-  bob: number[];
-  public context: CanvasRenderingContext2D;
+  _bob: number[];
+  private _context: CanvasRenderingContext2D;
 
   private _tail: FifoQueue<[number, number]>;
-  maxTailLength = 50000
 
 
   @Input()
@@ -51,10 +53,10 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor() {
 
-    this._tail = new FifoQueue(this.maxTailLength);
+    this._tail = new FifoQueue(this.size);
 
-    this.buffer = new Array(this.bufferSize[0] * this.bufferSize[1]);
-    this.buffer.fill(0);
+    this._buffer = new Array(this._bufferSize[0] * this._bufferSize[1]);
+    this._buffer.fill(0);
   }
 
   ngOnInit() {
@@ -63,9 +65,9 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
 
     let canvas = (<HTMLCanvasElement>this._canvas.nativeElement);
-    this.context = canvas.getContext('2d');
-    canvas.width = this.bufferSize[0];
-    canvas.height = this.bufferSize[1];
+    this._context = canvas.getContext('2d');
+    canvas.width = this._bufferSize[0];
+    canvas.height = this._bufferSize[1];
 
     this.reset();
     this.renderFrame(0);
@@ -99,18 +101,11 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     this._tail = new FifoQueue(this.tail * this.count);
-    this.bob = RendererComponent.buildBob(this.size, this.force);
+    this._bob = RendererComponent.buildBob(this.size, this.force);
 
-    this.buffer.fill(0);
+    this._buffer.fill(0);
 
-    this.image = this.context.createImageData(this.bufferSize[0], this.bufferSize[1]);
-
-    for (let i = 0; i < this.image.data.length; i += 4) {
-      this.image.data[i + 0] = this.redLookup[0];
-      this.image.data[i + 1] = this.greenLookup[0];
-      this.image.data[i + 2] = this.blueLookup[0];
-      this.image.data[i + 3] = 255;
-    }
+    this._image = this._context.createImageData(this._bufferSize[0], this._bufferSize[1]);
   }
 
   private static buildBob(size: number, force: number): number[] {
@@ -141,8 +136,8 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
-        let k = ((x + i) + (y + j) * this.image.width);
-        this.buffer[k] += bob[i + j * size];
+        let k = ((x + i) + (y + j) * this._image.width);
+        this._buffer[k] += bob[i + j * size];
       }
     }
   }
@@ -154,57 +149,52 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
-        let k = ((x + i) + (y + j) * this.image.width);
-        this.buffer[k] -= bob[i + j * size];
+        let k = ((x + i) + (y + j) * this._image.width);
+        this._buffer[k] -= bob[i + j * size];
       }
     }
   }
 
   private renderFrame(t: number): void {
 
-    if (true) {
+    t *= this.speed;
+    let multiplier = Math.round(this._frameRateMultiplier * this.speed);
 
-      t *= this.speed;
-      let multiplier = Math.round(this.frameRateMultiplier * this.speed);
+    let elapsed = t - this._previousT;
+    if (t !== this._previousT) {
 
-      let elapsed = t - this.previousT;
-      if (t !== this.previousT) {
+      for (let j = 0; j < this.count; j++) {
+        for (let i = 0; i < multiplier; i++) {
+          let k = this._previousT + elapsed * (i / multiplier) + j * 1000;
 
-        for (let j = 0; j < this.count; j++) {
-          for (let i = 0; i < multiplier; i++) {
-            let k = this.previousT + elapsed * (i / multiplier) + j * 1000;
-
-            let x: number = Math.round(k / 2) % this.bufferSize[0];
-            if (j % 2 == 1) {
-              x = this.bufferSize[0] - x;
-            }
-            let y: number = Math.round(this.bufferSize[1] * Math.cos(k / 300 + (j / this.count) * 2 * Math.PI) * 0.45 + this.bufferSize[1] / 2);
-
-            this.drawBob(x, y, this.size, this.bob);
-
-            if (this._tail.length == this._tail.capacity) {
-              let bob: [number, number] = this._tail.pop();
-              this.eraseBob(bob[0], bob[1], this.size, this.bob);
-            }
-            this._tail.push([x, y]);
+          let x: number = Math.round(k / 2) % this._bufferSize[0];
+          if (j % 2 == 1) {
+            x = this._bufferSize[0] - x;
           }
-        }
+          let y: number = Math.round(this._bufferSize[1] * Math.cos(k / 300 + (j / this.count) * 2 * Math.PI) * 0.45 + this._bufferSize[1] / 2);
 
-        for (let i = 0; i < this.buffer.length; i++) {
-          let k = Math.round(this.buffer[i]);
-          this.image.data[i * 4 + 0] = this.redLookup[k % this.redLookup.length];
-          this.image.data[i * 4 + 1] = this.greenLookup[k % this.greenLookup.length];
-          this.image.data[i * 4 + 2] = this.blueLookup[k % this.blueLookup.length];
-          this.image.data[i * 4 + 3] = 255;
+          this.drawBob(x, y, this.size, this._bob);
+
+          if (this._tail.length == this._tail.capacity) {
+            let bob: [number, number] = this._tail.pop();
+            this.eraseBob(bob[0], bob[1], this.size, this._bob);
+          }
+          this._tail.push([x, y]);
         }
       }
 
-      this.previousT = t;
-      this.context.putImageData(this.image, 0, 0);
+      for (let i = 0; i < this._buffer.length; i++) {
+        let k = Math.round(this._buffer[i]);
+        this._image.data[i * 4 + 0] = this.redLookup[k % this.redLookup.length];
+        this._image.data[i * 4 + 1] = this.greenLookup[k % this.greenLookup.length];
+        this._image.data[i * 4 + 2] = this.blueLookup[k % this.blueLookup.length];
+        this._image.data[i * 4 + 3] = 255;
+      }
     }
 
-    if (this.running) {
-      requestAnimationFrame((t) => this.renderFrame(t))
-    }
+    this._previousT = t;
+    this._context.putImageData(this._image, 0, 0);
+
+    requestAnimationFrame((t) => this.renderFrame(t))
   }
 }
