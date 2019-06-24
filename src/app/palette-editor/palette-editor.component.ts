@@ -73,11 +73,11 @@ export class PaletteEditorComponent implements OnInit {
 
   public mixed(): [number, number, number][] {
 
-    let r = this.getCurveR();
-    let g = this.getCurveG();
-    let b = this.getCurveB();
+    const r = this.getCurveR();
+    const g = this.getCurveG();
+    const b = this.getCurveB();
 
-    let result = [];
+    const result = [];
     for (let i = 0; i < r.length; i++) {
       result.push([r[i], g[i], b[i]]);
     }

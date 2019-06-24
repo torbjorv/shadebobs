@@ -1,10 +1,8 @@
 import { FifoQueue } from './fifoqueue';
-import { UV_UDP_REUSEADDR } from 'constants';
-import { queueScheduler } from 'rxjs';
 
 describe('FifoQueue', () => {
     it('should create an instance', () => {
-        expect(new FifoQueue<Number>(10)).toBeTruthy();
+        expect(new FifoQueue<number>(10)).toBeTruthy();
     });
 
     it('should push/pop a value', () => {
@@ -12,7 +10,7 @@ describe('FifoQueue', () => {
         // given
         const expectedCapacity = 10;
         const expectedValue = 123;
-        let queue = new FifoQueue<Number>(expectedCapacity);
+        const queue = new FifoQueue<number>(expectedCapacity);
 
         // when
         queue.push(expectedValue);
@@ -23,12 +21,12 @@ describe('FifoQueue', () => {
         expect(queue.pop()).toEqual(expectedValue);
 
         expect(queue.length).toEqual(0);
-    })
+    });
 
     it('should return correct length when queue is full', () => {
-        
+
         // given
-        let queue = new FifoQueue<Number>(3);
+        const queue = new FifoQueue<number>(3);
 
         // when
         queue.push(1);
@@ -37,12 +35,12 @@ describe('FifoQueue', () => {
 
         // then
         expect(queue.length).toEqual(3);
-    })
+    });
 
     it('should push values using circular buffer', () => {
 
         // given
-        let queue = new FifoQueue<Number>(3);
+        const queue = new FifoQueue<number>(3);
         queue.push(1);
         queue.push(2);
         queue.push(3);
@@ -61,7 +59,7 @@ describe('FifoQueue', () => {
 
     it('at() should handle the circular buffer magic', () => {
         // given
-        let queue = new FifoQueue<Number>(3);
+        const queue = new FifoQueue<number>(3);
         queue.push(0);
         queue.push(1);
         queue.push(2);
@@ -72,11 +70,11 @@ describe('FifoQueue', () => {
         expect(queue.at(0)).toEqual(1);
         expect(queue.at(1)).toEqual(2);
         expect(queue.at(2)).toEqual(3);
-    })
+    });
 
     it('resize should handle circularity', () => {
         // given
-        let queue = new FifoQueue<Number>(3);
+        const queue = new FifoQueue<number>(3);
         queue.push(0);
         queue.push(1);
         queue.push(2);
@@ -96,7 +94,7 @@ describe('FifoQueue', () => {
 
     it('dummy', () => {
 
-        let queue = new FifoQueue<Number>(5000);
+        const queue = new FifoQueue<number>(5000);
 
         for (let i = 0; i < 5000; i++) {
             queue.push(i);
@@ -123,10 +121,10 @@ describe('FifoQueue', () => {
         queue.resize(1000);
         for (let i = 0; i < 1000; i++) {
             expect(queue.at(i)).toEqual(6500 + i);
-            
+
         }
 
         queue.push(1);
 
-    })
+    });
 });

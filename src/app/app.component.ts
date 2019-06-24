@@ -13,7 +13,7 @@ export class AppComponent {
   title = 'shadebobs';
 
   settings: Settings;
-  settingsVisible: boolean = false;
+  settingsVisible = false;
 
   private _defaultRed: [number, number][] =
     [
@@ -53,14 +53,14 @@ export class AppComponent {
   public constructor(private router: Router, private route: ActivatedRoute) {
 
     this.settings = new Settings(
-      this._defaultTail, 
-      this._defaultCount, 
-      this._defaultSpeed, 
-      this._defaultSize, 
-      this._defaultForce, 
-      this._defaultRed, 
-      this._defaultGreen, 
-      this._defaultBlue      
+      this._defaultTail,
+      this._defaultCount,
+      this._defaultSpeed,
+      this._defaultSize,
+      this._defaultForce,
+      this._defaultRed,
+      this._defaultGreen,
+      this._defaultBlue
     );
 
     // This is a BehaviorSubject so first value is always empty, then we just get the initial
@@ -84,7 +84,7 @@ export class AppComponent {
   }
 
   private getValueOrDefault<T>(map: ParamMap, key: string, defaultValue: T): T {
-    return map.has(key) ? <T>(map.get(key) as any) : defaultValue;
+    return map.has(key) ? map.get(key) as any as T : defaultValue;
   }
 
   private getColorOrDefault(map: ParamMap, key: string, defaultValue: [number, number][]): [number, number][] {
@@ -92,24 +92,22 @@ export class AppComponent {
       return defaultValue;
     }
 
-    let a = map.getAll(key);
-    return a.map(s => s.split(',').map(e => parseInt(e))) as any;
+    return map.getAll(key).map(s => s.split(',').map(e => parseInt(e, 10))) as any;
   }
 
   public toggleSettings() {
     this.settingsVisible = !this.settingsVisible;
   }
 
-
   public get settingsIconColor(): string {
     if (this.settingsVisible) {
-      return "black";
+      return 'black';
     } else {
-      let firstR = CardinalCurve.build(this.settings.red, 0.5, 2)[0];
-      let firstG = CardinalCurve.build(this.settings.green, 0.5, 2)[0];
-      let firstB = CardinalCurve.build(this.settings.blue, 0.5, 2)[0];
-      let sum = firstR + firstG + firstB;
-      return sum > 350 ? "black" : "white";
+      const firstR = CardinalCurve.build(this.settings.red, 0.5, 2)[0];
+      const firstG = CardinalCurve.build(this.settings.green, 0.5, 2)[0];
+      const firstB = CardinalCurve.build(this.settings.blue, 0.5, 2)[0];
+      const sum = firstR + firstG + firstB;
+      return sum > 350 ? 'black' : 'white';
     }
   }
 }

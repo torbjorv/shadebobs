@@ -1,6 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Settings } from '../settings';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-settings',
@@ -9,9 +8,8 @@ import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 })
 export class SettingsComponent {
 
-  @Input('settings')
+  @Input()
   settings: Settings;
 
   constructor() { }
-} 
-  
+}

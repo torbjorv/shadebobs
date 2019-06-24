@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import { CardinalCurve } from '../cardinal-curve';
 import { Subject, Observable } from 'rxjs';
@@ -9,7 +9,7 @@ import { Subject, Observable } from 'rxjs';
   templateUrl: './curve-editor.component.html',
   styleUrls: ['./curve-editor.component.sass']
 })
-export class CurveEditorComponent implements OnChanges {
+export class CurveEditorComponent implements OnChanges, AfterViewInit {
 
   @ViewChild('chart', { static: false })
   private _chartContainer: ElementRef;
@@ -52,8 +52,6 @@ export class CurveEditorComponent implements OnChanges {
     setTimeout(() => this.svgSize = [contentWidth, contentHeight - 4]);
   }
 
-  ngOnInit() { }
-
   ngAfterViewInit() {
     this.onResize();
     this.updateSvg();
@@ -63,43 +61,41 @@ export class CurveEditorComponent implements OnChanges {
     if (!this.isInitialized) {
       return;
     }
-    
+
     this.updateSvg();
   }
 
   public get isInitialized(): boolean {
-    return this._chartContainer != undefined;
+    return this._chartContainer !== undefined;
   }
 
-  public getCurve(numPoints: number):number[] {
-
-    let r = CardinalCurve.build(this.points, 0.5, numPoints);
-    return r;
+  public getCurve(numPoints: number): number[] {
+    return CardinalCurve.build(this.points, 0.5, numPoints);
   }
 
   public get svgCurve(): string {
 
-    let lineGenerator: any = d3.line()
+    const lineGenerator: any = d3.line()
       .curve(d3.curveMonotoneX);
 
-    let p = this.points.map(p => this.toSvg(p));
+    const svgPoints = this.points.map(p => this.toSvg(p));
 
-    return lineGenerator(p);
+    return lineGenerator(svgPoints);
   }
 
   public toWorld(p: [number, number]): [number, number] {
-    let worldSize = [this.world[1][0] - this.world[0][0], this.world[1][1] - this.world[0][1]];
-    let normalizedScreen: [number, number] = [p[0]/this.svgSize[0], (this.svgSize[1] - p[1])/this.svgSize[1]];
+    const worldSize = [this.world[1][0] - this.world[0][0], this.world[1][1] - this.world[0][1]];
+    const normalizedScreen: [number, number] = [p[0] / this.svgSize[0], (this.svgSize[1] - p[1]) / this.svgSize[1]];
 
     return [
-      this.world[0][0] + worldSize[0] * normalizedScreen[0], 
+      this.world[0][0] + worldSize[0] * normalizedScreen[0],
       this.world[0][1] + worldSize[1] * normalizedScreen[1]];
   }
 
   public toSvg(p: [number, number]): [number, number] {
-    let worldSize = [this.world[1][0] - this.world[0][0], this.world[1][1] - this.world[0][1]];
+    const worldSize = [this.world[1][0] - this.world[0][0], this.world[1][1] - this.world[0][1]];
     return [
-      this.svgSize[0] * (p[0] - this.world[0][0]) / worldSize[0], 
+      this.svgSize[0] * (p[0] - this.world[0][0]) / worldSize[0],
       this.svgSize[1] * (this.world[1][1] - p[1]) / worldSize[1]];
   }
 
@@ -114,11 +110,11 @@ export class CurveEditorComponent implements OnChanges {
       .selectAll('circle')
       .data(this.points)
       .call(d3.drag<SVGCircleElement, [number, number]>()
-        .on("drag", (d, i) => this.move(d, this.toWorld([d3.event.x, d3.event.y]), this.world))
-        .on("end", (d, i) => this.active[i] = false));
+        .on('drag', (d, i) => this.move(d, this.toWorld([d3.event.x, d3.event.y]), this.world))
+        .on('end', (d, i) => this.active[i] = false));
   }
 
-  private move(p: [number, number], to: [number, number], limits:[[number, number], [number, number]] = undefined): void {
+  private move(p: [number, number], to: [number, number], limits?: [[number, number], [number, number]]): void {
 
     // set the individual properties because the template is binding to the x/y, not the Point
     // instance.
@@ -126,10 +122,10 @@ export class CurveEditorComponent implements OnChanges {
     p[1] = to[1];
 
     if (limits) {
-      p[0] = Math.min(Math.max(p[0], limits[0][0]), limits[1][0]); 
-      p[1] = Math.min(Math.max(p[1], limits[0][1]), limits[1][1]); 
+      p[0] = Math.min(Math.max(p[0], limits[0][0]), limits[1][0]);
+      p[1] = Math.min(Math.max(p[1], limits[0][1]), limits[1][1]);
     }
-    
+
     this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
     this._pointsChange.next(this._points);
   }

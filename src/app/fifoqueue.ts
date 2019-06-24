@@ -1,7 +1,5 @@
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
-
 export class FifoQueue<T> {
-    
+
     private _capacity: number;
     private _buffer: T[];
     private _front: number;
@@ -18,8 +16,8 @@ export class FifoQueue<T> {
     }
 
     public push(value: T): void {
-        if (this.length == this.capacity) {
-            throw new Error("Queue full, call pop or resize before pushing.");
+        if (this.length === this.capacity) {
+            throw new Error('Queue full, call pop or resize before pushing.');
         }
 
         this._buffer[this._back] = value;
@@ -28,17 +26,16 @@ export class FifoQueue<T> {
     }
 
     public pop(): T {
-        if (this.length == 0) {
-            throw new Error("Queue empty.");
+        if (this.length === 0) {
+            throw new Error('Queue empty.');
         }
 
-        let value = this._buffer[this._front];
+        const value = this._buffer[this._front];
         this._front = (this._front + 1) % this.capacity;
         this._length--;
         return value;
     }
- 
-    
+
     public get length(): number {
         return this._length;
     }
@@ -57,7 +54,7 @@ export class FifoQueue<T> {
             throw new Error('New capacity is too small, pop enough elements to make it fit in the new capacity before resizing.');
         }
 
-        let newBuffer: T[] = new Array(newCapacity);
+        const newBuffer: T[] = new Array(newCapacity);
         for (let i = 0; i < this.length; i++) {
             newBuffer[i] = this.at(i);
         }
