@@ -30,7 +30,7 @@ jobs:
             # Lint the source code
             - run:
                 name: Linting
-                command: npm lint
+                command: npm run lint
             # Test the source code
             - run:
                 name: Testing
