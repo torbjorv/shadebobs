@@ -64,7 +64,8 @@ jobs:
             - run:
                 name: Deploy to github pages
                 command: |
-                    npx ngh --token $TOKEN 
+                    npx ngh --repo=https://GH_TOKEN@github.com:torbjorv/shadebobs.git --name="CircleCI"
+
 
 workflows:
     version: 2
