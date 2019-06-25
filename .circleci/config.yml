@@ -64,7 +64,7 @@ jobs:
             - run:
                 name: Deploy to github pages
                 command: |
-                    npx angular-cli-ghpages 
+                    npx ngh --token $TOKEN 
 
 workflows:
     version: 2
