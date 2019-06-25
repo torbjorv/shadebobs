@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FifoQueue } from '../fifoqueue';
 import { CardinalCurve } from '../cardinal-curve';
+import { Utils } from '../utils';
 
 @Component({
   selector: 'app-renderer',
@@ -60,7 +61,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
 
-        const distance = Math.min(size / 2, Math.sqrt(Math.pow(center - i, 2) + Math.pow(center - j, 2)));
+        const distance = Math.min(size / 2, Utils.distance([i, j], [center, center]));
         const normalized = 1 - distance * 2 / size;
 
         bob[k] = normalized * force;

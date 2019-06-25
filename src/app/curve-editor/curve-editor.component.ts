@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input, Aft
 import * as d3 from 'd3';
 import { CardinalCurve } from '../cardinal-curve';
 import { Subject, Observable } from 'rxjs';
+import { Utils } from '../utils';
 
 
 @Component({
@@ -55,6 +56,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
   ngAfterViewInit() {
     this.onResize();
     this.updateSvg();
+
   }
 
   ngOnChanges() {
@@ -106,12 +108,12 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
   private updateSvg(): void {
 
     // This is just a hack so we can use D3's drag-features
-    d3.select(this._chartContainer.nativeElement).select('svg')
-      .selectAll('circle')
-      .data(this.points)
-      .call(d3.drag<SVGCircleElement, [number, number]>()
-        .on('drag', (d, i) => this.move(d, this.toWorld([d3.event.x, d3.event.y]), this.world))
-        .on('end', (d, i) => this.active[i] = false));
+    // d3.select(this._chartContainer.nativeElement).select('svg')
+    //   .selectAll('circle')
+    //   .data(this.points)
+    //   .call(d3.drag<SVGCircleElement, [number, number]>()
+    //     .on('drag', (d, i) => this.move(d, this.toWorld([d3.event.x, d3.event.y]), this.world))
+    //     .on('end', (d, i) => this.active[i] = false));
   }
 
   private move(p: [number, number], to: [number, number], limits?: [[number, number], [number, number]]): void {
@@ -128,5 +130,37 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
 
     this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
     this._pointsChange.next(this._points);
+  }
+
+  _isDragging = false;
+
+  mousedown(event) {
+    event.preventDefault();
+    this._isDragging = true;
+    console.log(`starting`, event);
+    // Hide dragging element
+  }
+
+  mousemove(event) {
+    event.preventDefault();
+    if (this._isDragging) {
+
+      const world = this.toWorld([event.offsetX, event.offsetY]);
+
+      const closest: [number, number] = 
+        this.points.reduce((current, next) => Math.abs(world[0] - current[0]) < Math.abs(world[0] - next[0]) ? current : next);
+
+      // closest[0] = world[0];
+//      closest[1] = world[1];
+      this.move(closest, [closest[0], world[1]], this.world);
+
+      // console.log('dragging', event);
+    }
+  }
+
+  mouseup(event) {
+    event.preventDefault();
+    console.log('drag end', event);
+    this._isDragging = false;
   }
 }

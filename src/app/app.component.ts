@@ -18,26 +18,44 @@ export class AppComponent {
   private _defaultRed: [number, number][] =
     [
       [0, 180],
-      [30, 255],
-      [50, 127],
-      [75, 36],
-      [100, 0],
+      [10, 255],
+      [20, 127],
+      [30, 36],
+      [40, 0],
+      [50, 180],
+      [60, 255],
+      [70, 127],
+      [80, 36],
+      [90, 0],
+      [100, 0]
     ];
 
   private _defaultGreen: [number, number][] =
     [
       [0, 180],
-      [30, 255],
-      [50, 127],
-      [75, 25],
+      [10, 255],
+      [20, 127],
+      [30, 25],
+      [40, 0],
+      [50, 180],
+      [60, 255],
+      [70, 127],
+      [80, 25],
+      [90, 0],
       [100, 0],
     ];
 
   private _defaultBlue: [number, number][] = [
     [0, 255],
-    [30, 255],
-    [50, 130],
-    [75, 120],
+    [10, 255],
+    [20, 130],
+    [30, 120],
+    [40, 0],
+    [50, 255],
+    [60, 255],
+    [70, 130],
+    [80, 120],
+    [90, 0],
     [100, 0],
   ];
 
@@ -47,10 +65,16 @@ export class AppComponent {
   private _defaultSize = 10;
   private _defaultForce = 3;
 
-
-
-
   public constructor(private router: Router, private route: ActivatedRoute) {
+
+    this._defaultRed = [];
+    this._defaultGreen = [];
+    this._defaultBlue = [];
+    for (let i = 0; i < 50; i++) {
+      this._defaultRed.push([i*2, (i/100)*255]);
+      this._defaultGreen.push([i*2, (i/100)*255]);
+      this._defaultBlue.push([i*2, (i/100)*255]);
+    }
 
     this.settings = new Settings(
       this._defaultTail,
