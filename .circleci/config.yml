@@ -30,11 +30,11 @@ jobs:
             # Lint the source code
             - run:
                 name: Linting
-                command: npm run lint
+                command: ng lint
             # Test the source code
             - run:
                 name: Testing
-                command: npm run test
+                command: ng test --watch=false
             # Build project with different configuration based on
             # the current branch
             - run:
@@ -51,7 +51,7 @@ jobs:
     deploy:
         working_directory: ~/project
         docker:
-            - image: circleci/node:9.9.0-browsers
+            - image: circleci/node:11.15-browsers
         steps:
             # Log the current branch
             - run:
