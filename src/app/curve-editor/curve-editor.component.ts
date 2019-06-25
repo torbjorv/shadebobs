@@ -15,6 +15,8 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
   @ViewChild('chart', { static: false })
   private _chartContainer: ElementRef;
 
+  private _isDragging = false;
+
   private _points: [number, number][] = [];
   private _pointsChange: Subject<[number, number][]> = new Subject();
 
@@ -132,8 +134,6 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
     this._pointsChange.next(this._points);
   }
 
-  _isDragging = false;
-
   mousedown(event) {
     event.preventDefault();
     this._isDragging = true;
@@ -147,7 +147,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
 
       const world = this.toWorld([event.offsetX, event.offsetY]);
 
-      const closest: [number, number] = 
+      const closest: [number, number] =
         this.points.reduce((current, next) => Math.abs(world[0] - current[0]) < Math.abs(world[0] - next[0]) ? current : next);
 
       // closest[0] = world[0];
