@@ -30,11 +30,11 @@ jobs:
             # Lint the source code
             - run:
                 name: Linting
-                command: ng lint
+                command: npm lint
             # Test the source code
             - run:
                 name: Testing
-                command: ng test --watch=false
+                command: npm run test --watch=false
             # Build project with different configuration based on
             # the current branch
             - run:
