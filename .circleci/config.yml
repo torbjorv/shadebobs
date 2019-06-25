@@ -63,8 +63,7 @@ jobs:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
             - run:
                 name: Deploy to github pages
-                command: |
-                    npx ngh --repo=https://GH_TOKEN@github.com/torbjorv/shadebobs.git --name="CircleCI" --no-silent
+                command: npx ngh --repo=https://GH_TOKEN@github.com/torbjorv/shadebobs.git --name="CircleCI" --no-silent
 
 
 workflows:
