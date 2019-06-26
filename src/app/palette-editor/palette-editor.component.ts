@@ -15,13 +15,11 @@ export class PaletteEditorComponent implements OnInit {
   public gradientB: {};
   public gradient: {};
 
-
   private _red: [number, number][] = [];
   @Input()
   public set red(value: [number, number][]) {
     this._red = value;
     this._redChange.next(value);
-    this.palette = this.mixed();
   }
 
   public get red(): [number, number][] {
@@ -66,39 +64,7 @@ export class PaletteEditorComponent implements OnInit {
     return this._blueChange;
   }
 
-  public paletteR: number[];
-  public paletteG: number[];
-  public paletteB: number[];
-
-  public palette: [number, number, number][];
-
-  // public getCurveR() {
-  //   return CardinalCurve.build(this.red, 0.5, 100);
-  // }
-
-  // public getCurveG() {
-  //   return CardinalCurve.build(this.green, 0.5, 100);
-  // }
-
-  // public getCurveB() {
-  //   return CardinalCurve.build(this.blue, 0.5, 100);
-  // }
-
-  public mixed(): [number, number, number][] {
-
-    const r = this.paletteR;
-    const g = this.paletteG;
-    const b = this.paletteB;
-
-    const result = [];
-    for (let i = 0; i < r.length; i++) {
-      result.push([r[i], g[i], b[i]]);
-    }
-    return result;
-  }
-
   constructor() {
-
     this.redChange.subscribe(() => this.updatePalettes());
     this.greenChange.subscribe(() => this.updatePalettes());
     this.blueChange.subscribe(() => this.updatePalettes());
@@ -107,14 +73,14 @@ export class PaletteEditorComponent implements OnInit {
   ngOnInit() { }
 
   private updatePalettes() {
-    this.paletteR = CardinalCurve.build(this.red, 0.5, 100);
-    this.paletteG = CardinalCurve.build(this.green, 0.5, 100);
-    this.paletteB = CardinalCurve.build(this.blue, 0.5, 100);
+    const paletteR = CardinalCurve.build(this.red, 0.5, 100);
+    const paletteG = CardinalCurve.build(this.green, 0.5, 100);
+    const paletteB = CardinalCurve.build(this.blue, 0.5, 100);
 
-    this.gradientR = this.buildGradient(Array(100).fill(255), Array(100).fill(0), Array(100).fill(0), this.paletteR.map(v => v / 255));
-    this.gradientG = this.buildGradient(Array(100).fill(0), Array(100).fill(255), Array(100).fill(0), this.paletteG.map(v => v / 255));
-    this.gradientB = this.buildGradient(Array(100).fill(0), Array(100).fill(0), Array(100).fill(255), this.paletteB.map(v => v / 255));
-    this.gradient = this.buildGradient(this.paletteR, this.paletteG, this.paletteB, Array(100).fill(1));
+    this.gradientR = this.buildGradient(Array(100).fill(255), Array(100).fill(0), Array(100).fill(0), paletteR.map(v => v / 255));
+    this.gradientG = this.buildGradient(Array(100).fill(0), Array(100).fill(255), Array(100).fill(0), paletteG.map(v => v / 255));
+    this.gradientB = this.buildGradient(Array(100).fill(0), Array(100).fill(0), Array(100).fill(255), paletteB.map(v => v / 255));
+    this.gradient = this.buildGradient(paletteR, paletteG, paletteB, Array(100).fill(1));
   }
 
   public buildGradient(r: number[], g: number[], b: number[], a: number[]) {
@@ -124,7 +90,7 @@ export class PaletteEditorComponent implements OnInit {
       value += `, rgba(${r[i]}, ${g[i]}, ${b[i]}, ${a[i]}) ${i}%`;
     }
     value += ')';
-    return  {
+    return {
       background: value
     };
   }
