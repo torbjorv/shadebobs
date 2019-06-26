@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-remote=https://github.com/torbjorv/shadebobs.git
+remote=https://$1@github.com/torbjorv/shadebobs.git
 
 siteSource=master
 

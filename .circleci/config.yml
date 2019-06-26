@@ -65,7 +65,7 @@ jobs:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
             - run:
                 name: Deploy to github pages
-                command: ./deploy.sh
+                command: ./deploy.sh $GH_TOKEN
 
 
 workflows:
