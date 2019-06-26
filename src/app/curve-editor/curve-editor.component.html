@@ -2,7 +2,8 @@
   <svg [attr.width]="svgSize[0]" [attr.height]="svgSize[1]" [attr.viewBox]="svgViewBox" 
   (mousedown)="mousedown($event)"
   (mouseup)="mouseup($event)"
-  (mousemove)="mousemove($event)">
+  (mousemove)="mousemove($event)"
+  (mouseenter)="mouseenter($event)">
       <svg:path [attr.d]="svgCurve" stroke-width="1px" stroke="black" fill-opacity="0"/>
       <!-- <svg:circle *ngFor="let p of points; let i = index" 
         [attr.cx]="toSvg(p)[0]" 

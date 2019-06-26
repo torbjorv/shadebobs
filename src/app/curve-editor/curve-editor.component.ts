@@ -134,15 +134,15 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
     this._pointsChange.next(this._points);
   }
 
-  mousedown(event) {
+  mousedown(event: MouseEvent) {
     event.preventDefault();
     this._isDragging = true;
     console.log(`starting`, event);
     // Hide dragging element
   }
 
-  mousemove(event) {
-    event.preventDefault();
+  mousemove(event: MouseEvent) {
+//    event.preventDefault();
     if (this._isDragging) {
 
       const world = this.toWorld([event.offsetX, event.offsetY]);
@@ -158,9 +158,15 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  mouseup(event) {
-    event.preventDefault();
+  mouseup(event: MouseEvent) {
+//    event.preventDefault();
     console.log('drag end', event);
     this._isDragging = false;
+  }
+
+  mouseenter(event: MouseEvent) {
+//    event.preventDefault();
+    console.log('mouse enter', event);
+    this._isDragging = (event.buttons === 1);
   }
 }
