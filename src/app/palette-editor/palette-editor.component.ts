@@ -10,11 +10,18 @@ import { CardinalCurve } from '../cardinal-curve';
 })
 export class PaletteEditorComponent implements OnInit {
 
+  public gradientR: {};
+  public gradientG: {};
+  public gradientB: {};
+  public gradient: {};
+
+
   private _red: [number, number][] = [];
   @Input()
   public set red(value: [number, number][]) {
     this._red = value;
     this._redChange.next(value);
+    this.palette = this.mixed();
   }
 
   public get red(): [number, number][] {
@@ -59,23 +66,29 @@ export class PaletteEditorComponent implements OnInit {
     return this._blueChange;
   }
 
-  public getCurveR() {
-    return CardinalCurve.build(this.red, 0.5, 100);
-  }
+  public paletteR: number[];
+  public paletteG: number[];
+  public paletteB: number[];
 
-  public getCurveG() {
-    return CardinalCurve.build(this.green, 0.5, 100);
-  }
+  public palette: [number, number, number][];
 
-  public getCurveB() {
-    return CardinalCurve.build(this.blue, 0.5, 100);
-  }
+  // public getCurveR() {
+  //   return CardinalCurve.build(this.red, 0.5, 100);
+  // }
+
+  // public getCurveG() {
+  //   return CardinalCurve.build(this.green, 0.5, 100);
+  // }
+
+  // public getCurveB() {
+  //   return CardinalCurve.build(this.blue, 0.5, 100);
+  // }
 
   public mixed(): [number, number, number][] {
 
-    const r = this.getCurveR();
-    const g = this.getCurveG();
-    const b = this.getCurveB();
+    const r = this.paletteR;
+    const g = this.paletteG;
+    const b = this.paletteB;
 
     const result = [];
     for (let i = 0; i < r.length; i++) {
@@ -84,22 +97,35 @@ export class PaletteEditorComponent implements OnInit {
     return result;
   }
 
-  constructor() { }
+  constructor() {
+
+    this.redChange.subscribe(() => this.updatePalettes());
+    this.greenChange.subscribe(() => this.updatePalettes());
+    this.blueChange.subscribe(() => this.updatePalettes());
+  }
 
   ngOnInit() { }
 
-  public mixedGradient() {
+  private updatePalettes() {
+    this.paletteR = CardinalCurve.build(this.red, 0.5, 100);
+    this.paletteG = CardinalCurve.build(this.green, 0.5, 100);
+    this.paletteB = CardinalCurve.build(this.blue, 0.5, 100);
+
+    this.gradientR = this.buildGradient(Array(100).fill(255), Array(100).fill(0), Array(100).fill(0), this.paletteR.map(v => v / 255));
+    this.gradientG = this.buildGradient(Array(100).fill(0), Array(100).fill(255), Array(100).fill(0), this.paletteG.map(v => v / 255));
+    this.gradientB = this.buildGradient(Array(100).fill(0), Array(100).fill(0), Array(100).fill(255), this.paletteB.map(v => v / 255));
+    this.gradient = this.buildGradient(this.paletteR, this.paletteG, this.paletteB, Array(100).fill(1));
+  }
+
+  public buildGradient(r: number[], g: number[], b: number[], a: number[]) {
 
     let value = 'linear-gradient(to right';
-    const colors = this.mixed();
-    for (let i = 0; i < colors.length; i++) {
-      const color = colors[i];
-      value += `, rgb(${color[0]}, ${color[1]}, ${color[2]}) ${i}%`;
+    for (let i = 0; i < r.length; i++) {
+      value += `, rgba(${r[i]}, ${g[i]}, ${b[i]}, ${a[i]}) ${i}%`;
     }
     value += ')';
-    let style = {
+    return  {
       background: value
     };
-    return style;
   }
 }

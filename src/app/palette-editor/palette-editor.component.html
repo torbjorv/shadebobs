@@ -1,4 +1,4 @@
-<div class="all-channels" [ngStyle]="mixedGradient()">
+<div class="all-channels" [ngStyle]="gradient">
 
   <!-- <svg width="100%" height="100%" class="channels-mixed">
 
@@ -16,7 +16,9 @@
 
 <div class="channel">
   <div class="channel-curve channel-background"></div>
-  <svg width="100%" height="100%" class="channel-curve">
+  <div class="channel-curve" [ngStyle]="gradientR"></div>>
+
+  <!-- <svg width="100%" height="100%" class="channel-curve">
 
     <defs>
       <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -26,7 +28,7 @@
     </defs>
 
     <svg:rect width="100%" height="100%" fill="url(#redGradient)" />
-  </svg>
+  </svg> -->
 
   <div class="channel-curve">
     <app-curve-editor [(points)]="red"></app-curve-editor>
@@ -34,8 +36,8 @@
 </div>
 
 <div class="channel">
-  <div class="channel-curve channel-background"></div>
-  <svg width="100%" height="100%" class="channel-curve">
+    <div class="channel-curve channel-background"></div>
+  <!-- <svg width="100%" height="100%" class="channel-curve">
 
     <defs>
       <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -45,7 +47,7 @@
     </defs>
 
     <svg:rect width="100%" height="100%" fill="url(#greenGradient)" />
-  </svg>
+  </svg> -->
 
   <div class="channel-curve">
     <app-curve-editor [(points)]="green"></app-curve-editor>
@@ -53,8 +55,8 @@
 </div>
 
 <div class="channel">
-  <div class="channel-curve channel-background"></div>
-  <svg width="100%" height="100%" class="channel-curve">
+  <div class="channel-curve channel-background"  [ngStyle]="gradientB"></div>
+  <!-- <svg width="100%" height="100%" class="channel-curve">
 
     <defs>
       <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -64,7 +66,7 @@
     </defs>
 
     <svg:rect width="100%" height="100%" fill="url(#blueGradient)" />
-  </svg>
+  </svg> -->
 
   <div class="channel-curve">
     <app-curve-editor [(points)]="blue"></app-curve-editor>
