@@ -87,4 +87,19 @@ export class PaletteEditorComponent implements OnInit {
   constructor() { }
 
   ngOnInit() { }
+
+  public mixedGradient() {
+
+    let value = 'linear-gradient(to right';
+    const colors = this.mixed();
+    for (let i = 0; i < colors.length; i++) {
+      const color = colors[i];
+      value += `, rgb(${color[0]}, ${color[1]}, ${color[2]}) ${i}%`;
+    }
+    value += ')';
+    let style = {
+      background: value
+    };
+    return style;
+  }
 }
