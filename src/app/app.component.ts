@@ -72,7 +72,7 @@ export class AppComponent {
     this._defaultBlue = [];
 
     const c = 10;
-    for (let i = 0; i < c; i++) {
+    for (let i = 0; i <= c; i++) {
       this._defaultRed.push([i * (100 / c), (i / c) * 255]);
       this._defaultGreen.push([i * (100 / c), (i / c) * 255]);
       this._defaultBlue.push([i * (100 / c), (i / c) * 255]);

@@ -53,8 +53,10 @@ export class CardinalCurve {
         }
 
         const result: number[] = [];
+        const a = (points[points.length - 1][0] - points[0][0]);
         const k = (points[points.length - 1][0] - points[0][0]) / (count - 1);
-        for (let x = points[0][0]; x <= points[points.length - 1][0]; x += k) {
+        for (let i = 0; i < count; i++) {
+            const x = k * i;
             result.push(CardinalCurve.valueAt(points, tension, x));
         }
 

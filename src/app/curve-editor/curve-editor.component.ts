@@ -57,16 +57,16 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     this.onResize();
-    this.updateSvg();
 
+    d3.select(this._chartContainer.nativeElement).select('svg')
+    .call(d3.drag()
+      .on('drag', () => this.onDrag()));
   }
 
   ngOnChanges() {
     if (!this.isInitialized) {
       return;
     }
-
-    this.updateSvg();
   }
 
   public get isInitialized(): boolean {
@@ -107,82 +107,24 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
     return `0 0 ${this.svgSize[0]} ${this.svgSize[1]}`;
   }
 
-  private updateSvg(): void {
+  private onDrag(): void {
 
-    // This is just a hack so we can use D3's drag-features
-    // d3.select(this._chartContainer.nativeElement).select('svg')
-    //   .selectAll('circle')
-    //   .data(this.points)
-    //   .call(d3.drag<SVGCircleElement, [number, number]>()
-    //     .on('drag', (d, i) => this.move(d, this.toWorld([d3.event.x, d3.event.y]), this.world))
-    //     .on('end', (d, i) => this.active[i] = false));
+    const world = this.toWorld([d3.event.x, d3.event.y]);
 
-    d3.select(this._chartContainer.nativeElement).select('svg')
-      .call(d3.drag<SVGCircleElement, [number, number]>()
-        .on('drag', (d, i) => this.something())
-        .on('end', (d, i) => console.log('TROLLS dragend')));
-  }
-
-  private move(p: [number, number], to: [number, number], limits?: [[number, number], [number, number]]): void {
+    const closest: [number, number] =
+      this.points.reduce((current, next) => Math.abs(world[0] - current[0]) < Math.abs(world[0] - next[0]) ? current : next);
 
     // set the individual properties because the template is binding to the x/y, not the Point
     // instance.
-    p[0] = to[0];
-    p[1] = to[1];
+    closest[0] = world[0];
+    closest[1] = world[1];
 
-    if (limits) {
-      p[0] = Math.min(Math.max(p[0], limits[0][0]), limits[1][0]);
-      p[1] = Math.min(Math.max(p[1], limits[0][1]), limits[1][1]);
+    if (this.world) {
+      closest[0] = Math.min(Math.max(closest[0], this.world[0][0]), this.world[1][0]);
+      closest[1] = Math.min(Math.max(closest[1], this.world[0][1]), this.world[1][1]);
     }
 
     this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
     this._pointsChange.next(this._points);
-  }
-
-  mousedown(event: MouseEvent) {
-    // event.preventDefault();
-    // this._isDragging = true;
-    // console.log(`starting`, event);
-    // // Hide dragging element
-  }
-
-  private something() {
-      const world = this.toWorld([d3.event.x, d3.event.y]);
-
-      const closest: [number, number] =
-        this.points.reduce((current, next) => Math.abs(world[0] - current[0]) < Math.abs(world[0] - next[0]) ? current : next);
-
-      // closest[0] = world[0];
-//      closest[1] = world[1];
-      this.move(closest, [closest[0], world[1]], this.world);
-  }
-
-  mousemove(event: MouseEvent) {
-//     event.preventDefault();
-//     if (this._isDragging) {
-
-//       const world = this.toWorld([event.offsetX, event.offsetY]);
-
-//       const closest: [number, number] =
-//         this.points.reduce((current, next) => Math.abs(world[0] - current[0]) < Math.abs(world[0] - next[0]) ? current : next);
-
-//       // closest[0] = world[0];
-// //      closest[1] = world[1];
-//       this.move(closest, [closest[0], world[1]], this.world);
-
-//       // console.log('dragging', event);
-//     }
-  }
-
-  mouseup(event: MouseEvent) {
-    // event.preventDefault();
-    // console.log('drag end', event);
-    // this._isDragging = false;
-  }
-
-  mouseenter(event: MouseEvent) {
-//    event.preventDefault();
-//    console.log('mouse enter', event);
-//    this._isDragging = (event.buttons === 1);
   }
 }

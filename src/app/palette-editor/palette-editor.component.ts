@@ -73,14 +73,15 @@ export class PaletteEditorComponent implements OnInit {
   ngOnInit() { }
 
   private updatePalettes() {
-    const paletteR = CardinalCurve.build(this.red, 0.5, 100);
-    const paletteG = CardinalCurve.build(this.green, 0.5, 100);
-    const paletteB = CardinalCurve.build(this.blue, 0.5, 100);
+    const steps = 101;
+    const paletteR = CardinalCurve.build(this.red, 0.5, steps);
+    const paletteG = CardinalCurve.build(this.green, 0.5, steps);
+    const paletteB = CardinalCurve.build(this.blue, 0.5, steps);
 
-    this.gradientR = this.buildGradient(Array(100).fill(255), Array(100).fill(0), Array(100).fill(0), paletteR.map(v => v / 255));
-    this.gradientG = this.buildGradient(Array(100).fill(0), Array(100).fill(255), Array(100).fill(0), paletteG.map(v => v / 255));
-    this.gradientB = this.buildGradient(Array(100).fill(0), Array(100).fill(0), Array(100).fill(255), paletteB.map(v => v / 255));
-    this.gradient = this.buildGradient(paletteR, paletteG, paletteB, Array(100).fill(1));
+    this.gradientR = this.buildGradient(Array(steps).fill(255), Array(steps).fill(0), Array(steps).fill(0), paletteR.map(v => v / 255));
+    this.gradientG = this.buildGradient(Array(steps).fill(0), Array(steps).fill(255), Array(steps).fill(0), paletteG.map(v => v / 255));
+    this.gradientB = this.buildGradient(Array(steps).fill(0), Array(steps).fill(0), Array(steps).fill(255), paletteB.map(v => v / 255));
+    this.gradient = this.buildGradient(paletteR, paletteG, paletteB, Array(steps).fill(1));
   }
 
   public buildGradient(r: number[], g: number[], b: number[], a: number[]) {
