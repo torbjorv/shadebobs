@@ -27,7 +27,7 @@ git add -A > /dev/null 2>&1
 echo commit and push
 # need 'ci skip' to ignore this branch in CircleCI
 git commit --allow-empty -m "Deploy to GitHub pages [ci skip]"  > /dev/null 2>&1
-git push --force --quiet origin gh-pages > /dev/null 2>&1
+git push --force --quiet origin gh-pages 
 
 echo cleanup
 cd ..
