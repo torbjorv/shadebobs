@@ -4,10 +4,7 @@ import { CardinalCurve } from '../cardinal-curve';
 import { Subject, Observable } from 'rxjs';
 import { SimplifyAP } from 'simplify-ts';
 import { Utils } from '../utils';
-
-//import binarysearch = require("binary-search");
 import binarySearch from 'binary-search';
-//import * as binarySearch from 'binary-search';
 
 
 @Component({
@@ -158,7 +155,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
     //   closest[1] = Math.min(Math.max(closest[1], this.world[0][1]), this.world[1][1]);
     // }
 
-    
+
 
     // this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
     this._pointsChange.next(this._points);
