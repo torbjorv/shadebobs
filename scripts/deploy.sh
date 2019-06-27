@@ -10,7 +10,6 @@ mkdir gh-pages
 cd gh-pages
 
 git config --global user.name "CircleCI"  > /dev/null 2>&1
-# git config --global user.email "CircleCI"  > /dev/null 2>&1
 git init  > /dev/null 2>&1
 git remote add --fetch origin https://$TOKEN@github.com/torbjorv/shadebobs.git > /dev/null 2>&1
 
@@ -28,7 +27,7 @@ git add -A > /dev/null 2>&1
 echo commit and push
 # need 'ci skip' to ignore this branch in CircleCI
 git commit --allow-empty -m "Deploy to GitHub pages [ci skip]"  > /dev/null 2>&1
-git push --force --quiet origin gh-pages 
+git push --force --quiet origin gh-pages > /dev/null 2>&1
 
 echo cleanup
 cd ..
