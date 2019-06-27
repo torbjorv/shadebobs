@@ -9,7 +9,8 @@ echo checkout gh-pages
 mkdir gh-pages
 cd gh-pages
 
-# git config --global user.name "CircleCI"  > /dev/null 2>&1
+git config --global user.name "CircleCI"  > /dev/null 2>&1
+# git config --global user.email "CircleCI"  > /dev/null 2>&1
 git init  > /dev/null 2>&1
 git remote add --fetch origin https://$TOKEN@github.com/torbjorv/shadebobs.git > /dev/null 2>&1
 

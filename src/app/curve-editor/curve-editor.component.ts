@@ -15,8 +15,6 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
   @ViewChild('chart', { static: false })
   private _chartContainer: ElementRef;
 
-  private _isDragging = false;
-
   private _points: [number, number][] = [];
   private _pointsChange: Subject<[number, number][]> = new Subject();
 
@@ -52,7 +50,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
 
     // Unless I subtract 4 here, the svg area will keep growing for every onResize. No idea where those 4 pixels
     // are coming from (it's not padding/margin).
-    setTimeout(() => this.svgSize = [contentWidth, contentHeight - 4]);
+    setTimeout(() => this.svgSize = [contentWidth, contentHeight]);
   }
 
   ngAfterViewInit() {
