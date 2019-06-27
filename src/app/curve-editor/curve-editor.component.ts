@@ -114,7 +114,6 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
 
     // set the individual properties because the template is binding to the x/y, not the Point
     // instance.
-    closest[0] = world[0];
     closest[1] = world[1];
 
     if (this.world) {
