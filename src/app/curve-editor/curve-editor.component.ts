@@ -2,7 +2,12 @@ import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input, Aft
 import * as d3 from 'd3';
 import { CardinalCurve } from '../cardinal-curve';
 import { Subject, Observable } from 'rxjs';
+import { SimplifyAP } from 'simplify-ts';
 import { Utils } from '../utils';
+
+//import binarysearch = require("binary-search");
+import binarySearch from 'binary-search';
+//import * as binarySearch from 'binary-search';
 
 
 @Component({
@@ -10,13 +15,15 @@ import { Utils } from '../utils';
   templateUrl: './curve-editor.component.html',
   styleUrls: ['./curve-editor.component.sass']
 })
-export class CurveEditorComponent implements OnChanges, AfterViewInit {
+export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
 
   @ViewChild('chart', { static: false })
   private _chartContainer: ElementRef;
 
   private _points: [number, number][] = [];
   private _pointsChange: Subject<[number, number][]> = new Subject();
+  private _allPoints: [number, number][];
+  private _previousDrag: [number, number];
 
   @Input()
   public set points(value: [number, number][]) {
@@ -53,18 +60,24 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
     setTimeout(() => this.svgSize = [contentWidth, contentHeight]);
   }
 
+  ngOnInit() {
+    this._allPoints = this.points;
+  }
+
   ngAfterViewInit() {
     this.onResize();
 
     d3.select(this._chartContainer.nativeElement).select('svg')
     .call(d3.drag()
-      .on('drag', () => this.onDrag()));
+      .on('start', () => this.onDragStart())
+      .on('drag', () => this.onDrag())
+      .on('end', () => this.onDragEnd()));
   }
 
   ngOnChanges() {
-    if (!this.isInitialized) {
-      return;
-    }
+    // if (!this.isInitialized) {
+    //   return;
+    // }
   }
 
   public get isInitialized(): boolean {
@@ -105,23 +118,54 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit {
     return `0 0 ${this.svgSize[0]} ${this.svgSize[1]}`;
   }
 
+  private onDragStart(): void {
+    this._previousDrag = this.toWorld([d3.event.x, d3.event.y]);
+  }
+
   private onDrag(): void {
 
-    const world = this.toWorld([d3.event.x, d3.event.y]);
-
-    const closest: [number, number] =
-      this.points.reduce((current, next) => Math.abs(world[0] - current[0]) < Math.abs(world[0] - next[0]) ? current : next);
-
-    // set the individual properties because the template is binding to the x/y, not the Point
-    // instance.
-    closest[1] = world[1];
+    const current = this.toWorld([d3.event.x, d3.event.y]);
 
     if (this.world) {
-      closest[0] = Math.min(Math.max(closest[0], this.world[0][0]), this.world[1][0]);
-      closest[1] = Math.min(Math.max(closest[1], this.world[0][1]), this.world[1][1]);
+      current[0] = Math.min(Math.max(current[0], this.world[0][0]), this.world[1][0]);
+      current[1] = Math.min(Math.max(current[1], this.world[0][1]), this.world[1][1]);
     }
 
-    this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
+    let currentIndex = binarySearch(this._allPoints, current, (a, b) => a[0] - b[0]);
+    if (currentIndex < 0) {
+      currentIndex = Math.abs(currentIndex) - 1;
+    }
+    let previousIndex = binarySearch(this._allPoints, this._previousDrag, (a, b) => a[0] - b[0]);
+    if (previousIndex < 0) {
+      previousIndex = Math.abs(previousIndex) - 1;
+    }
+    const left = Math.min(currentIndex, previousIndex);
+    const right = Math.max(currentIndex, previousIndex);
+
+    this._allPoints.splice(left, right - left, current);
+
+    this._points = SimplifyAP(this._allPoints, 1);
+
+    // const closest: [number, number] =
+    //   this.points.reduce((current, next) => Math.abs(current[0] - current[0]) < Math.abs(current[0] - next[0]) ? current : next);
+
+    // // set the individual properties because the template is binding to the x/y, not the Point
+    // // instance.
+    // closest[1] = current[1];
+
+    // if (this.world) {
+    //   closest[0] = Math.min(Math.max(closest[0], this.world[0][0]), this.world[1][0]);
+    //   closest[1] = Math.min(Math.max(closest[1], this.world[0][1]), this.world[1][1]);
+    // }
+
+    
+
+    // this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
     this._pointsChange.next(this._points);
+    this._previousDrag = current;
+  }
+
+  private onDragEnd(): void {
+    this._previousDrag = null;
   }
 }
