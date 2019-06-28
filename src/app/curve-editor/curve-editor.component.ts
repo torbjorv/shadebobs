@@ -1,9 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input, AfterViewInit, ɵsetCurrentInjector } from '@angular/core';
 import * as d3 from 'd3';
-import { CardinalCurve } from '../cardinal-curve';
 import { Subject, Observable } from 'rxjs';
 import { SimplifyAP } from 'simplify-ts';
-import { Utils } from '../utils';
 import binarySearch from 'binary-search';
 
 
@@ -19,7 +17,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
 
   private _points: [number, number][] = [];
   private _pointsChange: Subject<[number, number][]> = new Subject();
-  private _allPoints: [number, number][];
+  private _dragPoints: [number, number][];
   private _previousDrag: [number, number];
 
   @Input()
@@ -58,7 +56,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this._allPoints = this.points;
+    this._dragPoints = this.points;
   }
 
   ngAfterViewInit() {
@@ -72,17 +70,6 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   ngOnChanges() {
-    // if (!this.isInitialized) {
-    //   return;
-    // }
-  }
-
-  public get isInitialized(): boolean {
-    return this._chartContainer !== undefined;
-  }
-
-  public getCurve(numPoints: number): number[] {
-    return CardinalCurve.build(this.points, 0.5, numPoints);
   }
 
   public get svgCurve(): string {
@@ -128,36 +115,18 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
       current[1] = Math.min(Math.max(current[1], this.world[0][1]), this.world[1][1]);
     }
 
-    let currentIndex = binarySearch(this._allPoints, current, (a, b) => a[0] - b[0]);
-    if (currentIndex < 0) {
-      currentIndex = Math.abs(currentIndex) - 1;
-    }
-    let previousIndex = binarySearch(this._allPoints, this._previousDrag, (a, b) => a[0] - b[0]);
-    if (previousIndex < 0) {
-      previousIndex = Math.abs(previousIndex) - 1;
-    }
-    const left = Math.min(currentIndex, previousIndex);
-    const right = Math.max(currentIndex, previousIndex);
+    const left = (current[0] <= this._previousDrag[0]) ? current : this._previousDrag;
+    const right = (current[0] > this._previousDrag[0]) ? current : this._previousDrag;
 
-    this._allPoints.splice(left, right - left, current);
+    let leftIndex = binarySearch(this._dragPoints, left, (a, b) => a[0] - b[0]);
+    let rightIndex = binarySearch(this._dragPoints, right, (a, b) => a[0] - b[0]);
 
-    this._points = SimplifyAP(this._allPoints, 1);
+    leftIndex = leftIndex < 0 ? Math.abs(leftIndex) - 1 : leftIndex;
+    rightIndex = rightIndex < 0 ? Math.abs(rightIndex) - 1 : rightIndex + 1;
 
-    // const closest: [number, number] =
-    //   this.points.reduce((current, next) => Math.abs(current[0] - current[0]) < Math.abs(current[0] - next[0]) ? current : next);
+    this._dragPoints.splice(leftIndex, (rightIndex - leftIndex), left, right);
+    this._points = SimplifyAP(this._dragPoints, 2);
 
-    // // set the individual properties because the template is binding to the x/y, not the Point
-    // // instance.
-    // closest[1] = current[1];
-
-    // if (this.world) {
-    //   closest[0] = Math.min(Math.max(closest[0], this.world[0][0]), this.world[1][0]);
-    //   closest[1] = Math.min(Math.max(closest[1], this.world[0][1]), this.world[1][1]);
-    // }
-
-
-
-    // this._points = [...this._points.sort((p0, p1) => p0[0] - p1[0])];
     this._pointsChange.next(this._points);
     this._previousDrag = current;
   }
