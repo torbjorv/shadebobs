@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Observable } from 'rxjs';
 import { Utils } from '../utils';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ghost-slider',
@@ -11,7 +12,7 @@ import { Utils } from '../utils';
   animations: [
     trigger('focusBar', [
       state('true', style({
-        opacity: 0.2,
+        opacity: 0.6,
       })),
       state('false', style({
         opacity: 0.0,
@@ -25,10 +26,10 @@ import { Utils } from '../utils';
     ]),
     trigger('focusLabel', [
       state('true', style({
-        'font-size': '15pt',
+        transform: 'scale(1.5)'
       })),
       state('false', style({
-        'font-size': '10pt',
+        transform: 'scale(1)'
       })),
       transition('true => false', [
         animate('0.2s')
@@ -41,8 +42,8 @@ import { Utils } from '../utils';
 })
 export class GhostSliderComponent implements AfterViewInit {
 
-  @ViewChild('container', { static: false })
-  private _container: ElementRef;
+  @ViewChild('slider', { static: false })
+  private _slider: ElementRef;
 
   private _normalizedValueAtDragStart: number;
   private _xAtDragStart: number;
@@ -85,13 +86,13 @@ export class GhostSliderComponent implements AfterViewInit {
   @Input()
   public label = 'label';
 
-  constructor() { }
+  constructor(private sanitizer: DomSanitizer) { }
 
   ngAfterViewInit() {
 
     // d3 handles nicely both mouse and touch, in addition to triggering 'end' if the drag stops
     // outside the element.
-    d3.select(this._container.nativeElement)
+    d3.select(this._slider.nativeElement)
       .call(d3.drag()
         .on('start', () => this.onDragStart(d3.event))
         .on('drag', () => this.onDrag(d3.event))
@@ -105,9 +106,7 @@ export class GhostSliderComponent implements AfterViewInit {
   }
 
   onDrag(e: MouseEvent) {
-    const before = this.normalizedValue;
-
-    this.normalizedValue = this._normalizedValueAtDragStart + 2 * (e.x - this._xAtDragStart) / this._container.nativeElement.clientWidth;
+    this.normalizedValue = this._normalizedValueAtDragStart + 2 * (e.x - this._xAtDragStart) / this._slider.nativeElement.clientWidth;
     this.normalizedValue = Math.max(Math.min(1, this.normalizedValue), 0);
 
     const k = this.normalizedValue * (this.max - this.min) + this.min;
@@ -118,5 +117,12 @@ export class GhostSliderComponent implements AfterViewInit {
 
   onDragEnd(e: MouseEvent) {
     this.hasFocus = false;
+  }
+
+  public get background() {
+    const gradient =
+    `linear-gradient(to right, white ${this.normalizedValue * 100}%, black ${this.normalizedValue * 100}%)`;
+
+    return this.sanitizer.bypassSecurityTrustStyle(gradient);
   }
 }

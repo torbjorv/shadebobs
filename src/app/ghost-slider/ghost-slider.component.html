@@ -1,9 +1,5 @@
-<div style="height: 100%; position: absolute; display: flex; align-items: center; font-size: 10pt"
-[@focusLabel]="hasFocus">
-{{ label }}
-    <!-- <span matBadge="{{ value }}"  matBadgeOverlap="false" matBadgeSize="large">{{ label }}</span> -->
+<div class="container">
+  <div class="label overlay-and-fill" [@focusLabel]="hasFocus">{{ label }}</div>
+  <div #slider class="slider" [@focusBar]="hasFocus" [style.background]="background"></div>
 </div>
-<div #container class="container" [@focusBar]="hasFocus" >
-  <div class="left" [style.width]="normalizedValue * 100 + '%'"></div>
-  <div class="right" [style.width]="100 * (1 - normalizedValue) + '%'"></div>
-</div>
+
