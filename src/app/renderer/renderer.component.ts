@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import { FifoQueue } from '../fifoqueue';
 import { CardinalCurve } from '../cardinal-curve';
 import { Utils } from '../utils';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-renderer',
@@ -52,6 +53,8 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
   public force = 100;
 
+  public debouncer: EventEmitter<void> = new EventEmitter();
+
   private static buildBob(size: number, force: number): number[] {
 
     const bob: number[] = new Array(size * size);
@@ -79,6 +82,8 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
     this._buffer = new Array(this._bufferSize[0] * this._bufferSize[1]);
     this._buffer.fill(0);
+
+    this.debouncer.pipe(debounceTime(500)).subscribe(() => this.reset());
   }
 
   ngOnInit() {
@@ -110,11 +115,9 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     if ('tail' in changes || 'size' in changes || 'force' in changes || 'count' in changes) {
-      this.reset();
+      this.debouncer.next();
     }
-
   }
-
 
   public reset(): void {
 
@@ -176,11 +179,11 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
           const y: number =
             Math.round(this._bufferSize[1] * Math.cos(k / 300 + (j / this.count) * 2 * Math.PI) * 0.45 + this._bufferSize[1] / 2);
 
-          this.drawBob(x, y, this.size, this.shadebob);
+          this.drawBob(x, y, Math.sqrt(this.shadebob.length), this.shadebob);
 
           if (this.queue.length === this.queue.capacity) {
             const bob: [number, number] = this.queue.pop();
-            this.eraseBob(bob[0], bob[1], this.size, this.shadebob);
+            this.eraseBob(bob[0], bob[1], Math.sqrt(this.shadebob.length), this.shadebob);
           }
           this.queue.push([x, y]);
         }

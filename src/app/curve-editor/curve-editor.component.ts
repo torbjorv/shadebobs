@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input, Aft
 import * as d3 from 'd3';
 import { Subject, Observable } from 'rxjs';
 import { SimplifyAP } from 'simplify-ts';
-import binarySearch from 'binary-search';
+import { Utils } from '../utils';
 
 
 @Component({
@@ -103,7 +103,21 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   private onDragStart(): void {
-    this._previousDrag = this.toWorld([d3.event.x, d3.event.y]);
+    // this._previousDrag = this.toWorld([d3.event.x, d3.event.y]);
+
+    const current = this.toWorld([d3.event.x, d3.event.y]);
+
+    if (this.world) {
+      current[0] = Math.min(Math.max(current[0], this.world[0][0]), this.world[1][0]);
+      current[1] = Math.min(Math.max(current[1], this.world[0][1]), this.world[1][1]);
+    }
+
+    Utils.setPoint(this._dragPoints, current);
+    this._points = SimplifyAP(this._dragPoints, 2);
+    this._pointsChange.next(this._points);
+    this._previousDrag = current;
+
+    // this.insert2(current, current);
   }
 
   private onDrag(): void {
@@ -115,20 +129,32 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
       current[1] = Math.min(Math.max(current[1], this.world[0][1]), this.world[1][1]);
     }
 
-    const left = (current[0] <= this._previousDrag[0]) ? current : this._previousDrag;
-    const right = (current[0] > this._previousDrag[0]) ? current : this._previousDrag;
+    Utils.setRange(this._dragPoints, this._previousDrag, current);
 
-    let leftIndex = binarySearch(this._dragPoints, left, (a, b) => a[0] - b[0]);
-    let rightIndex = binarySearch(this._dragPoints, right, (a, b) => a[0] - b[0]);
-
-    leftIndex = leftIndex < 0 ? Math.abs(leftIndex) - 1 : leftIndex;
-    rightIndex = rightIndex < 0 ? Math.abs(rightIndex) - 1 : rightIndex + 1;
-
-    this._dragPoints.splice(leftIndex, (rightIndex - leftIndex), left, right);
     this._points = SimplifyAP(this._dragPoints, 2);
-
     this._pointsChange.next(this._points);
     this._previousDrag = current;
+
+    // this.insert2(this._previousDrag, current);
+
+//    this.insert(current[0], current[1], this._previousDrag[0]);
+
+    // const left = (current[0] <= this._previousDrag[0]) ? current : this._previousDrag;
+    // const right = (current[0] > this._previousDrag[0]) ? current : this._previousDrag;
+
+    // console.log(`x: ${d3.event.x} r: ${right} ${this.world[1][0]}`);
+    
+    // let leftIndex = binarySearch(this._dragPoints, left, (a, b) => a[0] - b[0]);
+    // let rightIndex = binarySearch(this._dragPoints, right, (a, b) => a[0] - b[0]);
+
+    // leftIndex = leftIndex < 0 ? Math.abs(leftIndex) - 1 : leftIndex;
+    // rightIndex = rightIndex < 0 ? Math.abs(rightIndex) - 1 : rightIndex + 1;
+
+    // this._dragPoints.splice(leftIndex, (rightIndex - leftIndex), left, right);
+    // this._points = SimplifyAP(this._dragPoints, 2);
+
+    // this._pointsChange.next(this._points);
+    // this._previousDrag = current;
   }
 
   private onDragEnd(): void {
