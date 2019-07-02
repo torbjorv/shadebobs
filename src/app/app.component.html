@@ -1,32 +1,47 @@
-<app-renderer [red]="settings.red" [green]="settings.green" [blue]="settings.blue" [tail]="settings.tail"
+<!-- <app-renderer [red]="settings.red" [green]="settings.green" [blue]="settings.blue" [tail]="settings.tail"
   [count]="settings.count" [speed]="settings.speed" [size]="settings.size" [force]="settings.force">
 </app-renderer>
+ -->
 
-<div style="width: 100%; height: 45px; top: 50px; position: absolute;">
-  <app-ghost-slider [(value)]="settings.tail" [min]="100" [max]="50000" [label]="'Tail'"></app-ghost-slider>
-</div>
-
-<div style="width: 100%; height: 45px; top: 100px; position: absolute;">
-  <app-ghost-slider [(value)]="settings.count" [min]="1" [max]="10" [label]="'Count'"></app-ghost-slider>
-</div>
-
-<div style="width: 100%; height: 45px; top: 150px; position: absolute;">
-  <app-ghost-slider [(value)]="settings.speed" [min]="0.1" [max]="10" [step]="0.1" [label]="'Speed'"></app-ghost-slider>
-</div>
-
-<div style="width: 100%; height: 45px; top: 200px; position: absolute;">
-  <app-ghost-slider [(value)]="settings.size" [min]="10" [max]="50"  [label]="'Size'"></app-ghost-slider>
-</div>
-
-<div style="width: 100%; height: 45px; top: 250px; position: absolute;">
-  <app-ghost-slider [(value)]="settings.force" [min]="1" [max]="10"  [label]="'Force'"></app-ghost-slider>
-</div>
-<div *ngIf="settingsVisible" class="settings">
-    <app-settings [settings]="settings"></app-settings>
+<div class="toolbar-container">
+  <div class="toolbar-background" [style.background]="background">
   </div>
-  <div (click)="toggleSettings()" class="settings-icon" [style.color]="settingsIconColor">
-      <i *ngIf="!settingsVisible" class="material-icons-outlined">edit</i>
-      <i *ngIf="settingsVisible" class="material-icons">edit</i>
-    </div>
-    
-  
+
+  <div class="tool" [style.color]="toolbarColor">
+    <app-ghost-slider [(value)]="settings.tail" [min]="100" [max]="50000" [label]="'Tail'"></app-ghost-slider>
+  </div>
+
+  <div class="tool" [style.color]="toolbarColor">
+    <app-ghost-slider [(value)]="settings.count" [min]="1" [max]="10" [label]="'Count'"></app-ghost-slider>
+  </div>
+
+  <div class="tool" [style.color]="toolbarColor">
+    <app-ghost-slider [(value)]="settings.speed" [min]="0.1" [max]="10" [step]="0.1" [label]="'Speed'">
+    </app-ghost-slider>
+  </div>
+
+  <div class="tool" [style.color]="toolbarColor">
+    <app-ghost-slider [(value)]="settings.size" [min]="10" [max]="50" [label]="'Size'"></app-ghost-slider>
+  </div>
+
+  <div class="tool" [style.color]="toolbarColor">
+    <app-ghost-slider [(value)]="settings.force" [min]="1" [max]="10" [label]="'Force'"></app-ghost-slider>
+  </div>
+
+  <div class="tool">
+      <div class="tool-label" [style.color]="toolbarColor" (click)="redActive=!redActive">Red</div>
+  </div>
+  <div class="tool tool-label" [style.color]="toolbarColor" (click)="greenActive=!greenActive">Green</div>
+  <div class="tool tool-label" [style.color]="toolbarColor" (click)="blueActive=!blueActive">Blue</div>
+</div>
+
+
+
+
+<div *ngIf="settingsVisible" class="settings">
+  <app-settings [settings]="settings"></app-settings>
+</div>
+<div (click)="toggleSettings()" class="settings-icon" [style.color]="settingsIconColor">
+  <i *ngIf="!settingsVisible" class="material-icons-outlined">edit</i>
+  <i *ngIf="settingsVisible" class="material-icons">edit</i>
+</div>

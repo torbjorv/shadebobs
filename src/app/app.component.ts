@@ -3,6 +3,7 @@ import { Settings } from './settings';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { skip, first } from 'rxjs/operators';
 import { CardinalCurve } from './cardinal-curve';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -65,7 +66,11 @@ export class AppComponent {
   private _defaultSize = 10;
   private _defaultForce = 3;
 
-  public constructor(private router: Router, private route: ActivatedRoute) {
+  public redActive = false;
+  public greenActive = false;
+  public blueActive = false;
+
+  public constructor(private router: Router, private route: ActivatedRoute, private sanitizer: DomSanitizer) {
 
     this._defaultRed = [];
     this._defaultGreen = [];
@@ -129,11 +134,42 @@ export class AppComponent {
     if (this.settingsVisible) {
       return 'black';
     } else {
-      const firstR = CardinalCurve.build(this.settings.red, 0.5, 2)[0];
-      const firstG = CardinalCurve.build(this.settings.green, 0.5, 2)[0];
-      const firstB = CardinalCurve.build(this.settings.blue, 0.5, 2)[0];
+      const firstR = this.settings.red[0][1];
+      const firstG = this.settings.green[0][1];
+      const firstB = this.settings.blue[0][1];
       const sum = firstR + firstG + firstB;
       return sum > 350 ? 'black' : 'white';
     }
+  }
+
+  public get toolbarColor(): string {
+    const firstR = this.settings.red[0][1];
+    const firstG = this.settings.green[0][1];
+    const firstB = this.settings.blue[0][1];
+    const sum = firstR + firstG + firstB;
+    return sum > 350 ? 'black' : 'white';
+  }
+
+  public get toolbarBackground(): string {
+    const firstR = this.settings.red[0][1];
+    const firstG = this.settings.green[0][1];
+    const firstB = this.settings.blue[0][1];
+    const sum = firstR + firstG + firstB;
+    return sum > 350 ? 'white' : 'black';
+  }
+
+  public get background() {
+    const firstR = this.settings.red[0][1];
+    const firstG = this.settings.green[0][1];
+    const firstB = this.settings.blue[0][1];
+    const sum = firstR + firstG + firstB;
+    const C = (sum > 350) ? 255 : 0;
+    // const style = `linear-gradient(to right, rgba(${C}, ${C}, ${C}, 0.7) 40%, rgba(${C}, ${C}, ${C}, 0) 100%)`;
+    // const style = `radial-gradient(at bottom right, rgba(${C}, ${C}, ${C}, 0) 100%, rgba(${C}, ${C}, ${C}, 1) 0%)`;
+
+    const style = `radial-gradient(at bottom right,rgba(${C}, ${C}, ${C}, 0) 70%, rgba(${C}, ${C}, ${C}, 1) 100%)`;
+
+    return this.sanitizer.bypassSecurityTrustStyle(style);
+//    return 'red';
   }
 }
