@@ -5,10 +5,9 @@ export class Utils {
         return Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
     }
 
-    // https://stackoverflow.com/questions/13634813/javascript-round-to-the-nearest-value-on-a-scale?rq=1
-    public static nearest(value: number, min: number, max: number, steps: number): number {
-        const zerone = Math.round((value - min) * steps / (max - min)) / steps;
-        return zerone * (max - min) + min;
+    public static roundToStep(numToRound: number, numToRoundTo: number): number {
+        numToRoundTo = 1 / (numToRoundTo);
+        return Math.round(numToRound * numToRoundTo) / numToRoundTo;
     }
 
     /**

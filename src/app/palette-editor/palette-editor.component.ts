@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, Input, EventEmitter } from '@angular/core';
 import { CurveEditorComponent } from '../curve-editor/curve-editor.component';
 import { Subject, Observable } from 'rxjs';
 import { CardinalCurve } from '../cardinal-curve';

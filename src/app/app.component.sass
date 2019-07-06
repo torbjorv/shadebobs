@@ -1,45 +1,31 @@
 @import ../variables.sass
 
-.settings
+.renderer
     position: absolute
     top: 0
     left: 0
-    width: 300px
+    width: 100%
     height: 100%
 
-.settings-icon
-    position: absolute
-    top: 10px
-    left: 10px
-    user-select: none
+.menu
+    width: 100%
+    height: 100%
 
-.settings-icon:hover
-    cursor: pointer
-    text-shadow: 0 0 10px rgba(0, 0, 0, 1)
-
-.toolbar-background
-    position: absolute
-    width: 400px
-    pointer-events: none
-    height: 1000px
-    z-index: -100
-
-.toolbar-container
+.actions-bar
+    height: 40px
     display: flex
-    flex-direction: column
-    width: 100%
-    height: 100%
-    justify-content: flex-start
+    flex-direction: row
 
-.tool
-    width: 100%
-    height: 50px
-    color: blue
-    font-size: 12pt
-
-.tool-label
+.action
     user-select: none
-    pointer-events: none
     display: flex
     align-items: center
+    box-sizing: content-box
+    padding: 0 8px 0 8px
+    cursor: pointer
 
+.github-icon
+    width: 20px
+    height: 20px
+    box-sizing: content-box
+    padding: 2px

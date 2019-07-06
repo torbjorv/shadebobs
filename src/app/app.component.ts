@@ -1,9 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import { Settings } from './settings';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { skip, first } from 'rxjs/operators';
 import { CardinalCurve } from './cardinal-curve';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { RendererComponent } from './renderer/renderer.component';
+import { DOCUMENT } from '@angular/common';
+
+
+export enum ColorTheme {
+  dark = 'dark',
+  light = 'light'
+}
 
 @Component({
   selector: 'app-root',
@@ -14,7 +22,8 @@ export class AppComponent {
   title = 'shadebobs';
 
   settings: Settings;
-  settingsVisible = false;
+  settingsVisible = true;
+  isFullscreen = false;
 
   private _defaultRed: [number, number][] =
     [
@@ -70,7 +79,14 @@ export class AppComponent {
   public greenActive = false;
   public blueActive = false;
 
-  public constructor(private router: Router, private route: ActivatedRoute, private sanitizer: DomSanitizer) {
+  @ViewChild('renderer', { static: false })
+  public renderer: RendererComponent;
+
+  public constructor(
+    private router: Router, 
+    private route: ActivatedRoute, 
+    private sanitizer: DomSanitizer, 
+    @Inject(DOCUMENT) private document: any) {
 
     this._defaultRed = [];
     this._defaultGreen = [];
@@ -130,46 +146,57 @@ export class AppComponent {
     this.settingsVisible = !this.settingsVisible;
   }
 
-  public get settingsIconColor(): string {
-    if (this.settingsVisible) {
-      return 'black';
-    } else {
-      const firstR = this.settings.red[0][1];
-      const firstG = this.settings.green[0][1];
-      const firstB = this.settings.blue[0][1];
-      const sum = firstR + firstG + firstB;
-      return sum > 350 ? 'black' : 'white';
-    }
-  }
-
-  public get toolbarColor(): string {
+  public get colorTheme(): ColorTheme {
     const firstR = this.settings.red[0][1];
     const firstG = this.settings.green[0][1];
     const firstB = this.settings.blue[0][1];
     const sum = firstR + firstG + firstB;
-    return sum > 350 ? 'black' : 'white';
-  }
-
-  public get toolbarBackground(): string {
-    const firstR = this.settings.red[0][1];
-    const firstG = this.settings.green[0][1];
-    const firstB = this.settings.blue[0][1];
-    const sum = firstR + firstG + firstB;
-    return sum > 350 ? 'white' : 'black';
+    return sum > 350 ? ColorTheme.dark : ColorTheme.light;
   }
 
   public get background() {
-    const firstR = this.settings.red[0][1];
-    const firstG = this.settings.green[0][1];
-    const firstB = this.settings.blue[0][1];
-    const sum = firstR + firstG + firstB;
-    const C = (sum > 350) ? 255 : 0;
-    // const style = `linear-gradient(to right, rgba(${C}, ${C}, ${C}, 0.7) 40%, rgba(${C}, ${C}, ${C}, 0) 100%)`;
-    // const style = `radial-gradient(at bottom right, rgba(${C}, ${C}, ${C}, 0) 100%, rgba(${C}, ${C}, ${C}, 1) 0%)`;
+    const C = (this.colorTheme === ColorTheme.dark) ? 255 : 0;
 
-    const style = `radial-gradient(at bottom right,rgba(${C}, ${C}, ${C}, 0) 70%, rgba(${C}, ${C}, ${C}, 1) 100%)`;
+    const gradient = `radial-gradient(at bottom right,rgba(${C}, ${C}, ${C}, 0) 50%, rgba(${C}, ${C}, ${C}, 1) 90%)`;
 
-    return this.sanitizer.bypassSecurityTrustStyle(style);
-//    return 'red';
+    return this.sanitizer.bypassSecurityTrustStyle(gradient);
+  }
+
+  public openGithub() {
+    window.location.href='https://github.com/torbjorv/shadebobs';
+  }
+
+  enterFullscreen() {
+    const elem = document.documentElement as any;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+    this.isFullscreen = true;
+  }
+
+  /* Close fullscreen */
+  exitFullscreen() {
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+    } else if (this.document.mozCancelFullScreen) {
+      /* Firefox */
+      this.document.mozCancelFullScreen();
+    } else if (this.document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.document.webkitExitFullscreen();
+    } else if (this.document.msExitFullscreen) {
+      /* IE/Edge */
+      this.document.msExitFullscreen();
+    }
+    this.isFullscreen = false;
   }
 }

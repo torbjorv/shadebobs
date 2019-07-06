@@ -1,15 +1,24 @@
 @import ./variables.sass
 @import ./theme.sass
 
-html
+html, body
+    overflow: hidden
     margin: 0
     height: 100%
 
 body
-    margin: 0
-    min-height: 100%
     font-family: $sans-serif
     font-weight: $font-light
     color: white
+
+// Positions a div top left and fills the parent. Can be used to overlay multiple divs
+// inside same container. Only works if parent position is either relative or absolute
+.overlay-and-fill
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+
     
 

@@ -4,6 +4,11 @@ import { Subject, Observable } from 'rxjs';
 import { SimplifyAP } from 'simplify-ts';
 import { Utils } from '../utils';
 
+export enum DragState {
+  None = 'None',
+  Starting = 'Starting',
+  Dragging = 'Dragging'
+}
 
 @Component({
   selector: 'app-curve-editor',
@@ -12,13 +17,14 @@ import { Utils } from '../utils';
 })
 export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
 
-  @ViewChild('chart', { static: false })
-  private _chartContainer: ElementRef;
+  @ViewChild('svg', { static: false })
+  private _svg: ElementRef;
 
   private _points: [number, number][] = [];
   private _pointsChange: Subject<[number, number][]> = new Subject();
   private _dragPoints: [number, number][];
   private _previousDrag: [number, number];
+  public state = DragState.None;
 
   @Input()
   public set points(value: [number, number][]) {
@@ -45,7 +51,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
   constructor() { }
 
   onResize() {
-    const element = this._chartContainer.nativeElement;
+    const element = this._svg.nativeElement;
 
     const contentWidth = element.clientWidth;
     const contentHeight = element.clientHeight;
@@ -62,11 +68,11 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.onResize();
 
-    d3.select(this._chartContainer.nativeElement).select('svg')
-    .call(d3.drag()
-      .on('start', () => this.onDragStart())
-      .on('drag', () => this.onDrag())
-      .on('end', () => this.onDragEnd()));
+    d3.select(this._svg.nativeElement)
+      .call(d3.drag()
+        .on('start', () => this.onDragStart())
+        .on('drag', () => this.onDrag())
+        .on('end', () => this.onDragEnd()));
   }
 
   ngOnChanges() {
@@ -103,8 +109,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   private onDragStart(): void {
-    // this._previousDrag = this.toWorld([d3.event.x, d3.event.y]);
-
+    this.state = DragState.Starting;
     const current = this.toWorld([d3.event.x, d3.event.y]);
 
     if (this.world) {
@@ -116,12 +121,10 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
     this._points = SimplifyAP(this._dragPoints, 2);
     this._pointsChange.next(this._points);
     this._previousDrag = current;
-
-    // this.insert2(current, current);
   }
 
   private onDrag(): void {
-
+    this.state = DragState.Dragging;
     const current = this.toWorld([d3.event.x, d3.event.y]);
 
     if (this.world) {
@@ -134,30 +137,10 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
     this._points = SimplifyAP(this._dragPoints, 2);
     this._pointsChange.next(this._points);
     this._previousDrag = current;
-
-    // this.insert2(this._previousDrag, current);
-
-//    this.insert(current[0], current[1], this._previousDrag[0]);
-
-    // const left = (current[0] <= this._previousDrag[0]) ? current : this._previousDrag;
-    // const right = (current[0] > this._previousDrag[0]) ? current : this._previousDrag;
-
-    // console.log(`x: ${d3.event.x} r: ${right} ${this.world[1][0]}`);
-    
-    // let leftIndex = binarySearch(this._dragPoints, left, (a, b) => a[0] - b[0]);
-    // let rightIndex = binarySearch(this._dragPoints, right, (a, b) => a[0] - b[0]);
-
-    // leftIndex = leftIndex < 0 ? Math.abs(leftIndex) - 1 : leftIndex;
-    // rightIndex = rightIndex < 0 ? Math.abs(rightIndex) - 1 : rightIndex + 1;
-
-    // this._dragPoints.splice(leftIndex, (rightIndex - leftIndex), left, right);
-    // this._points = SimplifyAP(this._dragPoints, 2);
-
-    // this._pointsChange.next(this._points);
-    // this._previousDrag = current;
   }
 
   private onDragEnd(): void {
+    this.state = DragState.None;
     this._previousDrag = null;
   }
 }

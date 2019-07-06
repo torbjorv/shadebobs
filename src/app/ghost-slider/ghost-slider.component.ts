@@ -38,7 +38,7 @@ import { DomSanitizer } from '@angular/platform-browser';
         animate('0.1s')
       ]),
     ]),
-  ],
+  ]
 })
 export class GhostSliderComponent implements AfterViewInit {
 
@@ -109,9 +109,7 @@ export class GhostSliderComponent implements AfterViewInit {
     this.normalizedValue = this._normalizedValueAtDragStart + 2 * (e.x - this._xAtDragStart) / this._slider.nativeElement.clientWidth;
     this.normalizedValue = Math.max(Math.min(1, this.normalizedValue), 0);
 
-    const k = this.normalizedValue * (this.max - this.min) + this.min;
-
-    this._value = Utils.nearest(k, this.min, this.max, (this.max - this.min) / this.step);
+    this._value = Utils.roundToStep(this.normalizedValue * (this.max - this.min) + this.min, this.step);
     this._valueChange.next(this.value);
   }
 
