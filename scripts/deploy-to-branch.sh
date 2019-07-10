@@ -7,7 +7,7 @@ BRANCH_DIR=branch-$BRANCH
 
 # All git output below is sent to dev/null to avoid exposing anything sensitive in build logs
 
-echo checkout $BRANCH_DIR
+echo checkout $BRANCH
 mkdir $BRANCH_DIR
 cd $BRANCH_DIR
 
@@ -15,9 +15,9 @@ git config --global user.name "CircleCI"  > /dev/null 2>&1
 git init  > /dev/null 2>&1
 git remote add --fetch origin https://$TOKEN@github.com/torbjorv/shadebobs.git > /dev/null 2>&1
 
-git checkout $BRANCH  > /dev/null 2>&1
+git checkout $BRANCH > /dev/null 2>&1
 
-rm -rf . > /dev/null 2>&1
+rm -rf * > /dev/null 2>&1
 # Revert the deletion of this one, wanna keep it
 git checkout -- README.md
 
