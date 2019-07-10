@@ -125,15 +125,15 @@ workflows:
                             - master
 
     build_and_deploy_prod:
-    jobs:
-        - build
-        # The deploy job will only run on the filtered branches and
-        # require the build job to be successful before it starts
-        - deploy:
-            type: approval
-            requires:
-                - build
-            filters:
-                branches:
-                    only:
-                        - master
+        jobs:
+            - build
+            # The deploy job will only run on the filtered branches and
+            # require the build job to be successful before it starts
+            - deploy:
+                type: approval
+                requires:
+                    - build
+                filters:
+                    branches:
+                        only:
+                            - master
