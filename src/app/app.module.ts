@@ -17,7 +17,6 @@ import { Settings2Component } from './settings2/settings2.component';
   declarations: [
     AppComponent,
     RendererComponent,
-    SettingsComponent,
     CurveEditorComponent,
     PaletteEditorComponent,
     GhostSliderComponent,
