@@ -32,7 +32,7 @@ export class Utils {
     }
 
     /**
-     * Overwrites/sets/inserts a range in the curve. <p0, p1] will be either removed or overwritten. 
+     * Overwrites/sets/inserts a range in the curve. <p0, p1] will be either removed or overwritten.
      * p1 is guaranteed to be in the curve after operation is done.
      */
     public static setRange(curve: [number, number][], p0: [number, number], p1: [number, number]) {

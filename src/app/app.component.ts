@@ -2,8 +2,7 @@ import { Component, ViewChild, Inject } from '@angular/core';
 import { Settings } from './settings';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { skip, first } from 'rxjs/operators';
-import { CardinalCurve } from './cardinal-curve';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RendererComponent } from './renderer/renderer.component';
 import { DOCUMENT } from '@angular/common';
 
@@ -83,9 +82,9 @@ export class AppComponent {
   public renderer: RendererComponent;
 
   public constructor(
-    private router: Router, 
-    private route: ActivatedRoute, 
-    private sanitizer: DomSanitizer, 
+    private router: Router,
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
     @Inject(DOCUMENT) private document: any) {
 
     this._defaultRed = [];
@@ -157,13 +156,13 @@ export class AppComponent {
   public get background() {
     const C = (this.colorTheme === ColorTheme.dark) ? 255 : 0;
 
-    const gradient = `radial-gradient(at bottom right,rgba(${C}, ${C}, ${C}, 0) 50%, rgba(${C}, ${C}, ${C}, 1) 90%)`;
+    const gradient = `radial-gradient(at bottom right,rgba(${C}, ${C}, ${C}, 0) 36%, rgba(${C}, ${C}, ${C}, 0.9) 44%)`;
 
     return this.sanitizer.bypassSecurityTrustStyle(gradient);
   }
 
   public openGithub() {
-    window.location.href='https://github.com/torbjorv/shadebobs';
+    window.location.href = 'https://github.com/torbjorv/shadebobs';
   }
 
   enterFullscreen() {

@@ -1,4 +1,4 @@
-<app-renderer #renderer class="renderer" style="z-index: -200"
+<app-renderer #renderer class="overlay-and-fill" style="z-index: -100"
   [red]="settings.red" 
   [green]="settings.green" 
   [blue]="settings.blue" 
@@ -9,10 +9,10 @@
   [force]="settings.force">
 </app-renderer>
 
-<div class="menu" [style.color]="colorTheme==='light' ? 'white' : 'black'">
-    <div class="overlay-and-fill" [style.background]="background" style="z-index: -100"></div>
-
-    <div class="actions-bar">
+<div class="overlay-and-fill" [style.color]="colorTheme==='light' ? 'white' : 'black'">
+  <div class="overlay-and-fill menu-vignette" [style.background]="background"></div>  
+  
+  <div class="actions-bar">
         <i class="material-icons action" (click)="renderer.reset()">refresh</i>
         <i class="material-icons action">share</i>
         <div class="action" (click)="openGithub()">
