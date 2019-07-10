@@ -17,8 +17,9 @@ git remote add --fetch origin https://$TOKEN@github.com/torbjorv/shadebobs.git >
 
 git checkout $BRANCH  > /dev/null 2>&1
 
-shopt -s extglob
-rm -rf . !("README.md") > /dev/null 2>&1
+rm -rf . > /dev/null 2>&1
+# Revert the deletion of this one, wanna keep it
+git checkout -- README.md
 
 # Copy angular app in here
 echo copy app
