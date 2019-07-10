@@ -47,26 +47,7 @@ jobs:
                 paths:
                     - dist
 
-    # The deploy job
-    deploy:
-        working_directory: ~/project
-        docker:
-            - image: circleci/node:11.15-browsers
-        steps:
-            # Checkout the code from the branch into the working_directory
-            - checkout
-            # Log the current branch
-            - run:
-                name: Show current branch
-                command: echo ${CIRCLE_BRANCH}
-            # Restore cache from the build job which contains the
-            # dist folder that needs to be deployed
-            - restore_cache:
-                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-            - run:
-                name: Deploy to github pages
-                command: ./scripts/deploy.sh $GH_TOKEN
-
+x`
     # The staging job
     deploy_staging:
         working_directory: ~/project
@@ -116,7 +97,7 @@ workflows:
             - build
             # The deploy job will only run on the filtered branches and
             # require the build job to be successful before it starts
-            - deploy:
+            - deploy_staging:
                 requires:
                     - build
                 filters:
@@ -129,7 +110,7 @@ workflows:
             - build
             # The deploy job will only run on the filtered branches and
             # require the build job to be successful before it starts
-            - deploy:
+            - deploy_prod:
                 type: approval
                 requires:
                     - build
