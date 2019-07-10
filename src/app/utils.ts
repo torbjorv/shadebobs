@@ -32,48 +32,29 @@ export class Utils {
     }
 
     /**
-     * Overwrites/sets/inserts a range in the curve. <p0, p1] will be either removed or overwritten.
-     * p1 is guaranteed to be in the curve after operation is done.
+     * Overwrites/sets/inserts a range in the curve. [p0, p1] will be either removed or overwritten.
      */
     public static setRange(curve: [number, number][], p0: [number, number], p1: [number, number]) {
 
         if (p0[0] === p1[0]) {
             Utils.setPoint(curve, p1);
         } else {
+
+            const left = (p0[0] < p1[0]) ? p0 : p1;
+            const right = (p1[0] > p0[0]) ? p1 : p0;
+
             let insertionPoint: number;
             let count: number;
 
-            let p0Inclusive = binarySearch(curve, p0, (a, b) => a[0] - b[0]);
-            let p1Inclusive = binarySearch(curve, p1, (a, b) => a[0] - b[0]);
+            const leftIndex = binarySearch(curve, left, (a, b) => a[0] - b[0]);
+            const rightIndex = binarySearch(curve, right, (a, b) => a[0] - b[0]);
+            const leftInclusive = (leftIndex < 0) ? -leftIndex - 1 : leftIndex;
+            const rightInclusive = (rightIndex < 0) ? -rightIndex - 1 : rightIndex + 1;
 
-            if (p1[0] >= p0[0]) {
-                // left to right
-                if (p0Inclusive < 0) {
-                    p0Inclusive = -p0Inclusive - 1;
-                } else {
-                    p0Inclusive++;
-                }
+            count = (rightInclusive - leftInclusive);
+            insertionPoint = leftInclusive;
 
-                if (p1Inclusive < 0) {
-                    p1Inclusive = -p1Inclusive - 1;
-                } else {
-                    p1Inclusive++;
-                }
-                count = (p1Inclusive - p0Inclusive);
-                insertionPoint = p0Inclusive;
-            } else {
-                // right to left
-                if (p0Inclusive < 0) {
-                    p0Inclusive = -p0Inclusive - 1;
-                }
-
-                if (p1Inclusive < 0) {
-                    p1Inclusive = -p1Inclusive - 1;
-                }
-                count = (p0Inclusive - p1Inclusive);
-                insertionPoint = p1Inclusive;
-            }
-            curve.splice(insertionPoint, count, p1);
+            curve.splice(insertionPoint, count, left, right);
         }
     }
 }

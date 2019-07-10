@@ -117,9 +117,6 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
       current[1] = Math.min(Math.max(current[1], this.world[0][1]), this.world[1][1]);
     }
 
-    Utils.setPoint(this._dragPoints, current);
-    this._points = SimplifyAP(this._dragPoints, 2);
-    this._pointsChange.next(this._points);
     this._previousDrag = current;
   }
 

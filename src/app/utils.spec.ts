@@ -1,5 +1,4 @@
 import { Utils } from './utils';
-import { CDK_DESCRIBEDBY_HOST_ATTRIBUTE } from '@angular/cdk/a11y';
 
 describe('Utils.setPoint', () => {
   it('should set one point in empty curve', () => {
@@ -46,7 +45,7 @@ describe('Utils.setPoint', () => {
 });
 
 describe('Utils.setRange', () => {
-  it('should set range in empty curve', () => {
+  it('should set range in empty curve, left to right', () => {
 
     // given
     const curve = [];
@@ -57,7 +56,21 @@ describe('Utils.setRange', () => {
     Utils.setRange(curve, p0, p1);
 
     // then
-    expect(curve).toEqual([p1]);
+    expect(curve).toEqual([p0, p1]);
+  });
+
+  it('should set range in empty curve, right to left', () => {
+
+    // given
+    const curve = [];
+    const p0: [number, number] = [0, 1];
+    const p1: [number, number] = [1, 2];
+
+    // when
+    Utils.setRange(curve, p1, p0);
+
+    // then
+    expect(curve).toEqual([p0, p1]);
   });
 
   it('p0 < p1, p0 is already in curve', () => {
@@ -130,7 +143,7 @@ describe('Utils.setRange', () => {
     Utils.setRange(curve, p1, p2);
 
     // then
-    expect(curve).toEqual([p0, p2, p3]);
+    expect(curve).toEqual([p0, p1, p2, p3]);
   });
 
   it('p0==p1 inside same segment', () => {
@@ -177,7 +190,7 @@ describe('Utils.setRange', () => {
     Utils.setRange(curve, p0, p2);
 
     // then
-    expect(curve).toEqual([p2]);
+    expect(curve).toEqual([p0, p2]);
   });
 
   it('p0 < p1, overwrite point between', () => {
@@ -192,6 +205,6 @@ describe('Utils.setRange', () => {
     Utils.setRange(curve, p2, p0);
 
     // then
-    expect(curve).toEqual([p0]);
+    expect(curve).toEqual([p0, p2]);
   });
 });
