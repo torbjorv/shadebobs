@@ -4,9 +4,9 @@ import { CardinalCurve } from '../cardinal-curve';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
-  selector: 'app-settings2',
-  templateUrl: './settings2.component.html',
-  styleUrls: ['./settings2.component.sass'],
+  selector: 'app-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.sass'],
   animations: [
     trigger('focusCurve', [
       state('Starting', style({
@@ -24,7 +24,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ])
   ]
 })
-export class Settings2Component implements OnInit {
+export class SettingsComponent implements OnInit {
 
   public gradientR: {};
   public gradientG: {};

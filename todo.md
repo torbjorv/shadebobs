@@ -7,7 +7,13 @@
 
 ### Enhancements
 - Menu vignette should fade from dark to light theme
-- Add loading/splash screen
+- Add loading/splash screen (with build date and github revision number)
 - Implement the 'sharing' button
 - Create page icon
 - Page title
+
+### Cleanup
+
+
+#### Done
+- Rename Settings2 component
