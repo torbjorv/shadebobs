@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { RendererComponent } from './renderer/renderer.component';
-import { SettingsComponent } from './settings/settings.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBadgeModule } from '@angular/material';
 import { AppRoutingModule } from './app-routing.module';
