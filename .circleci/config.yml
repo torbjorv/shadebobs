@@ -47,7 +47,7 @@ jobs:
                 paths:
                     - dist
 
-x`
+
     # The staging job
     deploy_staging:
         working_directory: ~/project
