@@ -15,7 +15,7 @@ git config --global user.name "CircleCI"  > /dev/null 2>&1
 git init  > /dev/null 2>&1
 git remote add --fetch origin https://$TOKEN@github.com/torbjorv/shadebobs.git > /dev/null 2>&1
 
-git checkout $BRANCH_DIR  > /dev/null 2>&1
+git checkout $BRANCH  > /dev/null 2>&1
 
 shopt -s extglob
 rm -rf . !("README.md") > /dev/null 2>&1
@@ -30,8 +30,8 @@ git add -A > /dev/null 2>&1
 
 echo commit and push
 # need 'ci skip' to ignore this branch in CircleCI
-git commit --allow-empty -m "Deploy to GitHub pages [ci skip]"  > /dev/null 2>&1
-git push --force --quiet origin $BRANCH_DIR > /dev/null 2>&1
+git commit --allow-empty -m "Deploy to branch '$BRANCH' [ci skip]"  > /dev/null 2>&1
+git push --force --quiet origin $BRANCH > /dev/null 2>&1
 
 echo cleanup
 cd ..
