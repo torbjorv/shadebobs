@@ -1,5 +1,5 @@
 ### Bugs
-- Ghost sliders show start to the right of text, not on top of
+- Ghost sliders should show start to the right of text, not on top of
 - Ghost sliders no longer animates on Safari
 - Ghost Slider labels disappear while dragging (probably scale outside frame)
 - Either fix the fullcsreen button on mobile or hide it
@@ -10,6 +10,7 @@
 - Implement the 'sharing' button
 - Create page icon
 - Page title
+- setup code coverage on circleci
 
 ### Cleanup
 
