@@ -8,8 +8,11 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.sass'],
   animations: [
-    trigger('focusCurve', [
-      state('Starting', style({
+    trigger('curve', [
+      state('void', style({
+        opacity : 0
+      })),
+      state('Holding', style({
         opacity: 1,
       })),
       state('None', style({
@@ -18,16 +21,57 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       state('Dragging', style({
         opacity: 0.5,
       })),
-      transition('Starting => Dragging', [
+      transition('Holding => Dragging', [
         animate('0.5s')
       ]),
       transition('* => None', [
         animate('0.2s')
       ]),
-      transition('* => Starting', [
+      transition('* => Holding', [
         animate('0.1s')
       ])
-    ])
+    ]),
+    trigger('slider', [
+      state('void', style({
+        opacity : 0
+      })),
+      state('Holding', style({
+        opacity: 0.7,
+      })),
+      state('None', style({
+        opacity: 0.0,
+      })),
+      state('Dragging', style({
+        opacity: 0.4,
+      })),
+      transition('Holding => Dragging', [
+        animate('0.5s')
+      ]),
+      transition('* => None', [
+        animate('0.2s')
+      ]),
+      transition('* => Holding', [
+        animate('0.1s')
+      ])
+    ]),
+
+    trigger('label', [
+      state('void, None', style({
+        'font-size' : '12pt'
+      })),
+      state('Holding, Dragging', style({
+        'font-size' : '24pt'
+      })),
+      transition('Holding => Dragging', [
+        animate('0.5s')
+      ]),
+      transition('* => None', [
+        animate('0.2s')
+      ]),
+      transition('* => Holding', [
+        animate('0.1s')
+      ])
+    ]),
   ]
 })
 export class SettingsComponent implements OnInit {

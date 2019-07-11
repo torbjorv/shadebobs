@@ -4,9 +4,9 @@ import { Subject, Observable } from 'rxjs';
 import { SimplifyAP } from 'simplify-ts';
 import { Utils } from '../utils';
 
-export enum DragState {
+enum DragState {
   None = 'None',
-  Starting = 'Starting',
+  Holding = 'Holding',
   Dragging = 'Dragging'
 }
 
@@ -109,7 +109,7 @@ export class CurveEditorComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   private onDragStart(): void {
-    this.state = DragState.Starting;
+    this.state = DragState.Holding;
     const current = this.toWorld([d3.event.x, d3.event.y]);
 
     if (this.world) {

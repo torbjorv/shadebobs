@@ -1,44 +1,19 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
-import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Observable } from 'rxjs';
 import { Utils } from '../utils';
 import { DomSanitizer } from '@angular/platform-browser';
 
+enum DragState {
+  None = 'None',
+  Holding = 'Holding',
+  Dragging = 'Dragging'
+}
+
 @Component({
   selector: 'app-ghost-slider',
   templateUrl: './ghost-slider.component.html',
-  styleUrls: ['./ghost-slider.component.sass'],
-  animations: [
-    trigger('focusBar', [
-      state('true', style({
-        opacity: 0.6,
-      })),
-      state('false', style({
-        opacity: 0.0,
-      })),
-      transition('true => false', [
-        animate('0.2s')
-      ]),
-      transition('false => true', [
-        animate('0.1s')
-      ]),
-    ]),
-    trigger('focusLabel', [
-      state('true', style({
-        transform: 'scale(1.5)'
-      })),
-      state('false', style({
-        transform: 'scale(1)'
-      })),
-      transition('true => false', [
-        animate('0.2s')
-      ]),
-      transition('false => true', [
-        animate('0.1s')
-      ]),
-    ]),
-  ]
+  styleUrls: ['./ghost-slider.component.sass']
 })
 export class GhostSliderComponent implements AfterViewInit {
 
@@ -52,7 +27,7 @@ export class GhostSliderComponent implements AfterViewInit {
   public normalizedValue = 0.3;
   private _valueChange: EventEmitter<number> = new EventEmitter();
 
-  public hasFocus = false;
+  public state = DragState.None;
 
   @Input()
   public set value(value: number) {
@@ -83,9 +58,6 @@ export class GhostSliderComponent implements AfterViewInit {
   @Input()
   public step = 1;
 
-  @Input()
-  public label = '';
-
   constructor(private sanitizer: DomSanitizer) { }
 
   ngAfterViewInit() {
@@ -100,12 +72,13 @@ export class GhostSliderComponent implements AfterViewInit {
   }
 
   onDragStart(e: MouseEvent) {
+    this.state = DragState.Holding;
     this._normalizedValueAtDragStart = this.normalizedValue;
     this._xAtDragStart = e.x;
-    this.hasFocus = true;
   }
 
   onDrag(e: MouseEvent) {
+    this.state = DragState.Dragging;
     const speed = 2;
     const width = this._slider.nativeElement.clientWidth;
     this.normalizedValue = this._normalizedValueAtDragStart + speed * (e.x - this._xAtDragStart) / width;
@@ -126,7 +99,7 @@ export class GhostSliderComponent implements AfterViewInit {
   }
 
   onDragEnd(e: MouseEvent) {
-    this.hasFocus = false;
+    this.state = DragState.None;
   }
 
   public get background() {

@@ -2,7 +2,8 @@
 - Ghost sliders no longer animates on Safari
 - Ghost Slider labels disappear while dragging (probably scale outside frame)
 - Either fix the fullscreen button on mobile or hide it
-- when slider hits edge we need to reset the start of the drag. E.g. if you drag all the way to the left, dragging to the right again makes it seem like nothing happens
+- vignette does not work on mobile safari
+- curve editor needs bigger margins (left and right) for mobile
 
 ### Enhancements
 - Menu vignette should fade from dark to light theme
@@ -24,9 +25,11 @@
 - Create shared style class for 'center text vertically in div'
 - rename 'GhostSlider' to 'BarSlider' or something. There is nothing Ghost about it now that the 
 opacity code is on the outside
-- remove label support from ghostslider
+- move opacity animation of ghostslider to parent
 
 #### Done
+- remove label support from ghostslider
 - Rename Settings2 component
 - Clicking on CurveEditor (without dragging) should not modify
 - Each setting need padding left and right
+- when slider hits edge we need to reset the start of the drag. E.g. if you drag all the way to the left, dragging to the right again makes it seem like nothing happens
