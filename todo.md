@@ -1,9 +1,7 @@
 ### Bugs
 - Ghost sliders no longer animates on Safari
-- Ghost Slider labels disappear while dragging (probably scale outside frame)
-- Either fix the fullscreen button on mobile or hide it
-- vignette does not work on mobile safari
-- curve editor needs bigger margins (left and right) for mobile
+≈- Either fix the fullscreen button on mobile or hide it
+- vignette does not work on safari
 
 ### Enhancements
 - Menu vignette should fade from dark to light theme
@@ -19,6 +17,7 @@
 - Need a visual indicator for the settings so users know where to click/how to interact
 - Need a vertical line on the slider (otherwise user can't know when the value is on either of the extremes)
 - Fade in/out settings based on mousemove/click (like menus on netflix/youtube/hbo)
+- animation effect on hovering over the labels
 
 ### Cleanup
 - Remove the PaletteEditor (after we take the full-palette viz code)
@@ -33,3 +32,6 @@ opacity code is on the outside
 - Clicking on CurveEditor (without dragging) should not modify
 - Each setting need padding left and right
 - when slider hits edge we need to reset the start of the drag. E.g. if you drag all the way to the left, dragging to the right again makes it seem like nothing happens
+- curve editor needs bigger margins (left and right) for mobile
+- curve editor needs bigger margins (left and right) for mobile
+
