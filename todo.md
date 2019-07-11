@@ -2,6 +2,8 @@
 - Ghost sliders no longer animates on Safari
 ≈- Either fix the fullscreen button on mobile or hide it
 - vignette does not work on safari
+- something slows down the rendering after many interactions. Must be some garbage hanging around after every 
+event 
 
 ### Enhancements
 - Menu vignette should fade from dark to light theme

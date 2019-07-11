@@ -1,33 +1,33 @@
 <div class="settings-container">
 
   <div class="setting">
-    <div [@label]="tailSlider.state" class="setting-label setting-padding">Tail</div>
     <app-ghost-slider #tailSlider [@slider]="tailSlider.state" class="overlay-and-fill setting-padding" [(value)]="tail" [min]="100" [max]="50000">
     </app-ghost-slider>
+    <div [@label]="tailSlider.state" class="setting-label setting-padding">Tail</div>
   </div>
 
   <div class="setting">
-    <div [@label]="countSlider.state"  class="setting-label setting-padding">Count</div>
     <app-ghost-slider #countSlider [@slider]="countSlider.state" class="overlay-and-fill setting-padding" [(value)]="count" [min]="1" [max]="10">
     </app-ghost-slider>
+    <div [@label]="countSlider.state"  class="setting-label setting-padding">Count</div>
   </div>
 
   <div class="setting">
-    <div [@label]="speedSlider.state"  class="setting-label setting-padding">Speed</div>
     <app-ghost-slider #speedSlider [@slider]="speedSlider.state" class="overlay-and-fill setting-padding" [(value)]="speed" [min]="0.1" [max]="10" [step]="0.1">
     </app-ghost-slider>
+    <div [@label]="speedSlider.state"  class="setting-label setting-padding">Speed</div>
   </div>
 
   <div class="setting">
-    <div [@label]="sizeSlider.state"  class="setting-label setting-padding">Size</div>
     <app-ghost-slider #sizeSlider [@slider]="sizeSlider.state" class="overlay-and-fill setting-padding" [(value)]="size" [min]="10" [max]="50">
     </app-ghost-slider>
+    <div [@label]="sizeSlider.state"  class="setting-label setting-padding">Size</div>
   </div>
 
   <div class="setting">
-    <div [@label]="forceSlider.state" class="setting-label setting-padding">Force</div>
     <app-ghost-slider #forceSlider [@slider]="forceSlider.state" class="overlay-and-fill setting-padding" [(value)]="force" [min]="1" [max]="10" [step]="0.1">
     </app-ghost-slider>
+    <div [@label]="forceSlider.state" class="setting-label setting-padding">Force</div>
   </div>
 
   <div class="setting">

@@ -10,33 +10,27 @@
 </app-renderer>
 
 <div class="overlay-and-fill" [style.color]="colorTheme==='light' ? 'white' : 'black'">
-  <div class="overlay-and-fill menu-vignette" [style.background]="background"></div>  
   
-  <div class="actions-bar">
-        <i class="material-icons action" (click)="renderer.reset()">refresh</i>
-        <i class="material-icons action">share</i>
-        <div class="action" (click)="openGithub()">
-          <img *ngIf="colorTheme==='light'" src="assets/GitHub-Mark-Light-32px.png" class="github-icon">
-          <img *ngIf="colorTheme==='dark'" src="assets/GitHub-Mark-32px.png" class="github-icon">
-        </div>
-        <i *ngIf="!isFullscreen" class="material-icons action" (click)="enterFullscreen()">fullscreen</i>
-        <i *ngIf="isFullscreen" class="material-icons action" (click)="exitFullscreen()">fullscreen_exit</i>
-    </div>
-      
-    <div class="settings">
-      <app-settings 
-        [(tail)]="settings.tail"
-        [(count)]="settings.count"
-        [(speed)]="settings.speed"
-        [(size)]="settings.size"
-        [(force)]="settings.force"
-        [(red)]="settings.red"
-        [(green)]="settings.green"
-        [(blue)]="settings.blue"></app-settings>
-    </div>      
-</div>
+  <div class="menu-vignette" [style.background]="background"></div>  
 
-<!-- <div (click)="toggleSettings()" class="settings-icon" [style.color]="settingsIconColor">
-  <i *ngIf="!settingsVisible" class="material-icons-outlined">edit</i>
-  <i *ngIf="settingsVisible" class="material-icons">edit</i>
-</div> -->
+  <div class="actions-bar">
+      <i class="material-icons action" (click)="renderer.reset()">refresh</i>
+      <i class="material-icons action">share</i>
+      <div class="action" (click)="openGithub()">
+        <img *ngIf="colorTheme==='light'" src="assets/GitHub-Mark-Light-32px.png" class="github-icon">
+        <img *ngIf="colorTheme==='dark'" src="assets/GitHub-Mark-32px.png" class="github-icon">
+      </div>
+      <i *ngIf="!isFullscreen" class="material-icons action" (click)="enterFullscreen()">fullscreen</i>
+      <i *ngIf="isFullscreen" class="material-icons action" (click)="exitFullscreen()">fullscreen_exit</i>
+  </div>
+      
+  <app-settings 
+    [(tail)]="settings.tail"
+    [(count)]="settings.count"
+    [(speed)]="settings.speed"
+    [(size)]="settings.size"
+    [(force)]="settings.force"
+    [(red)]="settings.red"
+    [(green)]="settings.green"
+    [(blue)]="settings.blue"></app-settings>
+</div>
