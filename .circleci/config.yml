@@ -1,7 +1,6 @@
 version: 2
 
 jobs:
-    # The build job
     build:
         working_directory: ~/project
         docker:
@@ -47,13 +46,11 @@ jobs:
                     - dist
 
 
-    # The staging job
     deploy_staging:
         working_directory: ~/project
         docker:
             - image: circleci/node:11.15-browsers
         steps:
-            # Checkout the code from the branch into the working_directory
             - checkout
             # Log the current branch
             - run:
@@ -67,13 +64,11 @@ jobs:
                 name: Deploy Staging
                 command: ./scripts/deploy-to-branch.sh $GH_TOKEN gh-pages-staging
     
-    # The prod job
     deploy_prod:
         working_directory: ~/project
         docker:
             - image: circleci/node:11.15-browsers
         steps:
-            # Checkout the code from the branch into the working_directory
             - checkout
             # Log the current branch
             - run:
@@ -110,7 +105,7 @@ workflows:
             # The deploy job will only run on the filtered branches and
             # require the build job to be successful before it starts
             - deploy_prod:
-                type: approval
+                # type: approval
                 requires:
                     - build
                 filters:
