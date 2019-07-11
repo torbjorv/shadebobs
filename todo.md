@@ -1,7 +1,5 @@
 ### Bugs
-- Ghost sliders no longer animates on Safari
 ≈- Either fix the fullscreen button on mobile or hide it
-- vignette does not work on safari
 - something slows down the rendering after many interactions. Must be some garbage hanging around after every 
 event 
 
@@ -36,4 +34,8 @@ opacity code is on the outside
 - when slider hits edge we need to reset the start of the drag. E.g. if you drag all the way to the left, dragging to the right again makes it seem like nothing happens
 - curve editor needs bigger margins (left and right) for mobile
 - curve editor needs bigger margins (left and right) for mobile
+- vignette does not work on safari
+- Ghost sliders no longer animates on Safari
+
+
 
