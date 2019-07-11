@@ -84,7 +84,7 @@ export class GhostSliderComponent implements AfterViewInit {
   public step = 1;
 
   @Input()
-  public label = 'label';
+  public label = '';
 
   constructor(private sanitizer: DomSanitizer) { }
 

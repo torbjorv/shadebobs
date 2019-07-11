@@ -1,8 +1,8 @@
 ### Bugs
-- Ghost sliders should show start to the right of text, not on top of
 - Ghost sliders no longer animates on Safari
 - Ghost Slider labels disappear while dragging (probably scale outside frame)
-- Either fix the fullcsreen button on mobile or hide it
+- Either fix the fullscreen button on mobile or hide it
+- when slider hits edge we need to reset the start of the drag. E.g. if you drag all the way to the left, dragging to the right again makes it seem like nothing happens
 
 ### Enhancements
 - Menu vignette should fade from dark to light theme
@@ -11,10 +11,22 @@
 - Create page icon
 - Page title
 - setup code coverage on circleci
+- Show the full palette over or below the colors
+- MOve settings to bottom (at least on mobile)
+- Rotate the canvas 90 on mobile (when screen is vertical)
+- Need a nicer font on settings
+- Need a visual indicator for the settings so users know where to click/how to interact
+- Need a vertical line on the slider (otherwise user can't know when the value is on either of the extremes)
+- Fade in/out settings based on mousemove/click (like menus on netflix/youtube/hbo)
 
 ### Cleanup
-
+- Remove the PaletteEditor (after we take the full-palette viz code)
+- Create shared style class for 'center text vertically in div'
+- rename 'GhostSlider' to 'BarSlider' or something. There is nothing Ghost about it now that the 
+opacity code is on the outside
+- remove label support from ghostslider
 
 #### Done
 - Rename Settings2 component
 - Clicking on CurveEditor (without dragging) should not modify
+- Each setting need padding left and right

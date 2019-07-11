@@ -1,50 +1,32 @@
-
-.toolbar-container
+.settings-container
     display: flex
     flex-direction: column
     width: 100%
     height: 100%
     justify-content: flex-start
 
-.tool
+.setting
     width: 100%
     height: 40px
-    font-size: 12pt
+    position: relative
 
-.tool-label
+.setting-padding
+    padding-left: 12px
+    padding-right: 24px
+
+.setting-label
     user-select: none
     pointer-events: none
+    font-size: 12pt
+
+    // For vertical alignment
+    height: 100%
     display: flex
     align-items: center
 
-.color-channel-container
-    width: 100%
-    height: 100%
-    // padding: 2px 0 2px 0
-    // box-sizing: border-box
-    opacity: 0
-    position: relative
-    
-.channel-layer
-    width: 100%
-    height: 100%
-    // position: absolute
-
 .channel-background
-    // position: absolute
-    // width: 100%
-    // top: 0
-    // bottom: 0
     pointer-events: none
     user-select: none
-
-.color-channel
-    // height: 100%
-    // position: absolute
-
-// .channel-background
-//     background-image: url(../../assets/checkers.png)
-//     background-size: 20px 20px
 
 .channels-mixed
     padding: 10px 0px 10px 0px

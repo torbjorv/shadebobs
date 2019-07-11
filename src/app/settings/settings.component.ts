@@ -18,8 +18,14 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       state('Dragging', style({
         opacity: 0.5,
       })),
-      transition('* => *', [
+      transition('Starting => Dragging', [
+        animate('0.5s')
+      ]),
+      transition('* => None', [
         animate('0.2s')
+      ]),
+      transition('* => Starting', [
+        animate('0.1s')
       ])
     ])
   ]
