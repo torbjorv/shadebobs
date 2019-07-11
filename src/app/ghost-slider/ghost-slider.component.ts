@@ -106,8 +106,20 @@ export class GhostSliderComponent implements AfterViewInit {
   }
 
   onDrag(e: MouseEvent) {
-    this.normalizedValue = this._normalizedValueAtDragStart + 2 * (e.x - this._xAtDragStart) / this._slider.nativeElement.clientWidth;
-    this.normalizedValue = Math.max(Math.min(1, this.normalizedValue), 0);
+    const speed = 2;
+    const width = this._slider.nativeElement.clientWidth;
+    this.normalizedValue = this._normalizedValueAtDragStart + speed * (e.x - this._xAtDragStart) / width;
+
+    // If user pushes the bar to the edge (and beyond) and then back we want the return movement
+    // to give an immediate effect so we adjust dragstart to reflect that
+    if (this.normalizedValue < 0) {
+      this._xAtDragStart = e.x + this._normalizedValueAtDragStart * width / speed;
+      this.normalizedValue = 0;
+    }
+    if (this.normalizedValue > 1) {
+     this._xAtDragStart = e.x - (1 - this._normalizedValueAtDragStart) * width / speed;
+     this.normalizedValue = 1;
+    }
 
     this._value = Utils.roundToStep(this.normalizedValue * (this.max - this.min) + this.min, this.step);
     this._valueChange.next(this.value);
