@@ -1,5 +1,5 @@
 ### Bugs
-≈- Either fix the fullscreen button on mobile or hide it
+- Either fix the fullscreen button on mobile or hide it
 - something slows down the rendering after many interactions. Must be some garbage hanging around after every 
 event 
 
@@ -8,7 +8,6 @@ event
 - Add loading/splash screen (with build date and github revision number)
 - Implement the 'sharing' button
 - Create page icon
-- Page title
 - setup code coverage on circleci
 - Show the full palette over or below the colors
 - MOve settings to bottom (at least on mobile)
@@ -36,6 +35,8 @@ opacity code is on the outside
 - vignette does not work on safari
 - Ghost sliders no longer animates on Safari
 - move opacity animation of ghostslider to parent
+- Page title
+
 
 
 
