@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChang
 import { FifoQueue } from '../fifoqueue';
 import { CardinalCurve } from '../cardinal-curve';
 import { Utils } from '../utils';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-renderer',
@@ -22,6 +22,8 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   // the same on any screen resolution.
   private _bufferSize = [1234, 400];
   private _buffer: number[];
+
+  public fps: number;
 
   @Input()
   public red: [number, number][] = [[0, 0]];
@@ -53,7 +55,8 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
   public force = 100;
 
-  public debouncer: EventEmitter<void> = new EventEmitter();
+  private _settingsChange: EventEmitter<void> = new EventEmitter();
+  private _colorsChange: EventEmitter<void> = new EventEmitter();
 
   private static buildBob(size: number, force: number): number[] {
 
@@ -83,7 +86,8 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
     this._buffer = new Array(this._bufferSize[0] * this._bufferSize[1]);
     this._buffer.fill(0);
 
-    this.debouncer.pipe(debounceTime(500)).subscribe(() => this.reset());
+    this._settingsChange.pipe(debounceTime(500)).subscribe(() => this.reset());
+    this._colorsChange.pipe(throttleTime(100)).subscribe(() => this.updateImage());
   }
 
   ngOnInit() {
@@ -93,8 +97,11 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
     const canvas = this._canvas.nativeElement as HTMLCanvasElement;
     this.context = canvas.getContext('2d');
+
     canvas.width = this._bufferSize[0];
     canvas.height = this._bufferSize[1];
+
+    this._image = this.context.createImageData(this._bufferSize[0], this._bufferSize[1]);
 
     this.reset();
     this.renderFrame(0);
@@ -114,8 +121,12 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
       this.blueLookup = CardinalCurve.build(this.blue, 0.5, 100).concat(CardinalCurve.build(this.blue, 0.5, 100).reverse());
     }
 
+    if ('red' in changes || 'green' in changes || 'blue' in changes) {
+      this._colorsChange.next();
+    }
+
     if ('tail' in changes || 'size' in changes || 'force' in changes || 'count' in changes) {
-      this.debouncer.next();
+      this._settingsChange.next();
     }
   }
 
@@ -129,8 +140,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
     this.shadebob = RendererComponent.buildBob(this.size, this.force);
 
     this._buffer.fill(0);
-
-    this._image = this.context.createImageData(this._bufferSize[0], this._bufferSize[1]);
+    this.updateImage();
   }
 
 
@@ -139,10 +149,20 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
     x -= Math.round(size / 2);
     y -= Math.round(size / 2);
 
+    const redLength = this.redLookup.length;
+    const greenLength = this.greenLookup.length;
+    const blueLength = this.blueLookup.length;
+
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
         const k = ((x + i) + (y + j) * this._image.width);
         this._buffer[k] += bob[i + j * size];
+
+        const v = Math.round(this._buffer[k]);
+        this._image.data[k * 4 + 0] = this.redLookup[v % redLength];
+        this._image.data[k * 4 + 1] = this.greenLookup[v % greenLength];
+        this._image.data[k * 4 + 2] = this.blueLookup[v % blueLength];
+        this._image.data[k * 4 + 3] = 255;
       }
     }
   }
@@ -156,11 +176,19 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
       for (let j = 0; j < size; j++) {
         const k = ((x + i) + (y + j) * this._image.width);
         this._buffer[k] -= bob[i + j * size];
+
+        const v = Math.round(this._buffer[k]);
+        this._image.data[k * 4 + 0] = this.redLookup[v % this.redLookup.length];
+        this._image.data[k * 4 + 1] = this.greenLookup[v % this.greenLookup.length];
+        this._image.data[k * 4 + 2] = this.blueLookup[v % this.blueLookup.length];
+        this._image.data[k * 4 + 3] = 255;
       }
     }
   }
 
   private renderFrame(t: number): void {
+
+    const startMs = performance.now();
 
     t *= this.speed;
     const multiplier = Math.round(this._frameRateMultiplier * this.speed);
@@ -188,19 +216,27 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
           this.queue.push([x, y]);
         }
       }
-
-      for (let i = 0; i < this._buffer.length; i++) {
-        const k = Math.round(this._buffer[i]);
-        this._image.data[i * 4 + 0] = this.redLookup[k % this.redLookup.length];
-        this._image.data[i * 4 + 1] = this.greenLookup[k % this.greenLookup.length];
-        this._image.data[i * 4 + 2] = this.blueLookup[k % this.blueLookup.length];
-        this._image.data[i * 4 + 3] = 255;
-      }
     }
 
     this._previousT = t;
     this.context.putImageData(this._image, 0, 0);
 
+    const elapsedMs = performance.now() - startMs;
+    this.fps = 1000 / elapsedMs;
     requestAnimationFrame((frameT) => this.renderFrame(frameT));
+  }
+
+  private updateImage() {
+    if (!this._image) {
+      return;
+    }
+
+    for (let i = 0; i < this._buffer.length; i++) {
+      const k = Math.round(this._buffer[i]);
+      this._image.data[i * 4 + 0] = this.redLookup[k % this.redLookup.length];
+      this._image.data[i * 4 + 1] = this.greenLookup[k % this.greenLookup.length];
+      this._image.data[i * 4 + 2] = this.blueLookup[k % this.blueLookup.length];
+      this._image.data[i * 4 + 3] = 255;
+    }
   }
 }

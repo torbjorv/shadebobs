@@ -24,7 +24,6 @@ event
 - Create shared style class for 'center text vertically in div'
 - rename 'GhostSlider' to 'BarSlider' or something. There is nothing Ghost about it now that the 
 opacity code is on the outside
-- move opacity animation of ghostslider to parent
 
 #### Done
 - remove label support from ghostslider
@@ -36,6 +35,8 @@ opacity code is on the outside
 - curve editor needs bigger margins (left and right) for mobile
 - vignette does not work on safari
 - Ghost sliders no longer animates on Safari
+- move opacity animation of ghostslider to parent
+
 
 
 
