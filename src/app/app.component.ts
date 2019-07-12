@@ -1,10 +1,11 @@
-import { Component, ViewChild, Inject } from '@angular/core';
+import { Component, ViewChild, Inject, HostListener, ElementRef, AfterViewInit } from '@angular/core';
 import { Settings } from './settings';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { skip, first } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RendererComponent } from './renderer/renderer.component';
 import { DOCUMENT } from '@angular/common';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 
 export enum ColorTheme {
@@ -15,14 +16,32 @@ export enum ColorTheme {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.sass'],
+  animations: [
+    trigger('fadeInOut', [
+      state('true', style({
+        opacity : 1
+      })),
+      state('false', style({
+        opacity: 0,
+      })),
+      transition('false => true', [
+        animate('0.1s')
+      ]),
+      transition('true => false', [
+        animate('2s')
+      ])
+    ]),
+  ]
 })
 export class AppComponent {
   title = 'shadebobs';
 
   settings: Settings;
-  settingsVisible = true;
+  settingsVisible: boolean;
   isFullscreen = false;
+
+  private _timeout: NodeJS.Timer;
 
   private _defaultRed: [number, number][] =
     [
@@ -98,6 +117,7 @@ export class AppComponent {
       this._defaultBlue.push([i * (100 / c), (i / c) * 255]);
     }
 
+    this.showSettings();
     this.settings = new Settings(
       this._defaultTail,
       this._defaultCount,
@@ -202,5 +222,15 @@ export class AppComponent {
       this.document.msExitFullscreen();
     }
     this.isFullscreen = false;
+  }
+
+  public showSettings() {
+    this.settingsVisible = true;
+
+    if (this._timeout) {
+      clearTimeout(this._timeout);
+    }
+
+    this._timeout = setTimeout(() => this.settingsVisible = false, 5000);
   }
 }

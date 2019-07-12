@@ -9,7 +9,7 @@
   [force]="settings.force">
 </app-renderer>
 
-<div class="overlay-and-fill" [style.color]="colorTheme==='light' ? 'white' : 'black'">
+<div [@fadeInOut]="settingsVisible" class="overlay-and-fill" [style.color]="colorTheme==='light' ? 'white' : 'black'">
   
   <div class="menu-vignette" [style.background]="background"></div>  
 
@@ -20,8 +20,10 @@
         <img *ngIf="colorTheme==='light'" src="assets/GitHub-Mark-Light-32px.png" class="github-icon">
         <img *ngIf="colorTheme==='dark'" src="assets/GitHub-Mark-32px.png" class="github-icon">
       </div>
-        <i *ngIf="!isFullscreen && supportsFullscreen()" class="material-icons action" (click)="enterFullscreen()">fullscreen</i>
-        <i *ngIf="isFullscreen && supportsFullscreen()" class="material-icons action" (click)="exitFullscreen()">fullscreen_exit</i>    
+      <div class="action" *ngIf="supportsFullscreen()">
+          <i *ngIf="!isFullscreen" class="material-icons" (click)="enterFullscreen()">fullscreen</i>
+          <i *ngIf="isFullscreen" class="material-icons" (click)="exitFullscreen()">fullscreen_exit</i>        
+      </div>
   </div>
       
   <app-settings 
@@ -33,4 +35,7 @@
     [(red)]="settings.red"
     [(green)]="settings.green"
     [(blue)]="settings.blue"></app-settings>
+</div>
+
+<div *ngIf="!settingsVisible" class="overlay-and-fill" (mousemove)="showSettings()" (mousedown)="showSettings()">
 </div>
