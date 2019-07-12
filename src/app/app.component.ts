@@ -165,7 +165,12 @@ export class AppComponent {
     window.location.href = 'https://github.com/torbjorv/shadebobs';
   }
 
-  enterFullscreen() {
+  public supportsFullscreen(): boolean {
+    const elem = document.documentElement as any;
+    return elem.requestFullScreen || elem.mozRequestFullScreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
+  }
+
+  public enterFullscreen() {
     const elem = document.documentElement as any;
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
@@ -183,7 +188,7 @@ export class AppComponent {
   }
 
   /* Close fullscreen */
-  exitFullscreen() {
+  public exitFullscreen() {
     if (this.document.exitFullscreen) {
       this.document.exitFullscreen();
     } else if (this.document.mozCancelFullScreen) {
