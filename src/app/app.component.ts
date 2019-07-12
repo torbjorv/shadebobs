@@ -7,7 +7,6 @@ import { RendererComponent } from './renderer/renderer.component';
 import { DOCUMENT } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
-
 export enum ColorTheme {
   dark = 'dark',
   light = 'light'
@@ -41,7 +40,7 @@ export class AppComponent {
   settingsVisible: boolean;
   isFullscreen = false;
 
-  private _timeout: NodeJS.Timer;
+  private _settingsTimeout: any;
 
   private _defaultRed: [number, number][] =
     [
@@ -227,10 +226,10 @@ export class AppComponent {
   public showSettings() {
     this.settingsVisible = true;
 
-    if (this._timeout) {
-      clearTimeout(this._timeout);
+    if (this._settingsTimeout) {
+      clearTimeout(this._settingsTimeout);
     }
 
-    this._timeout = setTimeout(() => this.settingsVisible = false, 5000);
+    this._settingsTimeout = setTimeout(() => this.settingsVisible = false, 5000);
   }
 }
