@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { CardinalCurve } from '../cardinal-curve';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { GhostSliderComponent } from '../ghost-slider/ghost-slider.component';
+import { CurveEditorComponent } from '../curve-editor/curve-editor.component';
 
 @Component({
   selector: 'app-settings',
@@ -80,6 +82,23 @@ export class SettingsComponent implements OnInit {
   public gradientG: {};
   public gradientB: {};
   public gradient: {};
+
+  @ViewChild('tailSlider', { static: false })
+  private _tailSlider: GhostSliderComponent;
+  @ViewChild('countSlider', { static: false })
+  private _countSlider: GhostSliderComponent;
+  @ViewChild('speedSlider', { static: false })
+  private _speedSlider: GhostSliderComponent;
+  @ViewChild('sizeSlider', { static: false })
+  private _sizeSlider: GhostSliderComponent;
+  @ViewChild('forceSlider', { static: false })
+  private _forceSlider: GhostSliderComponent;
+  @ViewChild('redCurve', { static: false })
+  private _redCurve: CurveEditorComponent;
+  @ViewChild('greenCurve', { static: false })
+  private _greenCurve: CurveEditorComponent;
+  @ViewChild('blueCurve', { static: false })
+  private _blueCurve: CurveEditorComponent;
 
   @Input()
   public set tail(value: number) {
@@ -225,5 +244,33 @@ export class SettingsComponent implements OnInit {
     };
   }
 
+  public get isInteracting(): boolean {
 
+    if (this._tailSlider && this._tailSlider.state !== 'None') {
+      return true;
+    }
+    if (this._countSlider && this._countSlider.state !== 'None') {
+      return true;
+    }
+    if (this._speedSlider && this._speedSlider.state !== 'None') {
+      return true;
+    }
+    if (this._sizeSlider && this._sizeSlider.state !== 'None') {
+      return true;
+    }
+    if (this._forceSlider && this._forceSlider.state !== 'None') {
+      return true;
+    }
+    if (this._redCurve && this._redCurve.state !== 'None') {
+      return true;
+    }
+    if (this._greenCurve && this._greenCurve.state !== 'None') {
+      return true;
+    }
+    if (this._blueCurve && this._blueCurve.state !== 'None') {
+      return true;
+    }
+
+    return false;
+  }
 }

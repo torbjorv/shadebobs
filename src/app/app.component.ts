@@ -1,11 +1,12 @@
-import { Component, ViewChild, Inject, HostListener, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { Settings } from './settings';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { skip, first } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
-import { RendererComponent } from './renderer/renderer.component';
 import { DOCUMENT } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { SettingsComponent } from './settings/settings.component';
+import { RendererComponent } from './renderer/renderer.component';
 
 export enum ColorTheme {
   dark = 'dark',
@@ -34,8 +35,6 @@ export enum ColorTheme {
   ]
 })
 export class AppComponent {
-  title = 'shadebobs';
-
   settings: Settings;
   settingsVisible: boolean;
   isFullscreen = false;
@@ -103,7 +102,7 @@ export class AppComponent {
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    @Inject(DOCUMENT) private document: any) {
+    @Inject(DOCUMENT) private document: HTMLDocument) {
 
     this._defaultRed = [];
     this._defaultGreen = [];
@@ -146,6 +145,11 @@ export class AppComponent {
       this.router.navigate(['.'], { relativeTo: this.route, queryParams: this.settings }
       );
     }, 1000);
+
+    this.document.addEventListener('mousedown', () => this.showSettings(), {capture: true});
+    this.document.addEventListener('mousemove', () => this.showSettings(), {capture: true});
+    this.document.addEventListener('mouseup', () => this.showSettings(), true);
+    this.document.addEventListener('drag', () => this.showSettings(), true);
   }
 
   private getValueOrDefault<T>(map: ParamMap, key: string, defaultValue: T): T {
@@ -158,10 +162,6 @@ export class AppComponent {
     }
 
     return map.getAll(key).map(s => s.split(',').map(e => parseInt(e, 10))) as any;
-  }
-
-  public toggleSettings() {
-    this.settingsVisible = !this.settingsVisible;
   }
 
   public get colorTheme(): ColorTheme {
@@ -208,17 +208,18 @@ export class AppComponent {
 
   /* Close fullscreen */
   public exitFullscreen() {
-    if (this.document.exitFullscreen) {
-      this.document.exitFullscreen();
-    } else if (this.document.mozCancelFullScreen) {
+    const doc = document as any;
+    if (doc.exitFullscreen) {
+      doc.exitFullscreen();
+    } else if (doc.mozCancelFullScreen) {
       /* Firefox */
-      this.document.mozCancelFullScreen();
-    } else if (this.document.webkitExitFullscreen) {
+      doc.mozCancelFullScreen();
+    } else if (doc.webkitExitFullscreen) {
       /* Chrome, Safari and Opera */
-      this.document.webkitExitFullscreen();
-    } else if (this.document.msExitFullscreen) {
+      doc.webkitExitFullscreen();
+    } else if (doc.msExitFullscreen) {
       /* IE/Edge */
-      this.document.msExitFullscreen();
+      doc.msExitFullscreen();
     }
     this.isFullscreen = false;
   }

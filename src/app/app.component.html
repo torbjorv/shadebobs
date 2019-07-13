@@ -9,7 +9,7 @@
   [force]="settings.force">
 </app-renderer>
 
-<div [@fadeInOut]="settingsVisible" class="overlay-and-fill" [style.color]="colorTheme==='light' ? 'white' : 'black'">
+<div #menu [@fadeInOut]="settingsVisible || settingsComponent?.isInteracting" class="overlay-and-fill" [style.color]="colorTheme==='light' ? 'white' : 'black'">
   
   <div class="menu-vignette" [style.background]="background"></div>  
 
@@ -26,7 +26,7 @@
       </div>
   </div>
       
-  <app-settings 
+  <app-settings #settingsComponent
     [(tail)]="settings.tail"
     [(count)]="settings.count"
     [(speed)]="settings.speed"
@@ -35,7 +35,4 @@
     [(red)]="settings.red"
     [(green)]="settings.green"
     [(blue)]="settings.blue"></app-settings>
-</div>
-
-<div *ngIf="!settingsVisible" class="overlay-and-fill" (mousemove)="showSettings()" (mousedown)="showSettings()">
 </div>

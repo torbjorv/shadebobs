@@ -23,7 +23,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   private _bufferSize = [1234, 400];
   private _buffer: number[];
 
-  public fps: number;
+  public fps: number = 1;
 
   @Input()
   public red: [number, number][] = [[0, 0]];
