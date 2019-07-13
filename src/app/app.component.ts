@@ -29,7 +29,7 @@ export enum ColorTheme {
         animate('0.1s')
       ]),
       transition('true => false', [
-        animate('2s')
+        animate('1s')
       ])
     ]),
   ]
