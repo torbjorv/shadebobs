@@ -3,7 +3,7 @@ import {
   SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FifoQueue } from '../fifoqueue';
 import { CardinalCurve } from '../cardinal-curve';
-import { Utils } from '../utils';
+import { Utils } from '../utils/utils';
 import { debounceTime, throttleTime } from 'rxjs/operators';
 
 @Component({

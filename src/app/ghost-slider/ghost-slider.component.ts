@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
 import { Observable } from 'rxjs';
-import { Utils } from '../utils';
+import { Utils } from '../utils/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 
 enum DragState {

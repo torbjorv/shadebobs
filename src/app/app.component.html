@@ -20,9 +20,9 @@
         <img *ngIf="colorTheme==='light'" src="assets/GitHub-Mark-Light-32px.png" class="github-icon">
         <img *ngIf="colorTheme==='dark'" src="assets/GitHub-Mark-32px.png" class="github-icon">
       </div>
-      <div class="action" *ngIf="supportsFullscreen()">
-          <i *ngIf="!isFullscreen" class="material-icons" (click)="enterFullscreen()">fullscreen</i>
-          <i *ngIf="isFullscreen" class="material-icons" (click)="exitFullscreen()">fullscreen_exit</i>        
+      <div class="action" *ngIf="fullscreen.isSupported(document)">
+          <i *ngIf="!fullscreen.isFullscreen" class="material-icons" (click)="fullscreen.enter(document)">fullscreen</i>
+          <i *ngIf="fullscreen.isFullscreen" class="material-icons" (click)="fullscreen.exit(document)">fullscreen_exit</i>        
       </div>
   </div>
       

@@ -7,6 +7,7 @@ import { DOCUMENT } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SettingsComponent } from './settings/settings.component';
 import { RendererComponent } from './renderer/renderer.component';
+import { Fullscreen2Service as FullscreenService } from './utils/fullscreen.service';
 
 export enum ColorTheme {
   dark = 'dark',
@@ -37,7 +38,6 @@ export enum ColorTheme {
 export class AppComponent {
   settings: Settings;
   settingsVisible: boolean;
-  isFullscreen = false;
 
   private _settingsTimeout: any;
 
@@ -102,7 +102,8 @@ export class AppComponent {
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    @Inject(DOCUMENT) private document: HTMLDocument) {
+    @Inject(DOCUMENT) private document: HTMLDocument,
+    private fullscreen: FullscreenService) {
 
     this._defaultRed = [];
     this._defaultGreen = [];
@@ -182,46 +183,6 @@ export class AppComponent {
 
   public openGithub() {
     window.location.href = 'https://github.com/torbjorv/shadebobs';
-  }
-
-  public supportsFullscreen(): boolean {
-    const elem = document.documentElement as any;
-    return elem.requestFullScreen || elem.mozRequestFullScreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
-  }
-
-  public enterFullscreen() {
-    const elem = document.documentElement as any;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      /* Chrome, Safari and Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      /* IE/Edge */
-      elem.msRequestFullscreen();
-    }
-    this.isFullscreen = true;
-  }
-
-  /* Close fullscreen */
-  public exitFullscreen() {
-    const doc = document as any;
-    if (doc.exitFullscreen) {
-      doc.exitFullscreen();
-    } else if (doc.mozCancelFullScreen) {
-      /* Firefox */
-      doc.mozCancelFullScreen();
-    } else if (doc.webkitExitFullscreen) {
-      /* Chrome, Safari and Opera */
-      doc.webkitExitFullscreen();
-    } else if (doc.msExitFullscreen) {
-      /* IE/Edge */
-      doc.msExitFullscreen();
-    }
-    this.isFullscreen = false;
   }
 
   public showSettings() {

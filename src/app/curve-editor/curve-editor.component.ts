@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnChanges, Output, Input, Aft
 import * as d3 from 'd3';
 import { Subject, Observable } from 'rxjs';
 import { SimplifyAP } from 'simplify-ts';
-import { Utils } from '../utils';
+import { Utils } from '../utils/utils';
 
 enum DragState {
   None = 'None',
