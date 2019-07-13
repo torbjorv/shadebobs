@@ -188,19 +188,20 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  private renderFrame(t: number): void {
+  private renderFrame(tActual: number): void {
 
     const startMs = performance.now();
 
-    t *= this.speed;
+    const t = tActual * this.speed;
+    const tPrevious = this._previousT * this.speed;
     const multiplier = Math.round(this._frameRateMultiplier * this.speed);
 
-    const elapsed = t - this._previousT;
-    if (t !== this._previousT) {
+    const elapsed = t - tPrevious;
+    if (t !== tPrevious) {
 
       for (let j = 0; j < this.count; j++) {
         for (let i = 0; i < multiplier; i++) {
-          const k = this._previousT + elapsed * (i / multiplier) + j * 1000;
+          const k = tPrevious + elapsed * (i / multiplier) + j * 1000;
 
           let x: number = Math.round(k / 2) % this._bufferSize[0];
           if (j % 2 === 1) {
@@ -220,12 +221,13 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
       }
     }
 
-    this._previousT = t;
     this.context.putImageData(this._image, 0, 0);
 
-    const elapsedMs = performance.now() - startMs;
+    const elapsedMs = tActual - this._previousT;
     this.fps = 1000 / elapsedMs;
     this._changeDetector.detectChanges();
+    this._previousT = tActual;
+
     requestAnimationFrame((frameT) => this.renderFrame(frameT));
   }
 
