@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
+import {
+  Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges,
+  SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FifoQueue } from '../fifoqueue';
 import { CardinalCurve } from '../cardinal-curve';
 import { Utils } from '../utils';
@@ -23,7 +25,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   private _bufferSize = [1234, 400];
   private _buffer: number[];
 
-  public fps: number = 1;
+  public fps = 0;
 
   @Input()
   public red: [number, number][] = [[0, 0]];
@@ -79,7 +81,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 
-  constructor() {
+  constructor(private _changeDetector: ChangeDetectorRef) {
 
     this.queue = new FifoQueue(this.size);
 
@@ -223,6 +225,7 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
     const elapsedMs = performance.now() - startMs;
     this.fps = 1000 / elapsedMs;
+    this._changeDetector.detectChanges();
     requestAnimationFrame((frameT) => this.renderFrame(frameT));
   }
 
