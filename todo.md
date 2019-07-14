@@ -1,7 +1,4 @@
 ### Bugs
-- Either fix the fullscreen button on mobile or hide it
-- something slows down the rendering after many interactions. Must be some garbage hanging around after every 
-event 
 
 ### Enhancements
 - Menu vignette should fade from dark to light theme
@@ -9,22 +6,25 @@ event
 - Implement the 'sharing' button
 - Create page icon
 - setup code coverage on circleci
-- Show the full palette over or below the colors
 - MOve settings to bottom (at least on mobile)
 - Rotate the canvas 90 on mobile (when screen is vertical)
 - Need a nicer font on settings
 - Need a visual indicator for the settings so users know where to click/how to interact
 - Need a vertical line on the slider (otherwise user can't know when the value is on either of the extremes)
-- Fade in/out settings based on mousemove/click (like menus on netflix/youtube/hbo)
-- animation effect on hovering over the labels
+- animation effect on hovering over the labels (won't work on mobile, so may not be worth it)
 
 ### Cleanup
-- Remove the PaletteEditor (after we take the full-palette viz code)
 - Create shared style class for 'center text vertically in div'
 - rename 'GhostSlider' to 'BarSlider' or something. There is nothing Ghost about it now that the 
 opacity code is on the outside
 
 #### Done
+- Fade in/out settings based on mousemove/click (like menus on netflix/youtube/hbo)
+- something slows down the rendering after many interactions. Must be some garbage hanging around after every 
+event 
+- Either fix the fullscreen button on mobile or hide it
+- Show the full palette over or below the colors
+- Remove the PaletteEditor (after we take the full-palette viz code)
 - remove label support from ghostslider
 - Rename Settings2 component
 - Clicking on CurveEditor (without dragging) should not modify

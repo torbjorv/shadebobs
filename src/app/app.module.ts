@@ -9,7 +9,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatBadgeModule } from '@angular/material';
 import { AppRoutingModule } from './app-routing.module';
 import { CurveEditorComponent } from './curve-editor/curve-editor.component';
-import { PaletteEditorComponent } from './palette-editor/palette-editor.component';
 import { GhostSliderComponent } from './ghost-slider/ghost-slider.component';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -18,7 +17,6 @@ import { SettingsComponent } from './settings/settings.component';
     AppComponent,
     RendererComponent,
     CurveEditorComponent,
-    PaletteEditorComponent,
     GhostSliderComponent,
     SettingsComponent,
   ],
