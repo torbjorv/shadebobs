@@ -103,7 +103,7 @@ export class AppComponent {
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     @Inject(DOCUMENT) private document: HTMLDocument,
-    private fullscreen: FullscreenService) {
+    public fullscreen: FullscreenService) {
 
     this._defaultRed = [];
     this._defaultGreen = [];
