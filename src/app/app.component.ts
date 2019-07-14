@@ -102,7 +102,7 @@ export class AppComponent {
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    @Inject(DOCUMENT) private document: HTMLDocument,
+    @Inject(DOCUMENT) public document: HTMLDocument,
     public fullscreen: FullscreenService) {
 
     this._defaultRed = [];
