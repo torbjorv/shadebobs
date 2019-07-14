@@ -74,6 +74,21 @@ import { CurveEditorComponent } from '../curve-editor/curve-editor.component';
         animate('0.1s')
       ])
     ]),
+
+    trigger('palette', [
+      state('void, false', style({
+        opacity: 0
+      })),
+      state('true', style({
+        opacity: 1
+      })),
+      transition('true => false', [
+        animate('0.5s')
+      ]),
+      transition('false => true', [
+        animate('0.2s')
+      ])
+    ])
   ]
 })
 export class SettingsComponent implements OnInit {
