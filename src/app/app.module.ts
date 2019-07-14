@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CurveEditorComponent } from './curve-editor/curve-editor.component';
 import { GhostSliderComponent } from './ghost-slider/ghost-slider.component';
 import { SettingsComponent } from './settings/settings.component';
+import { GhostSlider2Component } from './ghost-slider2/ghost-slider2.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SettingsComponent } from './settings/settings.component';
     CurveEditorComponent,
     GhostSliderComponent,
     SettingsComponent,
+    GhostSlider2Component,
   ],
   imports: [
     BrowserModule,
