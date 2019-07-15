@@ -192,6 +192,6 @@ export class AppComponent {
       clearTimeout(this._settingsTimeout);
     }
 
-    this._settingsTimeout = setTimeout(() => this.settingsVisible = false, 5000);
+    this._settingsTimeout = setTimeout(() => this.settingsVisible = false, 3000);
   }
 }

@@ -11,9 +11,9 @@ enum DragState {
 }
 
 @Component({
-  selector: 'app-ghost-slider2',
-  templateUrl: './ghost-slider2.component.html',
-  styleUrls: ['./ghost-slider2.component.sass'],
+  selector: 'app-ghost-slider',
+  templateUrl: './ghost-slider.component.html',
+  styleUrls: ['./ghost-slider.component.sass'],
   animations: [
     trigger('expandCollapseBar', [
       state('Holding, Dragging', style({
@@ -45,7 +45,7 @@ enum DragState {
     ]),
   ]
 })
-export class GhostSlider2Component implements OnInit, AfterViewInit {
+export class GhostSliderComponent implements OnInit, AfterViewInit {
 
   private _normalizedValueAtDragStart: number;
   private _xAtDragStart: number;

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angu
 import { Subject, Observable } from 'rxjs';
 import { CardinalCurve } from '../cardinal-curve';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { GhostSlider2Component } from '../ghost-slider2/ghost-slider2.component';
+import { GhostSliderComponent } from '../ghost-slider/ghost-slider.component';
 import { GhostCurveComponent } from '../ghost-curve/ghost-curve.component';
 
 @Component({
@@ -99,15 +99,15 @@ export class SettingsComponent implements OnInit {
   public gradient: {};
 
   @ViewChild('tailSlider', { static: false })
-  private _tailSlider: GhostSlider2Component;
+  private _tailSlider: GhostSliderComponent;
   @ViewChild('countSlider', { static: false })
-  private _countSlider: GhostSlider2Component;
+  private _countSlider: GhostSliderComponent;
   @ViewChild('speedSlider', { static: false })
-  private _speedSlider: GhostSlider2Component;
+  private _speedSlider: GhostSliderComponent;
   @ViewChild('sizeSlider', { static: false })
-  private _sizeSlider: GhostSlider2Component;
+  private _sizeSlider: GhostSliderComponent;
   @ViewChild('forceSlider', { static: false })
-  private _forceSlider: GhostSlider2Component;
+  private _forceSlider: GhostSliderComponent;
   @ViewChild('redCurve', { static: false })
   private _redCurve: GhostCurveComponent;
   @ViewChild('greenCurve', { static: false })

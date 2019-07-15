@@ -8,7 +8,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatBadgeModule } from '@angular/material';
 import { AppRoutingModule } from './app-routing.module';
 import { SettingsComponent } from './settings/settings.component';
-import { GhostSlider2Component } from './ghost-slider2/ghost-slider2.component';
+import { GhostSliderComponent } from './ghost-slider/ghost-slider.component';
 import { GhostCurveComponent } from './ghost-curve/ghost-curve.component';
 
 @NgModule({
@@ -16,7 +16,7 @@ import { GhostCurveComponent } from './ghost-curve/ghost-curve.component';
     AppComponent,
     RendererComponent,
     SettingsComponent,
-    GhostSlider2Component,
+    GhostSliderComponent,
     GhostCurveComponent,
   ],
   imports: [
