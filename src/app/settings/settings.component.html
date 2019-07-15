@@ -60,6 +60,30 @@
   </div> -->
 
   <div class="setting">
+    <div class="overlay-and-fill setting-padding">
+      <div style="position: relative; width:100%; height: 100%">
+        <app-ghost-curve class="overlay-and-fill" #redCurve [(points)]="red" [channel]="'R'"></app-ghost-curve>
+      </div>
+    </div>
+  </div>
+  
+  <div class="setting">
+    <div class="overlay-and-fill setting-padding">
+      <div style="position: relative; width:100%; height: 100%">
+        <app-ghost-curve class="overlay-and-fill" #greenCurve [(points)]="green" [channel]="'G'"></app-ghost-curve>
+      </div>
+    </div>
+  </div>
+
+    <div class="setting">
+      <div class="overlay-and-fill setting-padding">
+        <div style="position: relative; width:100%; height: 100%">
+          <app-ghost-curve class="overlay-and-fill" #blueCurve [(points)]="blue" [channel]="'B'"></app-ghost-curve>
+        </div>
+      </div>
+    </div>
+    
+  <!-- <div class="setting">
     <div class="setting-label setting-padding">Red</div>
     <div class="overlay-and-fill setting-padding" [@curve]="redCurve.state">
       <div style="position: relative; width:100%; height: 100%">
@@ -67,9 +91,9 @@
         <app-curve-editor class="overlay-and-fill" #redCurve [(points)]="red"></app-curve-editor>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <div class="setting">
+  <!-- <div class="setting">
     <div class="setting-label setting-padding">Green</div>
     <div class="overlay-and-fill setting-padding" [@curve]="greenCurve.state">
       <div style="position: relative; width:100%; height: 100%">
@@ -87,13 +111,13 @@
         <app-curve-editor class="overlay-and-fill" #blueCurve [(points)]="blue"></app-curve-editor>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <div class="setting">
+  <!-- <div class="setting">
     <div class="overlay-and-fill setting-padding" [@palette]="(greenCurve.state != 'None') || (redCurve.state != 'None') ||  (blueCurve.state != 'None')">
       <div style="position: relative; width:100%; height: 100%">
         <div class="overlay-and-fill" [ngStyle]="gradient"></div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

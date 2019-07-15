@@ -12,6 +12,7 @@ import { CurveEditorComponent } from './curve-editor/curve-editor.component';
 import { GhostSliderComponent } from './ghost-slider/ghost-slider.component';
 import { SettingsComponent } from './settings/settings.component';
 import { GhostSlider2Component } from './ghost-slider2/ghost-slider2.component';
+import { GhostCurveComponent } from './ghost-curve/ghost-curve.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { GhostSlider2Component } from './ghost-slider2/ghost-slider2.component';
     GhostSliderComponent,
     SettingsComponent,
     GhostSlider2Component,
+    GhostCurveComponent,
   ],
   imports: [
     BrowserModule,
