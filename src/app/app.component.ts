@@ -188,10 +188,10 @@ export class AppComponent {
   public showSettings() {
     this.settingsVisible = true;
 
-    // if (this._settingsTimeout) {
-    //   clearTimeout(this._settingsTimeout);
-    // }
+    if (this._settingsTimeout) {
+      clearTimeout(this._settingsTimeout);
+    }
 
-    // this._settingsTimeout = setTimeout(() => this.settingsVisible = false, 5000);
+    this._settingsTimeout = setTimeout(() => this.settingsVisible = false, 5000);
   }
 }
