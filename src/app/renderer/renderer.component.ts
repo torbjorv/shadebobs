@@ -190,8 +190,6 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   private renderFrame(tActual: number): void {
 
-    const startMs = performance.now();
-
     const t = tActual * this.speed;
     const tPrevious = this._previousT * this.speed;
     const multiplier = Math.round(this._frameRateMultiplier * this.speed);
