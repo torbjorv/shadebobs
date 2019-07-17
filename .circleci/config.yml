@@ -46,7 +46,7 @@ jobs:
                     - dist
 
 
-    deploy_staging:
+    deploy_dev:
         working_directory: ~/project
         docker:
             - image: circleci/node:11.15-browsers
@@ -61,10 +61,10 @@ jobs:
             - restore_cache:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
             - run:
-                name: Deploy Staging
-                command: ./scripts/deploy-to-branch.sh $GH_TOKEN gh-pages-staging
+                name: Deploy Dev
+                command: ./scripts/deploy-to-branch.sh $GH_TOKEN gh-pages-dev
     
-    deploy_prod:
+    deploy_stable:
         working_directory: ~/project
         docker:
             - image: circleci/node:11.15-browsers
@@ -79,19 +79,19 @@ jobs:
             - restore_cache:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
             - run:
-                name: Deploy Prod
+                name: Deploy Stable
                 command: ./scripts/deploy-to-branch.sh $GH_TOKEN gh-pages
 
 
 workflows:
     version: 2
     # The build and deploy workflow
-    build_and_deploy_staging:
+    build_and_deploy_dev:
         jobs:
             - build
             # The deploy job will only run on the filtered branches and
             # require the build job to be successful before it starts
-            - deploy_staging:
+            - deploy_dev:
                 requires:
                     - build
                 filters:
@@ -99,12 +99,12 @@ workflows:
                         only:
                             - master
 
-    build_and_deploy_prod:
+    build_and_deploy_stable:
         jobs:
             - build
             # The deploy job will only run on the filtered branches and
             # require the build job to be successful before it starts
-            - deploy_prod:
+            - deploy_stable:
                 type: approval
                 requires:
                     - build
