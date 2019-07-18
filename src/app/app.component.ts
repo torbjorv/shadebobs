@@ -149,8 +149,7 @@ export class AppComponent {
 
     this.document.addEventListener('mousedown', () => this.showSettings(), {capture: true});
     this.document.addEventListener('mousemove', () => this.showSettings(), {capture: true});
-    this.document.addEventListener('mouseup', () => this.showSettings(), true);
-    this.document.addEventListener('drag', () => this.showSettings(), true);
+    this.document.addEventListener('touchstart', () => this.showSettings(), {capture: true});
   }
 
   private getValueOrDefault<T>(map: ParamMap, key: string, defaultValue: T): T {
