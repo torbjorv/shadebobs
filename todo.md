@@ -1,4 +1,5 @@
 ### Bugs
+- tapping the screen (outside the settings-area) does not make the menu re-appear. Only on mobile
 
 ### Enhancements
 - Menu vignette should fade from dark to light theme
