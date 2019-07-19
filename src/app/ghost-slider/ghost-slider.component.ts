@@ -53,7 +53,6 @@ export class GhostSliderComponent implements OnInit, AfterViewInit {
   @ViewChild('container', { static: false })
   private _container: ElementRef<HTMLElement>;
   private _value = 30;
-  public normalizedValue = 0.3;
   private _valueChange: EventEmitter<number> = new EventEmitter();
 
   public state = DragState.None;
@@ -70,7 +69,6 @@ export class GhostSliderComponent implements OnInit, AfterViewInit {
     }
 
     this._value = value;
-    this.normalizedValue = (value - this.min) / (this.max - this.min);
     this._valueChange.next(this.value);
   }
 
@@ -113,7 +111,7 @@ export class GhostSliderComponent implements OnInit, AfterViewInit {
 
   onDragStart(e: MouseEvent) {
     this.state = DragState.Holding;
-    this._normalizedValueAtDragStart = this.normalizedValue;
+    this._normalizedValueAtDragStart = this.normalize(this.value, this.min, this.max);
     this._xAtDragStart = e.x;
   }
 
@@ -121,24 +119,28 @@ export class GhostSliderComponent implements OnInit, AfterViewInit {
     this.state = DragState.Dragging;
     const speed = 2;
     const width = this._container.nativeElement.clientWidth;
-    this.normalizedValue = this._normalizedValueAtDragStart + speed * (e.x - this._xAtDragStart) / width;
+    let normalizedValue = this._normalizedValueAtDragStart + speed * (e.x - this._xAtDragStart) / width;
 
     // If user pushes the bar to the edge (and beyond) and then back we want the return movement
     // to give an immediate effect so we adjust dragstart to reflect that
-    if (this.normalizedValue < 0) {
+    if (normalizedValue < 0) {
       this._xAtDragStart = e.x + this._normalizedValueAtDragStart * width / speed;
-      this.normalizedValue = 0;
+      normalizedValue = 0;
     }
-    if (this.normalizedValue > 1) {
+    if (normalizedValue > 1) {
      this._xAtDragStart = e.x - (1 - this._normalizedValueAtDragStart) * width / speed;
-     this.normalizedValue = 1;
+     normalizedValue = 1;
     }
 
-    this._value = Utils.roundToStep(this.normalizedValue * (this.max - this.min) + this.min, this.step);
+    this._value = Utils.snap(normalizedValue * (this.max - this.min) + this.min, this.step);
     this._valueChange.next(this.value);
   }
 
   onDragEnd(e: MouseEvent) {
     this.state = DragState.None;
+  }
+
+  normalize(value: number, min: number, max: number): number {
+    return (value - min) / (max - min);
   }
 }

@@ -6,12 +6,12 @@
   
     <div 
       style="background-color: rgba(200, 200, 200, 0.5); background-blend-mode:exclusion ; height: 100%;  border-right: 1px solid white; box-sizing: border-box; position: relative" 
-      [style.width]="(normalizedValue * 100) + '%'">
+      [style.width]="(normalize(value, min, max) * 100) + '%'">
     </div>
 
     <div 
       style="background-color: rgba(100, 100, 100, 0.5); position: absolute; height: 100%; top: 0; right: 0; box-sizing: border-box; border-left: 1px solid white" 
-      [style.width]="((1 - normalizedValue) * 100) + '%'">
+      [style.width]="((1 - normalize(value, min, max)) * 100) + '%'">
     </div>
   </div>
 

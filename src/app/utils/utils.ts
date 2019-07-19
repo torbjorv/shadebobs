@@ -5,9 +5,13 @@ export class Utils {
         return Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
     }
 
-    public static roundToStep(numToRound: number, numToRoundTo: number): number {
-        numToRoundTo = 1 / (numToRoundTo);
-        return Math.round(numToRound * numToRoundTo) / numToRoundTo;
+    public static snap(n: number, step: number): number {
+        step = 1 / (step);
+        return Math.round(n * step) / step;
+    }
+
+    public static clamp(n: number, min: number, max: number) {
+        return Math.min(Math.max(n, min), max);
     }
 
     /**

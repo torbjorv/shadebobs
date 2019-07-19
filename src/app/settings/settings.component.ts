@@ -11,14 +11,11 @@ import { GhostCurveComponent } from '../ghost-curve/ghost-curve.component';
   styleUrls: ['./settings.component.sass'],
   animations: [
     trigger('curve', [
-      state('void', style({
+      state('void, None', style({
         opacity : 0
       })),
       state('Holding', style({
         opacity: 1,
-      })),
-      state('None', style({
-        opacity: 0.0,
       })),
       state('Dragging', style({
         opacity: 0.5,
@@ -34,14 +31,11 @@ import { GhostCurveComponent } from '../ghost-curve/ghost-curve.component';
       ])
     ]),
     trigger('slider', [
-      state('void', style({
+      state('void, None', style({
         opacity : 0
       })),
       state('Holding', style({
         opacity: 0.7,
-      })),
-      state('None', style({
-        opacity: 0.0,
       })),
       state('Dragging', style({
         opacity: 0.4,
