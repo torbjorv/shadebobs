@@ -141,10 +141,4 @@ export class GhostSliderComponent implements OnInit, AfterViewInit {
   onDragEnd(e: MouseEvent) {
     this.state = DragState.None;
   }
-
-
-
-  public toggle(): void {
-    this.expanded = !this.expanded;
-  }
 }
