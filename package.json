@@ -24,6 +24,7 @@
     "@types/d3": "^5.7.2",
     "binary-search": "^1.3.5",
     "d3": "^5.9.2",
+    "fast-deep-equal": "^2.0.1",
     "hammerjs": "^2.0.8",
     "query-string": "^6.8.0",
     "rxjs": "~6.4.0",

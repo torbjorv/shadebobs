@@ -1,10 +1,11 @@
 import {
   Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges,
-  SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
+  SimpleChanges, EventEmitter, ChangeDetectorRef, SimpleChange } from '@angular/core';
 import { FifoQueue } from '../fifoqueue';
 import { CardinalCurve } from '../cardinal-curve';
 import { Utils } from '../utils/utils';
 import { debounceTime, throttleTime } from 'rxjs/operators';
+import fastEqual from 'fast-deep-equal';
 
 @Component({
   selector: 'app-renderer',
@@ -111,25 +112,33 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
 
-    if ('red' in changes) {
-      this.redLookup = CardinalCurve.build(this.red, 0.5, 100).concat(CardinalCurve.build(this.red, 0.5, 100).reverse());
-    }
+    Object.keys(changes).forEach(property => {
 
-    if ('green' in changes) {
-      this.greenLookup = CardinalCurve.build(this.green, 0.5, 100).concat(CardinalCurve.build(this.green, 0.5, 100).reverse());
-    }
+      const change = changes[property];
+      if (fastEqual(change.currentValue, change.previousValue)) {
+        return;
+      }
 
-    if ('blue' in changes) {
-      this.blueLookup = CardinalCurve.build(this.blue, 0.5, 100).concat(CardinalCurve.build(this.blue, 0.5, 100).reverse());
-    }
+      if (property === 'red') {
+        this.redLookup = CardinalCurve.build(this.red, 0.5, 100).concat(CardinalCurve.build(this.red, 0.5, 100).reverse());
+      }
 
-    if ('red' in changes || 'green' in changes || 'blue' in changes) {
-      this._colorsChange.next();
-    }
+      if (property === 'green') {
+        this.greenLookup = CardinalCurve.build(this.green, 0.5, 100).concat(CardinalCurve.build(this.green, 0.5, 100).reverse());
+      }
 
-    if ('tail' in changes || 'size' in changes || 'force' in changes || 'count' in changes) {
-      this._settingsChange.next();
-    }
+      if (property === 'blue') {
+        this.blueLookup = CardinalCurve.build(this.blue, 0.5, 100).concat(CardinalCurve.build(this.blue, 0.5, 100).reverse());
+      }
+
+      if ((property === 'red') || (property === 'green') || (property === 'blue')) {
+        this._colorsChange.next();
+      }
+
+      if ((property === 'tail') || (property === 'force') || (property === 'count') || (property === 'size')) {
+        this._settingsChange.next();
+      }
+    });
   }
 
   public reset(): void {

@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { SettingsComponent } from './settings/settings.component';
 import { GhostSliderComponent } from './ghost-slider/ghost-slider.component';
 import { GhostCurveComponent } from './ghost-curve/ghost-curve.component';
+import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { GhostCurveComponent } from './ghost-curve/ghost-curve.component';
     SettingsComponent,
     GhostSliderComponent,
     GhostCurveComponent,
+    SplashScreenComponent,
   ],
   imports: [
     BrowserModule,

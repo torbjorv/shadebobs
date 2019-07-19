@@ -2,8 +2,29 @@
 <html lang="en">
 
 <head>
-  <meta name="apple-mobile-web-app-capable" content="yes">
 
+  <style>
+    /* Need to define these here in order for the splashscreen to appear seemless */
+    html { 
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+    }
+    .splashscreen {
+      height: 100%; 
+      width: 100%; 
+      color: black; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      background-color: white;
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91629652-2"></script>
   <script>
@@ -13,7 +34,6 @@
 
     gtag('config', 'UA-91629652-2');
   </script>
-
 
   <meta charset="utf-8">
   <title>Shadebobs</title>
@@ -27,7 +47,11 @@
 </head>
 
 <body>
-  <app-root></app-root>
+  <app-root>
+    <div class="splashscreen">
+        Shadebobs
+    </div>
+  </app-root>
 </body>
 
 </html>
