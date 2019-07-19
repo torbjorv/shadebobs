@@ -81,7 +81,6 @@ export class GhostCurveComponent implements OnInit, AfterViewInit, DoCheck {
   constructor() { }
 
   onResize() {
-    console.log('onResize');
     const element = this._svg.nativeElement;
 
     const contentWidth = element.clientWidth;
