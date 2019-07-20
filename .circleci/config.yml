@@ -105,7 +105,7 @@ workflows:
             # The deploy job will only run on the filtered branches and
             # require the build job to be successful before it starts
             - deploy_stable:
-                type: approval
+                # type: approval
                 requires:
                     - build
                 filters:
