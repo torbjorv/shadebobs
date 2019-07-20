@@ -2,8 +2,29 @@
 <html lang="en">
 
 <head>
-  <meta name="apple-mobile-web-app-capable" content="yes">
 
+  <style>
+    /* Need to define these here in order for the splashscreen to appear seemless */
+    html { 
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+    }
+    .splashscreen {
+      height: 100%; 
+      width: 100%; 
+      color: black; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      background-color: white;
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91629652-2"></script>
   <script>
@@ -14,7 +35,6 @@
     gtag('config', 'UA-91629652-2');
   </script>
 
-
   <meta charset="utf-8">
   <title>Shadebobs</title>
   <base href="https://torbjorv.github.io/shadebobs/">
@@ -23,10 +43,14 @@
   <link
     href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
     rel="stylesheet">
-<link rel="stylesheet" href="styles.724e598dd021b5ccffbb.css"></head>
+<link rel="stylesheet" href="styles.78f7d923fd180649dd1b.css"></head>
 
 <body>
-  <app-root></app-root>
-<script src="runtime-es2015.858f8dd898b75fe86926.js" type="module"></script><script src="polyfills-es2015.559e7c8b3a629fdb5581.js" type="module"></script><script src="runtime-es5.741402d1d47331ce975c.js" nomodule></script><script src="polyfills-es5.943113ac054b16d954ae.js" nomodule></script><script src="main-es2015.654d9b9d13752d300706.js" type="module"></script><script src="main-es5.47b131ebced9d69b5707.js" nomodule></script></body>
+  <app-root>
+    <div class="splashscreen">
+        Shadebobs
+    </div>
+  </app-root>
+<script src="runtime-es2015.858f8dd898b75fe86926.js" type="module"></script><script src="polyfills-es2015.559e7c8b3a629fdb5581.js" type="module"></script><script src="runtime-es5.741402d1d47331ce975c.js" nomodule></script><script src="polyfills-es5.943113ac054b16d954ae.js" nomodule></script><script src="main-es2015.89a7db5c97d2bb41d0a0.js" type="module"></script><script src="main-es5.15bf8448ae1246cd4c9c.js" nomodule></script></body>
 
 </html>
