@@ -37,16 +37,6 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
   public blue: [number, number][] = [[0, 0]];
 
-  public redLookup: number[] = [];
-  public greenLookup: number[] = [];
-  public blueLookup: number[] = [];
-
-  shadebob: number[];
-  private context: CanvasRenderingContext2D;
-
-  private queue: FifoQueue<[number, number]>;
-
-
   @Input()
   public tail = 100;
   @Input()
@@ -58,6 +48,13 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
   public force = 100;
 
+  public redLookup: number[] = [];
+  public greenLookup: number[] = [];
+  public blueLookup: number[] = [];
+
+  private _shadebob: number[];
+  private _context: CanvasRenderingContext2D;
+  private _queue: FifoQueue<[number, number]>;
   private _settingsChange: EventEmitter<void> = new EventEmitter();
   private _colorsChange: EventEmitter<void> = new EventEmitter();
 
@@ -84,30 +81,26 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(private _changeDetector: ChangeDetectorRef) {
 
-    this.queue = new FifoQueue(this.size);
-
     this._buffer = new Array(this._bufferSize[0] * this._bufferSize[1]);
     this._buffer.fill(0);
-
-    this._settingsChange.pipe(debounceTime(500)).subscribe(() => this.reset());
-    this._colorsChange.pipe(throttleTime(100)).subscribe(() => this.updateImage());
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
 
     const canvas = this._canvas.nativeElement as HTMLCanvasElement;
-    this.context = canvas.getContext('2d');
+    this._context = canvas.getContext('2d');
 
     canvas.width = this._bufferSize[0];
     canvas.height = this._bufferSize[1];
 
-    this._image = this.context.createImageData(this._bufferSize[0], this._bufferSize[1]);
+    this._image = this._context.createImageData(this._bufferSize[0], this._bufferSize[1]);
+    this._settingsChange.pipe(debounceTime(500)).subscribe(() => this.reset());
+    this._colorsChange.pipe(throttleTime(100)).subscribe(() => this.updateImage());
 
     this.reset();
-    this.renderFrame(0);
+    requestAnimationFrame((frameT) => this.renderFrame(frameT));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -130,25 +123,21 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
       if (property === 'blue') {
         this.blueLookup = CardinalCurve.build(this.blue, 0.5, 100).concat(CardinalCurve.build(this.blue, 0.5, 100).reverse());
       }
-
-      if ((property === 'red') || (property === 'green') || (property === 'blue')) {
-        this._colorsChange.next();
-      }
-
-      if ((property === 'tail') || (property === 'force') || (property === 'count') || (property === 'size')) {
-        this._settingsChange.next();
-      }
     });
+
+    if (('red' in changes) || ('green' in changes) || ('blue' in changes)) {
+      this._colorsChange.next();
+    }
+
+    if (('tail' in changes) || ('force' in changes) || ('count' in changes) || ('size' in changes)) {
+      this._settingsChange.next();
+    }
   }
 
   public reset(): void {
 
-    if (!this._canvas) {
-      return;
-    }
-
-    this.queue = new FifoQueue(this.tail * this.count);
-    this.shadebob = RendererComponent.buildBob(this.size, this.force);
+    this._queue = new FifoQueue(this.tail * this.count);
+    this._shadebob = RendererComponent.buildBob(this.size, this.force);
 
     this._buffer.fill(0);
     this.updateImage();
@@ -217,18 +206,18 @@ export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
           const y: number =
             Math.round(this._bufferSize[1] * Math.cos(k / 300 + (j / this.count) * 2 * Math.PI) * 0.45 + this._bufferSize[1] / 2);
 
-          this.drawBob(x, y, Math.sqrt(this.shadebob.length), this.shadebob);
+          this.drawBob(x, y, Math.sqrt(this._shadebob.length), this._shadebob);
 
-          if (this.queue.length === this.queue.capacity) {
-            const bob: [number, number] = this.queue.pop();
-            this.eraseBob(bob[0], bob[1], Math.sqrt(this.shadebob.length), this.shadebob);
+          if (this._queue.length === this._queue.capacity) {
+            const bob: [number, number] = this._queue.pop();
+            this.eraseBob(bob[0], bob[1], Math.sqrt(this._shadebob.length), this._shadebob);
           }
-          this.queue.push([x, y]);
+          this._queue.push([x, y]);
         }
       }
     }
 
-    this.context.putImageData(this._image, 0, 0);
+    this._context.putImageData(this._image, 0, 0);
 
     const elapsedMs = tActual - this._previousT;
     this.fps = 1000 / elapsedMs;

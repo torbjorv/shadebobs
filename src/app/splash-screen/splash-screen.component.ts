@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
@@ -13,21 +13,18 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       state('true', style({
         opacity: 0,
       })),
-      transition('false => true', [
+      transition('* => true', [
         animate('1s')
       ]),
     ])
   ]
 })
-export class SplashScreenComponent implements OnInit, AfterViewInit {
+export class SplashScreenComponent implements AfterViewInit {
 
   public fade = false;
   public done = false;
 
   constructor(private _changeDetector: ChangeDetectorRef) { }
-
-  ngOnInit() {
-  }
 
   ngAfterViewInit() {
     this.fade = true;
