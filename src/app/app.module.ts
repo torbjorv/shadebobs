@@ -4,8 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { RendererComponent } from './renderer/renderer.component';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatBadgeModule } from '@angular/material';
 import { AppRoutingModule } from './app-routing.module';
 import { SettingsComponent } from './settings/settings.component';
 import { GhostSliderComponent } from './ghost-slider/ghost-slider.component';
@@ -23,10 +21,8 @@ import { SplashScreenComponent } from './splash-screen/splash-screen.component';
   ],
   imports: [
     BrowserModule,
-    MatSliderModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    MatBadgeModule
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
