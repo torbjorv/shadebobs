@@ -85,14 +85,9 @@ jobs:
 
 workflows:
     version: 2
-    # The build and deploy workflow
     build_and_deploy_dev:
         jobs:
-            - build:
-                filters:
-                    branches:
-                        only:
-                            - master
+            - build
             - deploy_dev:
                 requires:
                     - build
@@ -100,10 +95,16 @@ workflows:
                     branches:
                         only:
                             - master
-            - deploy_stable:
+    build_and_deploy_stable:
+        jobs:
+            - build
+            - approve:
                 type: approval
                 requires:
                     - build
+            - deploy_stable:
+                requires:
+                    - approve
                 filters:
                     branches:
                         only:
