@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { CardinalCurve } from '../cardinal-curve';
+import { CardinalCurve } from '../utils/cardinal-curve';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { GhostSliderComponent } from '../ghost-slider/ghost-slider.component';
 import { GhostCurveComponent } from '../ghost-curve/ghost-curve.component';

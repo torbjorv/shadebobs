@@ -1,8 +1,8 @@
 import {
   Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input, OnChanges,
   SimpleChanges, EventEmitter, ChangeDetectorRef, SimpleChange } from '@angular/core';
-import { FifoQueue } from '../fifoqueue';
-import { CardinalCurve } from '../cardinal-curve';
+import { FifoQueue } from '../utils/fifoqueue';
+import { CardinalCurve } from '../utils/cardinal-curve';
 import { Utils } from '../utils/utils';
 import { debounceTime, throttleTime } from 'rxjs/operators';
 import fastEqual from 'fast-deep-equal';

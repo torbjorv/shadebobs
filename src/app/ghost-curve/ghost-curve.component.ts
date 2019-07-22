@@ -4,7 +4,7 @@ import { Subject, Observable } from 'rxjs';
 import { SimplifyAP } from 'simplify-ts';
 import { Utils } from '../utils/utils';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { CardinalCurve } from '../cardinal-curve';
+import { CardinalCurve } from '../utils/cardinal-curve';
 
 enum DragState {
   None = 'None',
