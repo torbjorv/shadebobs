@@ -36,7 +36,12 @@ export class SplashScreenComponent implements AfterViewInit {
 
     // Move the splashscreen element from index.html to here so we can apply the fade
     const splashScreen: HTMLElement = this._document.getElementById('splashscreen');
-    splashScreen.parentElement.removeChild(splashScreen);
-    this._container.nativeElement.appendChild(splashScreen);
+    if (splashScreen) {
+      splashScreen.parentElement.removeChild(splashScreen);
+      this._container.nativeElement.appendChild(splashScreen);
+    } else {
+      // This will happen in tests
+      console.warn('Could not find splashscreen element.');
+    }
   }
 }
