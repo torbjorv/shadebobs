@@ -23,6 +23,7 @@ import { DOCUMENT } from '@angular/common';
 export class SplashScreenComponent implements AfterViewInit {
 
   public fade = false;
+  public done = false;
 
   @ViewChild('container', {static: false}) private _container: ElementRef<HTMLElement>;
 
