@@ -5,21 +5,23 @@
 
   <style>
     /* Need to define these here in order for the splashscreen to appear seemless */
-    html { 
+    html {
       height: 100%;
       margin: 0;
     }
+
     body {
       height: 100%;
       margin: 0;
     }
-    .splashscreen {
-      height: 100%; 
-      width: 100%; 
-      color: black; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
+
+    #splashscreen {
+      height: 100%;
+      width: 100%;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background-color: white;
       pointer-events: none;
       user-select: none;
@@ -47,11 +49,14 @@
 </head>
 
 <body>
-  <app-root>
-    <div class="splashscreen">
-        Shadebobs
+  <app-root></app-root>
+  <div id='splashscreen'>
+    <div style="width: 115px; height: 100px; display: flex; flex-direction: column">
+      <div style="font-size: 6pt; text-align: left">Loading...</div>
+      <div style="font-size: 20pt; text-align: center">Shadebobs</div>
+      <div style="font-size: 6pt; text-align: right">Build: local</div>
     </div>
-  </app-root>
+  </div>
 </body>
 
 </html>
