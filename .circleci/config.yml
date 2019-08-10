@@ -15,15 +15,14 @@ jobs:
             # Restore local dependencies from cache
             - restore_cache:
                 keys:
-                - v1-dependencies-{{ checksum "package.json" }}
-                - v1-dependencies-
+                - dependencies-{{ checksum "package.json" }}
             # Install project dependencies
             - run:
                 name: Install local dependencies
                 command: npm install
             # Cache local dependencies if they don't exist
             - save_cache:
-                key: v1-dependencies-{{ checksum "package.json" }}
+                key: dependencies-{{ checksum "package.json" }}
                 paths:
                     - node_modules
             - run:  
@@ -44,7 +43,7 @@ jobs:
                 command: npm run build -- --prod
             # Cache the dist folder for the deploy job
             - save_cache:
-                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+                key: dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
                 paths:
                     - dist
 
