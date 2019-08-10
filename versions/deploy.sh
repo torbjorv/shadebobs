@@ -22,7 +22,7 @@ deploy_to_folder()
 
     # Copy app
     cp -a $SRC/* $DEST
-    sed -i.bak 's|.*base href.*|<base href='"$BASE_HREF"'>|' $DEST/index.html
+    sed -i.bak 's|.*base href.*|<base href='"\"$BASE_HREF\""'>|' $DEST/index.html
     rm $DEST/index.html.bak
 }
 
