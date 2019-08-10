@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 jobs:
     build:
@@ -41,7 +41,7 @@ jobs:
             # the current branch
             - run:
                 name: Building
-                command: npm run build -- --prod --base-href "https://torbjorv.github.io/shadebobs/"
+                command: npm run build -- --prod
             # Cache the dist folder for the deploy job
             - save_cache:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
@@ -49,66 +49,68 @@ jobs:
                     - dist
 
 
-    deploy_dev:
+deploy:
         working_directory: ~/project
         docker:
             - image: circleci/node:11.15-browsers
+        parameters:
+            version:
+                type: string
+                default: ""
         steps:
             - checkout
-            # Log the current branch
-            - run:
-                name: Show current branch
-                command: echo ${CIRCLE_BRANCH}
-            # Restore cache from the build job which contains the
-            # dist folder that needs to be deployed
             - restore_cache:
-                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-            - run:
-                name: Deploy Dev
-                command: ./scripts/deploy-to-branch.sh $GH_TOKEN gh-pages-dev
-    
-    deploy_stable:
-        working_directory: ~/project
-        docker:
-            - image: circleci/node:11.15-browsers
-        steps:
-            - checkout
-            # Log the current branch
-            - run:
-                name: Show current branch
-                command: echo ${CIRCLE_BRANCH}
-            # Restore cache from the build job which contains the
-            # dist folder that needs to be deployed
-            - restore_cache:
-                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-            - run:
-                name: Deploy Stable
-                command: ./scripts/deploy-to-branch.sh $GH_TOKEN gh-pages
+                key: dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
 
+            - run:
+                name: Deploy
+                command: |
+                    mkdir gh-pages-branch
+                    cd gh-pages-branch
+                    git config --global user.name "CircleCI"
+                    git init
+                    echo adding remote
+                    git remote add --fetch origin https://$GH_TOKEN@github.com/torbjorv/shadebobs.git > /dev/null 2>&1
+                    echo checking out
+                    git checkout gh-pages
+                    echo running deployment
+                    ./versions/deploy.sh << parameters.version >> ../dist https://torbjorv.github.io/shadebobs/ https://circleci.com/workflow-run/$CIRCLE_WORKFLOW_ID https://github.com/torbjorv/shadebobs/commit/$CIRCLE_SHA1
+                    cd ..
+                    rm -rf gh-pages-branch        
 
 workflows:
-    version: 2
-    build_and_deploy_dev:
+    build_and_deploy:
         jobs:
-            - build
-            - deploy_dev:
+            - build:
+                filters:
+                    branches:
+                        only: master
+
+            # Deploy to gh-pages/builds/latest
+            - deploy:
+                name: deploy-dev
                 requires:
                     - build
                 filters:
                     branches:
-                        only:
-                            - master
-    build_and_deploy_stable:
-        jobs:
-            - build
+                        only: master
+                version: "$CIRCLE_BUILD_NUM"
+
+            # Promoting a given build to 'prod' requires manual approval
             - approve:
                 type: approval
                 requires:
                     - build
-            - deploy_stable:
+                filters:
+                    branches:
+                        only: master
+
+            # Deploys to gh-pages branch root level
+            - deploy:
+                name: deploy-prod
                 requires:
                     - approve
                 filters:
                     branches:
-                        only:
-                            - master
+                        only: master
+                version: prod            
