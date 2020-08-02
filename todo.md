@@ -15,6 +15,7 @@
 
 ### Cleanup
 - Create shared style class for 'center text vertically in div'
+- the 'done' flag in SplashScreen is unused
 
 #### Done
 - rename 'GhostSlider' to 'BarSlider' or something. There is nothing Ghost about it now that the 
