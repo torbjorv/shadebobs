@@ -14,7 +14,7 @@ import fastEqual from 'fast-deep-equal';
 })
 export class RendererComponent implements OnInit, AfterViewInit, OnChanges {
 
-  @ViewChild('viewport', { static: false })
+  @ViewChild('viewport')
   private _canvas: ElementRef;
 
   private _image: ImageData;

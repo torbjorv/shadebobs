@@ -50,7 +50,7 @@ export class GhostSliderComponent implements OnInit, AfterViewInit {
   private _normalizedValueAtDragStart: number;
   private _xAtDragStart: number;
 
-  @ViewChild('container', { static: false })
+  @ViewChild('container')
   private _container: ElementRef<HTMLElement>;
   private _value = 30;
   private _valueChange: EventEmitter<number> = new EventEmitter();
@@ -100,7 +100,7 @@ export class GhostSliderComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-      // d3 handles nicely both mouse and touch, in addition to triggering 'end' if the drag stops
+    // d3 handles nicely both mouse and touch, in addition to triggering 'end' if the drag stops
     // outside the element.
     d3.select(this._container.nativeElement)
       .call(d3.drag()

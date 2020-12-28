@@ -92,21 +92,21 @@ export class SettingsComponent implements OnInit {
   public gradientB: {};
   public gradient: {};
 
-  @ViewChild('tailSlider', { static: false })
+  @ViewChild('tailSlider')
   private _tailSlider: GhostSliderComponent;
-  @ViewChild('countSlider', { static: false })
+  @ViewChild('countSlider')
   private _countSlider: GhostSliderComponent;
-  @ViewChild('speedSlider', { static: false })
+  @ViewChild('speedSlider')
   private _speedSlider: GhostSliderComponent;
-  @ViewChild('sizeSlider', { static: false })
+  @ViewChild('sizeSlider')
   private _sizeSlider: GhostSliderComponent;
-  @ViewChild('forceSlider', { static: false })
+  @ViewChild('forceSlider')
   private _forceSlider: GhostSliderComponent;
-  @ViewChild('redCurve', { static: false })
+  @ViewChild('redCurve')
   private _redCurve: GhostCurveComponent;
-  @ViewChild('greenCurve', { static: false })
+  @ViewChild('greenCurve')
   private _greenCurve: GhostCurveComponent;
-  @ViewChild('blueCurve', { static: false })
+  @ViewChild('blueCurve')
   private _blueCurve: GhostCurveComponent;
 
   @Input()

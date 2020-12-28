@@ -25,7 +25,7 @@ export class SplashScreenComponent implements AfterViewInit {
   public fade = false;
   public done = false;
 
-  @ViewChild('container', {static: false}) private _container: ElementRef<HTMLElement>;
+  @ViewChild('container') private _container: ElementRef<HTMLElement>;
 
   constructor(
     private _changeDetector: ChangeDetectorRef,

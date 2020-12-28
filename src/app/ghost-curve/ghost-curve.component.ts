@@ -40,12 +40,13 @@ export class GhostCurveComponent implements OnInit, AfterViewInit, DoCheck {
 
   public expanded = false;
 
-  @ViewChild('svg', { static: false })
+  @ViewChild('svg')
   private _svg: ElementRef;
 
-  @ViewChild('container', { static: false })
+  @ViewChild('container')
   private _container: ElementRef<HTMLElement>;
 
+  private _channel = 'R';
   private _points: [number, number][] = [];
   private _pointsChange: Subject<[number, number][]> = new Subject();
   private _dragPoints: [number, number][];
@@ -53,7 +54,12 @@ export class GhostCurveComponent implements OnInit, AfterViewInit, DoCheck {
   public state = DragState.None;
 
   @Input()
-  public channel = 'R';
+  public set channel(value: string) {
+    this._channel = value;
+    this.updatePalettes();
+  }
+
+  public get channel(): string { return this._channel; }
 
   @Input()
   public set points(value: [number, number][]) {
@@ -103,6 +109,7 @@ export class GhostCurveComponent implements OnInit, AfterViewInit, DoCheck {
         .on('start', () => this.onDragStart())
         .on('drag', () => this.onDrag())
         .on('end', () => this.onDragEnd()));
+
   }
 
   ngDoCheck(): void {
