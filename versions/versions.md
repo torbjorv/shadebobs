@@ -1,5 +1,6 @@
 | Id | Date | Deployment | Source | CI/CD | Comment |
 | -: | ---- | :--------: | :----: | :---: | ------- |
+| 309 | 28Dec2020 | [link](https://torbjorv.github.io/shadebobs/versions/309/) | [link](https://github.com/torbjorv/shadebobs/commit/d3b12d150d616b6e10e409bed21ef17a6de46889) | [link](https://circleci.com/workflow-run/79084fcc-6e09-4ad5-9e53-45a2eea68143) | |
 | 304 | 02Aug2020 | [link](https://torbjorv.github.io/shadebobs/versions/304/) | [link](https://github.com/torbjorv/shadebobs/commit/3c6ce5ba53c7804690409c7aca174266cbdb2ed3) | [link](https://circleci.com/workflow-run/305467c0-4629-4aa1-a016-e9cd2a43adbc) | |
 | 300 | 02Aug2020 | [link](https://torbjorv.github.io/shadebobs/versions/300/) | [link](https://github.com/torbjorv/shadebobs/commit/619e79fddd635d88178837ac4ad1c6bff91d435e) | [link](https://circleci.com/workflow-run/d0a288bf-6fd4-416b-aa92-b3d49a6003b1) | |
 | 288 | 02Aug2020 | [link](https://torbjorv.github.io/shadebobs/versions/288/) | [link](https://github.com/torbjorv/shadebobs/commit/752aecbf3d09b650b63543814a7de603afae8ddc) | [link](https://circleci.com/workflow-run/4b79260f-cff5-4e8a-bd0e-21d0d75d9c83) | |
