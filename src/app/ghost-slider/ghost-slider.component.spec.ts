@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GhostSliderComponent } from './ghost-slider.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,7 +7,7 @@ describe('GhostSliderComponent', () => {
   let component: GhostSliderComponent;
   let fixture: ComponentFixture<GhostSliderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
       declarations: [ GhostSliderComponent ]
